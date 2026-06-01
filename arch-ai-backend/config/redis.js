@@ -61,7 +61,7 @@ function initRedis() {
         console.warn(`⚠️ [Redis] Retrying connection in ${delay}ms (attempt ${times})`);
         return delay;
       },
-      maxRetriesPerRequest: 3,
+      maxRetriesPerRequest: null, // FIX AZURE: Mencegah MaxRetriesPerRequestError dari Socket.io saat offline queue penuh
       // FIX: false agar koneksi langsung dibuat saat initRedis() dipanggil
       // sehingga isRedisAvailable bisa di-set true sebelum health check pertama
       lazyConnect: false,
@@ -69,9 +69,29 @@ function initRedis() {
       connectTimeout: 10000,  // 10 detik timeout koneksi (Azure bisa lambat)
     };
 
-    redisClient = new Redis(REDIS_URL, { ...commonOptions, keyPrefix: 'arkon:' });
-    redisPub = new Redis(REDIS_URL, commonOptions);
-    redisSub = new Redis(REDIS_URL, commonOptions);
+    // FIX AZURE: Password Azure Cache for Redis sering mengandung karakter spesial (/, +, =)
+    // Jika diparsing langsung sebagai URL oleh ioredis, formatnya akan rusak dan menyebabkan ETIMEDOUT.
+    // Kita parsing manual host, port, dan passwordnya.
+    let clientOptions = { ...commonOptions };
+    let parsedUrl = REDIS_URL;
+    
+    if (isAzureRedis && REDIS_URL.startsWith('rediss://:')) {
+      const match = REDIS_URL.match(/^rediss:\/\/:(.*)@([^@]+):(\d+)$/);
+      if (match) {
+        clientOptions = {
+          ...clientOptions,
+          password: match[1], // Password asli tanpa perlu URL encode
+          host: match[2],
+          port: parseInt(match[3]),
+          tls: { servername: match[2], rejectUnauthorized: false } // SNI sangat penting untuk Azure
+        };
+        parsedUrl = undefined; // Paksa ioredis pakai clientOptions, abaikan URL string
+      }
+    }
+
+    redisClient = new Redis(parsedUrl, { ...clientOptions, keyPrefix: 'arkon:' });
+    redisPub = new Redis(parsedUrl, clientOptions);
+    redisSub = new Redis(parsedUrl, clientOptions);
 
     // Event handlers — update isRedisAvailable secara real-time
     redisClient.on('ready', () => {
