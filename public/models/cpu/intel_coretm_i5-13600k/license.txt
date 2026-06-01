@@ -1,0 +1,11 @@
+Model Information:
+* title:	Intel® Core™ i5-13600K
+* source:	https://sketchfab.com/3d-models/intel-coretm-i5-13600k-e03b5f3b18a147a49bc2d6e61bc4bf37
+* author:	Anxxvnxn (https://sketchfab.com/Anxxvnxn)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Intel® Core™ i5-13600K" (https://sketchfab.com/3d-models/intel-coretm-i5-13600k-e03b5f3b18a147a49bc2d6e61bc4bf37) by Anxxvnxn (https://sketchfab.com/Anxxvnxn) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

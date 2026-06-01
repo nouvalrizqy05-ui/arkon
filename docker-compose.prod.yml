@@ -1,0 +1,178 @@
+# ============================================================
+# ARKON Production Docker Compose
+# ============================================================
+# Usage: docker compose -f docker-compose.prod.yml up -d --build
+#
+# Perbedaan dari docker-compose.yml (development):
+# - Tidak ada volume mount source code (immutable container)
+# - NODE_ENV=production
+# - Restart policy: unless-stopped
+# - Resource limits (CPU & RAM)
+# - Healthcheck pada semua service
+# - Frontend di-build sebagai static assets, disajikan via nginx
+# ============================================================
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: arkon-postgres-prod
+    environment:
+      POSTGRES_USER: ${DB_USER:?DB_USER is required}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      POSTGRES_DB: ${DB_NAME:-arkon_db}
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    networks:
+      - arkon-network-prod
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-arkon_db}"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Redis (Session Store, Socket.io Adapter, Cache) — Production
+  redis:
+    image: redis:7-alpine
+    container_name: arkon-redis-prod
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru --appendonly yes
+    volumes:
+      - redis_data_prod:/data
+    networks:
+      - arkon-network-prod
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+  # Backend API Server (Node.js/Express) — Production
+  backend:
+    build:
+      context: ./arch-ai-backend
+      dockerfile: Dockerfile
+    container_name: arkon-backend-prod
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:?DB_USER is required}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      DB_NAME: ${DB_NAME:-arkon_db}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      REFRESH_SECRET: ${REFRESH_SECRET:?REFRESH_SECRET is required}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://arkon.app}
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - arkon-network-prod
+    restart: unless-stopped
+    # PRODUCTION: No volume mounts — code baked into image
+    command: node server.js
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # Frontend (Nginx serving Vite-built static files) — Production
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-https://api.arkon.app}
+    container_name: arkon-frontend-prod
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - arkon-network-prod
+    restart: unless-stopped
+    # PRODUCTION: No volume mounts — static files baked into nginx image
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 32M
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+networks:
+  arkon-network-prod:
+    driver: bridge
+
+volumes:
+  postgres_data_prod:
+    driver: local
+  redis_data_prod:
+    driver: local

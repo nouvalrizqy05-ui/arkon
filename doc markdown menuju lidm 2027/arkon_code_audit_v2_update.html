@@ -1,0 +1,223 @@
+
+<style>
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.top-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.mc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px}
+.ml{font-size:11px;color:var(--color-text-secondary);margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em}
+.mv{font-size:22px;font-weight:500;margin:0}
+.ms{font-size:11px;color:var(--color-text-secondary);margin:2px 0 0}
+.sh{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 10px;padding-bottom:6px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.audit-row{border-bottom:0.5px solid var(--color-border-tertiary);padding:8px 0;cursor:pointer}
+.audit-row:hover{background:var(--color-background-secondary);border-radius:4px}
+.row-top{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:start}
+.r-name{font-size:12px;color:var(--color-text-primary);font-weight:500}
+.r-file{font-size:10px;color:var(--color-text-secondary);font-family:var(--font-mono)}
+.pill{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.p-done{background:var(--color-background-success);color:var(--color-text-success)}
+.p-warn{background:var(--color-background-warning);color:var(--color-text-warning)}
+.p-danger{background:var(--color-background-danger);color:var(--color-text-danger)}
+.p-info{background:var(--color-background-info);color:var(--color-text-info)}
+.r-note{font-size:11px;color:var(--color-text-secondary);margin:5px 0 0;padding:6px 8px;border-left:2px solid var(--color-border-secondary);line-height:1.5}
+.r-note.good{border-color:var(--color-text-success)}
+.r-note.warn{border-color:var(--color-text-warning)}
+.r-note.bad{border-color:var(--color-text-danger)}
+.bar-wrap{height:6px;background:var(--color-border-tertiary);border-radius:3px;overflow:hidden;margin:4px 0}
+.bar{height:100%;border-radius:3px}
+.b-g{background:var(--color-text-success)}
+.b-w{background:var(--color-text-warning)}
+.b-d{background:var(--color-text-danger)}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.fbtn{font-size:11px;padding:4px 12px;border-radius:16px;border:0.5px solid var(--color-border-secondary);cursor:pointer;background:transparent;color:var(--color-text-secondary)}
+.fbtn.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.verdict{padding:10px 14px;border-radius:var(--border-radius-md);border:0.5px solid;margin-bottom:18px;font-size:12px;line-height:1.6}
+.v-good{background:var(--color-background-success);border-color:var(--color-border-success);color:var(--color-text-success)}
+.v-warn{background:var(--color-background-warning);border-color:var(--color-border-warning);color:var(--color-text-warning)}
+.v-bad{background:var(--color-background-danger);border-color:var(--color-border-danger);color:var(--color-text-danger)}
+</style>
+
+<h2 class="sr-only">Audit 7 file ARKON yang diperbarui — verifikasi klaim vs implementasi aktual per file</h2>
+
+<div class="top-grid">
+  <div class="mc">
+    <p class="ml">Klaim "Done"</p>
+    <p class="mv" style="color:var(--color-text-warning)">7</p>
+    <p class="ms">item diklaim selesai</p>
+  </div>
+  <div class="mc">
+    <p class="ml">Benar-benar Done</p>
+    <p class="mv" style="color:var(--color-text-success)">4</p>
+    <p class="ms">verified dari kode</p>
+  </div>
+  <div class="mc">
+    <p class="ml">Partial / ada masalah</p>
+    <p class="mv" style="color:var(--color-text-warning)">2</p>
+    <p class="ms">fungsi ada, tapi ada bug/gap</p>
+  </div>
+  <div class="mc">
+    <p class="ml">Over-claimed</p>
+    <p class="mv" style="color:var(--color-text-danger)">1</p>
+    <p class="ms">implementasi tidak lengkap</p>
+  </div>
+</div>
+
+<div class="filter-row">
+  <button class="fbtn active" onclick="doFilter('all')">Semua file</button>
+  <button class="fbtn" onclick="doFilter('done')">Verified done</button>
+  <button class="fbtn" onclick="doFilter('partial')">Partial</button>
+  <button class="fbtn" onclick="doFilter('issue')">Ada masalah</button>
+</div>
+
+<div id="audit-list"></div>
+
+<script>
+const items = [
+  {
+    file: 'package.json (backend)',
+    claim: 'PERF-001: ioredis + @socket.io/redis-adapter ditambahkan — Redis bukan dead code lagi',
+    verdict: 'done',
+    pct: 90,
+    tag: 'Verified ✓',
+    tagClass: 'p-done',
+    notes: [
+      {type:'good', text:'ioredis ^5.6.1 dan @socket.io/redis-adapter ^8.3.0 sekarang ADA di dependencies. pdfkit ^0.16.2 juga masuk. Ini fix nyata — sebelumnya dependency tidak ada sama sekali.'},
+      {type:'warn', text:'TAPI: package.json saja tidak cukup. config/redis.js harus verifikasi koneksi Redis aktif dan io.adapter(createAdapter(...)) dipanggil di server.js. File server.js tidak diupload — tidak bisa verifikasi apakah Redis adapter benar-benar diattach ke Socket.io instance.'},
+      {type:'warn', text:'Skor naik dari 40% → 75%. Bukan 100% karena wiring di server.js belum terverifikasi.'},
+    ],
+    prompt: 'Tunjukkan bagaimana cara memverifikasi Redis adapter sudah benar-benar diattach ke Socket.io di server.js ARKON'
+  },
+  {
+    file: 'analytics.routes.js (backend)',
+    claim: 'FEAT-001: PDF report server-side via pdfkit — endpoint /api/analytics/report/pdf/:room_id',
+    verdict: 'done',
+    pct: 88,
+    tag: 'Verified ✓',
+    tagClass: 'p-done',
+    notes: [
+      {type:'good', text:'Implementasi lengkap dan solid. PDFDocument dibuat dengan benar, di-pipe ke res. Header Content-Type, Content-Disposition, A4 layout, tabel mahasiswa, summary stats, footer — semua ada.'},
+      {type:'good', text:'Query SQL untuk N-Gain join benar (first/second analytics per student). Handling page break (doc.y > 720) diimplementasi untuk tabel panjang.'},
+      {type:'warn', text:'BUG: Query menggunakan room_members.student_id, tapi dari audit codebase sebelumnya tabel junction adalah class_members (bukan room_members). Jika nama tabel salah, endpoint akan crash dengan "relation room_members does not exist".'},
+      {type:'warn', text:'TIDAK ADA: Validasi apakah req.user.id benar-benar adalah dosen dari room tersebut (hanya cek role=dosen, tidak cek ownership room). Dosen dari room lain bisa download laporan room manapun.'},
+    ],
+    prompt: 'Apa perbedaan nama tabel room_members vs class_members di schema database ARKON, dan bagaimana cara fix query PDF report?'
+  },
+  {
+    file: 'AnalyticsDashboard.jsx (frontend)',
+    claim: 'FEAT-001 FE: Tombol "Laporan Lengkap" ditambahkan di Analytics Dashboard dosen',
+    verdict: 'done',
+    pct: 85,
+    tag: 'Verified ✓',
+    tagClass: 'p-done',
+    notes: [
+      {type:'good', text:'Dua tombol PDF hadir: "Export PDF" (client-side via jsPDF+autoTable) dan "Laporan Lengkap" (server-side via fetch+blob). Logika download dengan revokeObjectURL sudah benar — tidak memory leak.'},
+      {type:'good', text:'AI Insight panel dengan graceful fallback ada: jika AI tidak bisa diakses, tampilkan panduan manual evaluasi. Ini implementasi FEAT-004 yang solid.'},
+      {type:'warn', text:'Import jsPDF di baris 3-4: jsPDF tidak ada di package.json frontend (berdasarkan codebase yang diaudit). Perlu verifikasi apakah jspdf dan jspdf-autotable sudah ditambahkan ke frontend package.json.'},
+      {type:'warn', text:'fetchAnalytics() menggunakan Promise.all dengan N request per member — jika ada 60 mahasiswa, ini 60 fetch request serentak. Perlu endpoint agregat /api/irt/room/:roomId/theta daripada N individual calls.'},
+    ],
+    prompt: 'Bagaimana cara refactor fetchAnalytics di AnalyticsDashboard.jsx agar tidak N fetch per mahasiswa?'
+  },
+  {
+    file: 'QuizLevelMap.jsx (frontend)',
+    claim: 'FEAT-002: QuizLevelMap sekarang menggunakan ThetaProgressCard baru (circular ring + level names)',
+    verdict: 'done',
+    pct: 92,
+    tag: 'Verified ✓',
+    tagClass: 'p-done',
+    notes: [
+      {type:'good', text:'Import ThetaProgressCard dari ./ThetaProgressCard (bukan TheoProgressCard lama) — fix yang diklaim benar-benar terjadi. Dirender di top-left overlay saat studentTheta ada.'},
+      {type:'good', text:'getRecommendedLevels() berdasarkan theta range sudah diimplementasi dengan baik: theta<-1 → level 1-3, dll. Level recommended mendapat amber pulse animation — UX yang informatif.'},
+      {type:'good', text:'Level unlocking logic menggunakan completedLevels.includes(l.id - 1) — ini benar secara sequential. Informasi Stallings reference per level tersedia di tooltip.'},
+      {type:'warn', text:'MINOR: Tidak ada accessibility label yang memadai di setiap button level — screen reader hanya akan baca angka level tanpa nama. Perlu aria-label yang lebih informatif.'},
+    ],
+    prompt: 'Bagaimana cara menambahkan aria-label yang proper untuk setiap button level di QuizLevelMap.jsx?'
+  },
+  {
+    file: 'QuizGame.jsx (frontend)',
+    claim: 'FEAT-002: QuizGame.jsx sekarang menggunakan ThetaProgressCard baru',
+    verdict: 'partial',
+    pct: 70,
+    tag: 'Partial ⚠',
+    tagClass: 'p-warn',
+    notes: [
+      {type:'good', text:'Import ThetaProgressCard dari ./ThetaProgressCard di baris 7 — benar, tidak lagi TheoProgressCard. Dirender di in-progress screen (baris 632) dengan compact mode.'},
+      {type:'warn', text:'MASALAH DESAIN IRT: QuizGame melakukan kalkulasi theta UPDATE sendiri di handleAnswer() (baris 232-249) menggunakan approximation sederhana. LALU di finishQuiz() juga POST ke /api/irt/update-theta. Dua jalur update theta berbeda — kalkulasi lokal dan backend IRT yang sebenarnya. Nilai lokal (dipakai untuk display real-time) bisa diverge dari nilai backend yang tersimpan.'},
+      {type:'warn', text:'VALIDASI: difficulty || 2 di finishQuiz() (baris 350) — angka 2 itu bukan nilai default yang valid untuk IRT. Semua soal tanpa difficulty property akan dianggap b=2 (sangat sulit), yang akan bias theta ke bawah.'},
+      {type:'bad', text:'STRUCTURAL GAP: Fungsi QuizMapAdmin() di bagian atas (content authoring UI) memiliki tombol "Edit" dan "Hapus" yang tidak ada handler-nya — onClick tidak diimplementasi. Ini UI shell tanpa fungsi.'},
+    ],
+    prompt: 'Bagaimana cara menyatukan kalkulasi theta lokal dan backend IRT di QuizGame.jsx agar tidak diverge?'
+  },
+  {
+    file: 'RoomHub.jsx (frontend)',
+    claim: 'MOBILE-002: pb-14 ditambahkan ke area konten agar tidak tertutup bottom nav',
+    verdict: 'partial',
+    pct: 65,
+    tag: 'Partial ⚠',
+    tagClass: 'p-warn',
+    notes: [
+      {type:'good', text:'pb-14 md:pb-0 ada di baris 797 pada main content area — konten tidak tertutup bottom nav di mobile. Mobile bottom nav (baris 864-882) diimplementasi dengan 5 item: Room, Rakit, Quiz, Ranking, Tugas.'},
+      {type:'warn', text:'DESAIN GAP: Bottom nav hanya untuk mahasiswa, tapi tidak ada conditional check — dosen yang buka di mobile juga akan melihat bottom nav mahasiswa. Perlu: {userRole === "mahasiswa" && <nav ...>}.'},
+      {type:'warn', text:'AKSESIBILITAS: Bottom nav sudah punya aria-label="Navigasi mobile" (bagus). Tapi tab aktif tidak memiliki aria-current="page" — screen reader tidak tahu tab mana yang sedang aktif.'},
+      {type:'bad', text:'CRITICAL BUG: Import campuran ada masalah — baris 51-55 menggunakan import statement SETELAH lazy() dan function declaration. Di strict ES module, semua import harus di atas. Ini akan menyebabkan "SyntaxError: Cannot use import statement" di Vite production build (dev mungkin masih jalan karena HMR tolerant).'},
+    ],
+    prompt: 'Bagaimana cara fix urutan import di RoomHub.jsx yang menyebabkan SyntaxError di Vite production build?'
+  },
+  {
+    file: 'App.jsx (frontend)',
+    claim: 'Already OK: routing, lazy loading, WCAG skip-to-content — tidak ada perubahan diklaim',
+    verdict: 'done',
+    pct: 95,
+    tag: 'Solid ✓',
+    tagClass: 'p-done',
+    notes: [
+      {type:'good', text:'Lazy loading semua heavy pages (ClassroomWorkspace, CpuSimulator, ArLab, dll) sudah benar. Skip-to-content link (baris 56) ada dan semantic main id="main-content" ada.'},
+      {type:'good', text:'ProtectedRoute dengan RBAC (role mahasiswa/dosen) sudah solid — cek token DAN role. Redirect ke role-appropriate path jika role tidak match.'},
+      {type:'warn', text:'MINOR: localStorage digunakan untuk auth_token dan user_role — ini rentan XSS. Di produksi sebaiknya gunakan httpOnly cookies untuk token. Tapi ini adalah design decision yang konsisten dengan existing codebase, bukan regresi.'},
+      {type:'warn', text:'Route /dosen/room/:roomId/* dari URL update di RoomHub tidak terdefinisi di App.jsx — hanya ada /dosen/* sebagai catch-all. replaceState akan bekerja tapi direct URL navigation ke /dosen/room/xxx/quiz akan 404.'},
+    ],
+    prompt: 'Bagaimana cara menambahkan route /dosen/room/:roomId/* yang proper di App.jsx ARKON?'
+  },
+];
+
+let currentFilter = 'all';
+
+function doFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.fbtn').forEach(b => {
+    b.classList.toggle('active', 
+      (f==='all' && b.textContent==='Semua file') ||
+      (f==='done' && b.textContent==='Verified done') ||
+      (f==='partial' && b.textContent==='Partial') ||
+      (f==='issue' && b.textContent==='Ada masalah')
+    );
+  });
+  render();
+}
+
+function render() {
+  const el = document.getElementById('audit-list');
+  let filtered = items;
+  if (currentFilter === 'done') filtered = items.filter(i => i.verdict === 'done');
+  if (currentFilter === 'partial') filtered = items.filter(i => i.verdict === 'partial');
+  if (currentFilter === 'issue') filtered = items.filter(i => i.notes.some(n => n.type === 'bad'));
+
+  el.innerHTML = filtered.map(item => {
+    const barClass = item.pct >= 80 ? 'b-g' : item.pct >= 60 ? 'b-w' : 'b-d';
+    const notesHtml = item.notes.map(n =>
+      `<div class="r-note ${n.type==='good'?'good':n.type==='warn'?'warn':'bad'}">${n.text}</div>`
+    ).join('');
+    return `<div class="audit-row" onclick="sendPrompt('${item.prompt.replace(/'/g,"\\'")}')">
+      <div class="row-top">
+        <div>
+          <div class="r-name">${item.file}</div>
+          <div class="r-file">Klaim: ${item.claim.substring(0,80)}...</div>
+        </div>
+        <span class="pill ${item.tagClass}">${item.tag}</span>
+        <span style="font-size:11px;color:var(--color-text-secondary);white-space:nowrap">${item.pct}%</span>
+      </div>
+      <div class="bar-wrap"><div class="bar ${barClass}" style="width:${item.pct}%"></div></div>
+      ${notesHtml}
+    </div>`;
+  }).join('');
+}
+
+render();
+</script>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARKON v2.0 — Presentasi LIDM 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#080C1A;color:#fff;overflow:hidden;height:100vh}
+.deck{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);height:100vh}
+.slide{min-width:100vw;height:100vh;padding:60px 80px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.slide::before{content:'';position:absolute;top:-200px;right:-200px;width:500px;height:500px;border-radius:50%;opacity:.08;pointer-events:none}
+h1{font-size:3.2rem;font-weight:900;line-height:1.15;margin-bottom:20px}
+h2{font-size:2.4rem;font-weight:900;line-height:1.2;margin-bottom:16px}
+h3{font-size:1.4rem;font-weight:700;margin-bottom:8px}
+p,.desc{font-size:1.05rem;color:rgba(255,255,255,.7);line-height:1.7;max-width:800px}
+.accent{color:#818cf8}
+.gold{color:#fbbf24}
+.green{color:#34d399}
+.red{color:#f87171}
+.tag{display:inline-block;padding:6px 16px;border-radius:999px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:20px}
+.tag-purple{background:rgba(129,140,248,.15);color:#818cf8;border:1px solid rgba(129,140,248,.3)}
+.tag-green{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3)}
+.tag-amber{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
+.tag-red{background:rgba(248,113,113,.15);color:#f87171;border:1px solid rgba(248,113,113,.3)}
+.tag-cyan{background:rgba(34,211,238,.15);color:#22d3ee;border:1px solid rgba(34,211,238,.3)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:24px}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;margin-top:24px}
+.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:28px}
+.card:hover{border-color:rgba(129,140,248,.3)}
+.stat{font-size:2.8rem;font-weight:900;line-height:1}
+.stat-sm{font-size:1.8rem;font-weight:900}
+.footer{position:absolute;bottom:24px;left:80px;right:80px;display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.3);font-weight:600}
+.emoji{font-size:2rem;margin-bottom:12px}
+.flow-arrow{color:rgba(129,140,248,.5);font-size:2rem;display:flex;align-items:center;justify-content:center}
+.nav{position:fixed;bottom:30px;right:40px;z-index:100;display:flex;gap:8px}
+.nav button{width:44px;height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:1.2rem;cursor:pointer;backdrop-filter:blur(10px)}
+.nav button:hover{background:rgba(129,140,248,.3);border-color:#818cf8}
+.counter{position:fixed;bottom:36px;left:40px;font-size:.8rem;color:rgba(255,255,255,.3);font-weight:700;z-index:100}
+.highlight-box{background:linear-gradient(135deg,rgba(129,140,248,.1),rgba(129,140,248,.05));border:1px solid rgba(129,140,248,.2);border-radius:16px;padding:20px 24px;margin-top:16px}
+ul{list-style:none;margin-top:12px}
+ul li{padding:8px 0;padding-left:24px;position:relative;color:rgba(255,255,255,.75);font-size:.95rem}
+ul li::before{content:'▸';position:absolute;left:0;color:#818cf8;font-weight:bold}
+.cols{display:flex;gap:40px;align-items:flex-start}
+.col{flex:1}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+<!-- SLIDE 1: COVER -->
+<section class="slide" style="justify-content:center;align-items:center;text-align:center;background:linear-gradient(135deg,#080C1A 0%,#1e1b4b 100%)">
+<div class="tag tag-purple">LIDM 2027 — Kelompok 10</div>
+<h1>AR<span class="accent">KON</span></h1>
+<p style="font-size:1.3rem;max-width:700px;margin:0 auto">Adaptive Resource Komputer Architecture Education<br><span style="color:rgba(255,255,255,.4)">Platform Edukasi Arsitektur Komputer berbasis Room-Based Learning,<br>IRT Rasch Model & 3D Interactive Simulation</span></p>
+<div style="margin-top:40px;display:flex;gap:16px;justify-content:center">
+<div class="tag tag-green">SDG 4</div><div class="tag tag-amber">SDG 9</div><div class="tag tag-cyan">SDG 10</div>
+</div>
+<div class="footer"><span>© 2027 ARKON Team</span><span>Lomba Inovasi Digital Mahasiswa — Kemendikbudristek RI</span></div>
+</section>
+
+<!-- SLIDE 2: LATAR BELAKANG -->
+<section class="slide">
+<div class="tag tag-red">Latar Belakang</div>
+<h2>Mengapa ARKON <span class="red">Dibutuhkan?</span></h2>
+<p>Kesenjangan infrastruktur laboratorium komputer di perguruan tinggi Indonesia menghambat kualitas pembelajaran Arsitektur Komputer.</p>
+<div class="grid3">
+<div class="card" style="text-align:center"><div class="stat red">78%</div><p style="margin-top:12px;font-size:.85rem">Kampus kekurangan lab komputer memadai</p><span style="font-size:.7rem;color:rgba(255,255,255,.3)">BPS 2023</span></div>
+<div class="card" style="text-align:center"><div class="stat gold">Rp500Jt+</div><p style="margin-top:12px;font-size:.85rem">Biaya minimum membangun 1 lab hardware</p><span style="font-size:.7rem;color:rgba(255,255,255,.3)">Kemendikbud</span></div>
+<div class="card" style="text-align:center"><div class="stat green">4.2x</div><p style="margin-top:12px;font-size:.85rem">Peningkatan partisipasi dengan gamified learning</p><span style="font-size:.7rem;color:rgba(255,255,255,.3)">Journal of Edu Tech</span></div>
+</div>
+<div class="highlight-box"><strong class="accent">Solusi:</strong> ARKON menggantikan lab fisik mahal dengan simulasi 3D + AR + AI — accessible dari browser manapun.</div>
+<div class="footer"><span>ARKON v2.0</span><span>Slide 2</span></div>
+</section>
+
+<!-- SLIDE 3: ARSITEKTUR -->
+<section class="slide">
+<div class="tag tag-purple">Arsitektur Sistem</div>
+<h2>Tech Stack & <span class="accent">Architecture</span></h2>
+<div class="grid2">
+<div class="card"><h3>🖥️ Frontend</h3><ul>
+<li>React.js + Vite (SPA, Code Splitting)</li>
+<li>Three.js & Model Viewer (3D/WebXR AR)</li>
+<li>TailwindCSS + Framer Motion</li>
+<li>Socket.io-client (Real-time)</li>
+<li>PWA (Offline-capable)</li>
+</ul></div>
+<div class="card"><h3>⚙️ Backend</h3><ul>
+<li>Node.js + Express.js (REST API)</li>
+<li>PostgreSQL + Supabase</li>
+<li>Socket.io (WebSocket Server)</li>
+<li>Google Gemini 2.0 AI</li>
+<li>JWT Auth + Helmet CSP + Rate Limit</li>
+</ul></div>
+</div>
+<div class="highlight-box" style="margin-top:20px">
+<strong>Inovasi Kunci:</strong> IRT Rasch Model 1-PL untuk adaptive assessment · N-Gain untuk efektivitas pembelajaran · Gemini AI untuk hint adaptif & analytics summary
+</div>
+<div class="footer"><span>ARKON v2.0</span><span>Slide 3</span></div>
+</section>
+
+<!-- SLIDE 4: WORKFLOW DOSEN -->
+<section class="slide">
+<div class="tag tag-green">Workflow Dosen</div>
+<h2>Alur Kerja <span class="green">Dosen</span></h2>
+<div class="grid4">
+<div class="card" style="text-align:center"><div class="emoji">🏠</div><h3>Buat Room</h3><p style="font-size:.8rem">Buat kelas dengan Room Code unik, atur deskripsi & konfigurasi</p></div>
+<div class="card" style="text-align:center"><div class="emoji">📋</div><h3>Kelola Tugas</h3><p style="font-size:.8rem">Buat aktivitas: Free Build, Quiz Challenge, Detective Mission</p></div>
+<div class="card" style="text-align:center"><div class="emoji">👁️</div><h3>Review Karya</h3><p style="font-size:.8rem">Tinker This — masuk ke karya mahasiswa, beri feedback spasial real-time</p></div>
+<div class="card" style="text-align:center"><div class="emoji">📊</div><h3>Analytics</h3><p style="font-size:.8rem">Dashboard IRT (θ), N-Gain, Heat Map, AI Summary dari Gemini</p></div>
+</div>
+<div style="margin-top:20px"><strong style="color:rgba(255,255,255,.4)">Dosen Tools:</strong></div>
+<div class="grid3" style="margin-top:8px">
+<div class="card" style="padding:16px"><strong>📡 Kendali Kelas</strong><p style="font-size:.78rem;margin-top:4px">Live Broadcast, Polling, Navigate mahasiswa</p></div>
+<div class="card" style="padding:16px"><strong>🎮 Live Quiz</strong><p style="font-size:.78rem;margin-top:4px">Buat & broadcast kuis real-time ala Kahoot</p></div>
+<div class="card" style="padding:16px"><strong>🛡️ Panel Dosen (GM)</strong><p style="font-size:.78rem;margin-top:4px">Kelola coin, double XP event, season awards</p></div>
+</div>
+<div class="footer"><span>ARKON v2.0</span><span>Slide 4</span></div>
+</section>
+
+<!-- SLIDE 5: WORKFLOW MAHASISWA -->
+<section class="slide">
+<div class="tag tag-cyan">Workflow Mahasiswa</div>
+<h2>Alur Kerja <span style="color:#22d3ee">Mahasiswa</span></h2>
+<div class="grid4">
+<div class="card" style="text-align:center"><div class="emoji">🔑</div><h3>Join Room</h3><p style="font-size:.8rem">Masuk kelas via Room Code dari dosen atau buat Room pribadi</p></div>
+<div class="card" style="text-align:center"><div class="emoji">🖥️</div><h3>Assembly Lab</h3><p style="font-size:.8rem">Rakit PC 3D: pasang CPU, RAM, GPU, Storage ke motherboard</p></div>
+<div class="card" style="text-align:center"><div class="emoji">🎮</div><h3>Quiz Map</h3><p style="font-size:.8rem">Kuis interaktif dengan peta motherboard 2D, level progression</p></div>
+<div class="card" style="text-align:center"><div class="emoji">🔍</div><h3>Detective</h3><p style="font-size:.8rem">Identifikasi komponen dari clue — latih pengenalan hardware</p></div>
+</div>
+<div class="grid3" style="margin-top:12px">
+<div class="card" style="text-align:center"><div class="emoji">🛒</div><h3>Hardware Shop</h3><p style="font-size:.8rem">Belanja komponen pakai ARKON Coins yang dikumpulkan dari Quiz</p></div>
+<div class="card" style="text-align:center"><div class="emoji">🏆</div><h3>Tournament</h3><p style="font-size:.8rem">Duel 1v1 quiz real-time, single elimination bracket</p></div>
+<div class="card" style="text-align:center"><div class="emoji">💬</div><h3>Study Group</h3><p style="font-size:.8rem">Kolaborasi catatan real-time + chat + typing indicators</p></div>
+</div>
+<div class="footer"><span>ARKON v2.0</span><span>Slide 5</span></div>
+</section>
+
+<!-- SLIDE 6: FITUR UNGGULAN -->
+<section class="slide">
+<div class="tag tag-amber">Fitur Unggulan</div>
+<h2>Inovasi <span class="gold">Diferensiator</span></h2>
+<div class="grid2">
+<div class="card">
+<h3>🧠 IRT Rasch Model 1-PL</h3>
+<p style="font-size:.85rem">Mengukur kemampuan laten mahasiswa (θ) — bukan sekedar persentase skor. Soal adaptif dipilih berdasarkan kesulitan (b) yang mendekati θ mahasiswa. Dosen melihat distribusi θ real-time di dashboard.</p>
+</div>
+<div class="card">
+<h3>🤖 Gemini AI Adaptive</h3>
+<p style="font-size:.85rem">AI memberikan hint adaptif saat quiz berdasarkan θ dan jumlah salah. Dosen mendapat AI-generated analytics summary dengan rekomendasi pengajaran otomatis.</p>
+</div>
+<div class="card">
+<h3>🔬 3D Assembly + WebXR AR</h3>
+<p style="font-size:.85rem">Model GLB high-fidelity untuk merakit PC virtual. Buka di smartphone → mode AR otomatis aktif. Menggantikan lab fisik senilai ratusan juta rupiah.</p>
+</div>
+<div class="card">
+<h3>⚡ CPU Visual Simulator</h3>
+<p style="font-size:.85rem">Tulis kode Assembly (LOAD, STORE, ADD, JUMP, HALT) dan lihat data mengalir real-time melalui pipeline CPU: Fetch → Decode → Execute secara visual.</p>
+</div>
+</div>
+<div class="footer"><span>ARKON v2.0</span><span>Slide 6</span></div>
+</section>
+
+<!-- SLIDE 7: KEAMANAN & KUALITAS -->
+<section class="slide">
+<div class="tag tag-red">Security & Quality</div>
+<h2>Keamanan & <span class="red">Standar Industri</span></h2>
+<div class="grid2">
+<div class="col">
+<h3 style="margin-bottom:16px">🛡️ Security Measures</h3>
+<ul>
+<li>JWT Authentication + Refresh Token Rotation</li>
+<li>Socket.io JWT Middleware (no anonymous WS)</li>
+<li>Helmet CSP + Rate Limiting + bcrypt hashing</li>
+<li>SQL Injection prevention (field whitelisting)</li>
+<li>XSS sanitization (email templates & AI output)</li>
+<li>Path traversal prevention (crypto random filenames)</li>
+<li>RBAC: role-based access (dosen/mahasiswa)</li>
+</ul>
+</div>
+<div class="col">
+<h3 style="margin-bottom:16px">✅ Code Quality</h3>
+<ul>
+<li>Modular architecture (15+ route modules)</li>
+<li>Service layer (IRT, N-Gain, Socket, AI)</li>
+<li>Input validation (centralized validators)</li>
+<li>Error boundaries (graceful UI fallback)</li>
+<li>PWA + Offline fallback</li>
+<li>WCAG 2.1 accessibility (skip-nav, focus ring)</li>
+<li>Code splitting + lazy loading</li>
+</ul>
+</div>
+</div>
+<div class="footer"><span>ARKON v2.0</span><span>Slide 7</span></div>
+</section>
+
+<!-- SLIDE 8: SDGs -->
+<section class="slide">
+<div class="tag tag-green">Sustainable Development Goals</div>
+<h2>Kontribusi Terhadap <span class="green">SDGs</span></h2>
+<div class="grid3">
+<div class="card" style="border-left:4px solid #C5192D">
+<div style="font-size:2.5rem;font-weight:900;color:#C5192D">4</div>
+<h3>Quality Education</h3>
+<p style="font-size:.85rem">Menghilangkan hambatan finansial untuk lab hardware mahal. Simulasi 3D + AR dapat diakses dari browser apapun — mendemokratisasi akses pendidikan.</p>
+</div>
+<div class="card" style="border-left:4px solid #F36D25">
+<div style="font-size:2.5rem;font-weight:900;color:#F36D25">9</div>
+<h3>Industry & Innovation</h3>
+<p style="font-size:.85rem">Mendorong inovasi teknologi AI + WebXR + IRT di sektor pendidikan vokasi untuk mencetak talenta digital yang kompeten.</p>
+</div>
+<div class="card" style="border-left:4px solid #DD1367">
+<div style="font-size:2.5rem;font-weight:900;color:#DD1367">10</div>
+<h3>Reduced Inequalities</h3>
+<p style="font-size:.85rem">Menurunkan biaya pembelajaran praktikum hingga 90%. Universitas daerah mendapat akses setara dengan kampus metropolitan.</p>
+</div>
+</div>
+<div class="footer"><span>ARKON v2.0</span><span>Slide 8</span></div>
+</section>
+
+<!-- SLIDE 9: PENUTUP -->
+<section class="slide" style="justify-content:center;align-items:center;text-align:center;background:linear-gradient(135deg,#1e1b4b 0%,#080C1A 100%)">
+<div class="tag tag-purple">Penutup</div>
+<h1>Terima <span class="accent">Kasih</span></h1>
+<p style="font-size:1.2rem;margin:0 auto 30px">ARKON — Membuat pembelajaran Arsitektur Komputer<br>lebih <strong class="accent">Interaktif</strong>, <strong class="green">Adaptif</strong>, dan <strong class="gold">Terjangkau</strong></p>
+<div class="grid3" style="max-width:600px;margin:0 auto">
+<div class="card" style="text-align:center;padding:16px"><div class="stat-sm accent">15+</div><p style="font-size:.75rem;margin-top:4px">Fitur Interaktif</p></div>
+<div class="card" style="text-align:center;padding:16px"><div class="stat-sm green">3</div><p style="font-size:.75rem;margin-top:4px">SDGs Didukung</p></div>
+<div class="card" style="text-align:center;padding:16px"><div class="stat-sm gold">90%</div><p style="font-size:.75rem;margin-top:4px">Penghematan Biaya</p></div>
+</div>
+<p style="margin-top:40px;font-size:.9rem;color:rgba(255,255,255,.4)">LIDM 2027 — Kelompok 10<br>Lomba Inovasi Digital Mahasiswa — Kemendikbudristek RI</p>
+<div class="footer"><span>© 2027 ARKON Team</span><span>Slide 9</span></div>
+</section>
+
+</div>
+
+<div class="nav">
+<button onclick="prev()">←</button>
+<button onclick="next()">→</button>
+</div>
+<div class="counter" id="counter">1 / 9</div>
+
+<script>
+let current=0;const total=9;
+function go(n){current=Math.max(0,Math.min(total-1,n));document.getElementById('deck').style.transform=`translateX(-${current*100}vw)`;document.getElementById('counter').textContent=`${current+1} / ${total}`}
+function next(){go(current+1)}function prev(){go(current-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')prev()});
+</script>
+</body>
+</html>

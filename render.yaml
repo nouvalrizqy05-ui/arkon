@@ -1,0 +1,79 @@
+services:
+  # ─── Backend API ───────────────────────────────────────
+  - type: web
+    name: arkon-backend
+    env: node
+    region: singapore
+    plan: starter
+    buildCommand: cd arch-ai-backend && npm install
+    startCommand: cd arch-ai-backend && node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: JWT_SECRET
+        sync: false
+      - key: REFRESH_SECRET
+        sync: false
+      - key: DB_URL
+        fromDatabase:
+          name: arkon-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: arkon-redis
+          type: redis
+          property: connectionString
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+
+  # ─── Frontend ──────────────────────────────────────────
+  - type: web
+    name: arkon-frontend
+    env: static
+    region: singapore
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: arkon-backend
+          type: web
+          property: url
+
+databases:
+  - name: arkon-postgres
+    databaseName: arkon_production
+    plan: starter
+    region: singapore
+
+  - name: arkon-redis
+    type: redis
+    plan: starter
+    region: singapore

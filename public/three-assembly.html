@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Modular Assembly</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { overflow: hidden; background: #111827; font-family: 'Segoe UI', sans-serif; }
+    canvas { display: block; }
+
+    #loader {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; background: #111827;
+      color: white; transition: opacity 0.5s; z-index: 10; pointer-events: none;
+    }
+    .spinner {
+      width: 44px; height: 44px; border: 4px solid rgba(99,102,241,0.2);
+      border-top-color: #6366f1; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hidden { opacity: 0; }
+
+    #debugBox {
+      position: absolute; bottom: 16px; left: 16px; background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 8px 12px;
+      font-size: 11px; font-weight: bold; pointer-events: none; border-radius: 8px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Toggle Button */
+    #toggleSidebar {
+      position: absolute; top: 16px; right: 16px; z-index: 30; width: 40px; height: 40px;
+      background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px; color: #a5b4fc; font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px); transition: all 0.2s;
+    }
+    #toggleSidebar:hover { background: rgba(99,102,241,0.3); color: #fff; }
+
+    /* Sidebar */
+    #sidebar {
+      position: absolute; top: 0; right: 0; width: 280px; height: 100%;
+      background: rgba(10,15,30,0.92); border-left: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px); z-index: 25; overflow-y: auto;
+      transform: translateX(100%); transition: transform 0.3s ease;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+    #sidebar.open { transform: translateX(0); }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+    .sb-header { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .sb-title { font-size: 12px; font-weight: 800; color: #a5b4fc; text-transform: uppercase; letter-spacing: 2px; }
+    .sb-subtitle { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+
+    .comp-btn {
+      width: 100%; padding: 10px 16px; background: transparent; border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.5);
+      font-size: 12px; font-weight: 600; cursor: pointer; text-align: left;
+      display: flex; align-items: center; gap: 8px; transition: all 0.15s;
+    }
+    .comp-btn:hover { background: rgba(255,255,255,0.04); color: #fff; }
+    .comp-btn.active { background: rgba(99,102,241,0.12); color: #a5b4fc; border-left: 3px solid #6366f1; }
+    .comp-dot { width: 6px; height: 6px; border-radius: 50%; background: #34d399; flex-shrink: 0; }
+
+    .transform-panel { padding: 16px; }
+    .tp-section { margin-bottom: 16px; }
+    .tp-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+
+    .tp-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .tp-axis { width: 16px; font-size: 10px; font-weight: 800; flex-shrink: 0; text-align: center; }
+    .tp-axis.x { color: #f87171; }
+    .tp-axis.y { color: #34d399; }
+    .tp-axis.z { color: #60a5fa; }
+
+    .tp-slider {
+      flex: 1; -webkit-appearance: none; height: 4px; border-radius: 4px;
+      background: rgba(255,255,255,0.08); outline: none;
+    }
+    .tp-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+      background: #6366f1; cursor: pointer; border: 2px solid #818cf8;
+    }
+    .tp-input {
+      width: 52px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px; color: #fff; font-size: 10px; font-weight: 700;
+      padding: 4px 6px; text-align: center; outline: none;
+    }
+    .tp-input:focus { border-color: #6366f1; }
+
+    .tp-btn {
+      width: 100%; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.5);
+      font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+      margin-top: 4px;
+    }
+    .tp-btn:hover { background: rgba(239,68,68,0.15); color: #f87171; border-color: rgba(239,68,68,0.3); }
+    .tp-btn.copy:hover { background: rgba(99,102,241,0.15); color: #a5b4fc; border-color: rgba(99,102,241,0.3); }
+
+    .no-select { padding: 40px 16px; text-align: center; color: rgba(255,255,255,0.2); font-size: 11px; }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="loader">
+    <div class="spinner"></div>
+    <div id="loadingText" style="font-weight:700;color:#818cf8;font-size:14px;">Menyiapkan Meja Perakitan...</div>
+  </div>
+  <div id="debugBox">Siap Menerima Komponen</div>
+  <button id="toggleSidebar" title="Transform Editor">⚙️</button>
+
+  <div id="sidebar">
+    <div class="sb-header">
+      <div class="sb-title">Transform Editor</div>
+      <div class="sb-subtitle">Atur posisi & rotasi komponen</div>
+    </div>
+    <div id="compList"></div>
+    <div id="transformPanel"></div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+
+    const debugBox = document.getElementById('debugBox');
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleSidebar');
+    const compListEl = document.getElementById('compList');
+    const transformPanelEl = document.getElementById('transformPanel');
+
+    function log(msg) { debugBox.innerText = msg; }
+
+    // Sidebar toggle
+    let sidebarOpen = false;
+    toggleBtn.addEventListener('click', () => {
+      sidebarOpen = !sidebarOpen;
+      sidebar.classList.toggle('open', sidebarOpen);
+      toggleBtn.textContent = sidebarOpen ? '✕' : '⚙️';
+      handleResize();
+    });
+
+    // SCENE SETUP
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color('#111827');
+
+    const gridHelper = new THREE.GridHelper(20, 20, 0x4f46e5, 0x1f2937);
+    gridHelper.position.y = -0.5;
+    scene.add(gridHelper);
+
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+    camera.position.set(0, 10, 15);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.target.set(0, 0, 0);
+
+    // LIGHTS
+    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.8);
+    hemiLight.position.set(0, 20, 0);
+    scene.add(hemiLight);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    dirLight.position.set(5, 15, 5);
+    scene.add(dirLight);
+    const backLight = new THREE.DirectionalLight(0x6366f1, 1.5);
+    backLight.position.set(-10, 10, -10);
+    scene.add(backLight);
+
+    // LOADER
+    const loader = new GLTFLoader();
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    loader.setDRACOLoader(dracoLoader);
+
+    const loadedModels = {};
+
+    const MODEL_URLS = {
+      motherboard: '/models/motherboard.glb',
+      cpu: '/models/intel_core_i3-3220_cpu.glb',
+      gpu: '/models/gpu_amd_rx_6700_xt.glb',
+      ram: '/models/ram_g-radient_totally_not_tridentz.glb',
+      storage: '/models/storage_ssd_hdd_m.2.glb',
+      psu: '/models/psu_power_supply_unit.glb',
+      cooling: '/models/lian_li_uni_fan_sl120_rgb_white.glb',
+      case: '/models/computer_case_based_off_of_nzxt_510b.glb'
+    };
+
+    // DEFAULT TRANSFORMS (editable at runtime)
+    const DEFAULT_TRANSFORMS = {
+      motherboard: { size: 10, pos: [0, 0.2, 0], rot: [-Math.PI/2, 0, 0] },
+      cpu:         { size: 1.2, pos: [0.45, -0.3, -1.9], rot: [0, Math.PI/-2, 0] },
+      ram:         { size: 4.4, pos: [2.6, 0.2, -2], rot: [0.10, Math.PI/360, 0] },
+      storage:     { size: 3, pos: [-0.8, -0.4, 0.4], rot: [0, Math.PI/1, 0] },
+      gpu:         { size: 6.5, pos: [-1, 0.8, 1.4], rot: [0, 0, 0] },
+      psu:         { size: 5, pos: [-1.8, 1.5, 5], rot: [Math.PI/-2, Math.PI/2, 0] },
+      cooling:     { size: 2.5, pos: [0.5, 0.2, -1.9], rot: [0, 0, 0] },
+      case:        { size: 13, pos: [2.3, 1.9, 1.2], rot: [Math.PI/2, Math.PI/1, Math.PI/1] }
+    };
+
+    // Live transforms (clone of defaults, mutated by sidebar)
+    const TRANSFORMS = JSON.parse(JSON.stringify(DEFAULT_TRANSFORMS));
+
+    let selectedComponent = null;
+
+    // Hapus penyembunyian loader secara hardcode di awal
+
+    function loadComponent(id) {
+      if (loadedModels[id] || !MODEL_URLS[id]) return;
+      
+      const loaderEl = document.getElementById('loader');
+      const textEl = document.getElementById('loadingText');
+      loaderEl.classList.remove('hidden');
+      textEl.innerText = `Menyiapkan ${id}...`;
+      log(`Memuat ${id}...`);
+
+      loader.load(MODEL_URLS[id], (gltf) => {
+        const model = gltf.scene;
+        const box = new THREE.Box3().setFromObject(model);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+
+        const targetSize = TRANSFORMS[id]?.size || 5;
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = targetSize / maxDim;
+
+        model.scale.set(scale, scale, scale);
+        model.position.sub(center.clone().multiplyScalar(scale));
+
+        const pivot = new THREE.Group();
+        pivot.add(model);
+        const group = new THREE.Group();
+        group.add(pivot);
+
+        group.userData.pivot = pivot;
+        group.userData.model = model;
+        group.userData.baseScale = scale;
+        group.userData.baseSize = targetSize;
+
+        const t = TRANSFORMS[id];
+        let targetY = 0;
+        if (t) {
+          if (t.pos) { group.position.set(t.pos[0], t.pos[1], t.pos[2]); targetY = t.pos[1]; }
+          if (t.rot) pivot.rotation.set(t.rot[0], t.rot[1], t.rot[2]);
+        }
+
+        group.userData.targetY = targetY;
+        const offset = (id === 'case') ? -10 : 10;
+        group.position.y = targetY + offset;
+
+        scene.add(group);
+        loadedModels[id] = group;
+        log(`Perakitan: ${Object.keys(loadedModels).filter(k => loadedModels[k].visible !== false).length} komponen terpasang`);
+        refreshCompList();
+        
+        // Sembunyikan loader jika ini berhasil
+        loaderEl.classList.add('hidden');
+      }, (xhr) => {
+        if(xhr.total > 0) {
+          const pct = Math.round((xhr.loaded / xhr.total) * 100);
+          textEl.innerText = `Mengunduh ${id}: ${pct}%`;
+        } else {
+          // Fallback jika panjang file tidak diketahui
+          const mb = (xhr.loaded / (1024 * 1024)).toFixed(1);
+          textEl.innerText = `Mengunduh ${id}: ${mb} MB`;
+        }
+      }, (error) => {
+        console.error(error);
+        log(`Gagal memuat ${id}`);
+        loaderEl.classList.add('hidden');
+      });
+    }
+
+    // ============================================
+    // SIDEBAR — Component List
+    // ============================================
+    function refreshCompList() {
+      compListEl.innerHTML = '';
+      const visibleIds = Object.keys(loadedModels).filter(id => loadedModels[id].visible !== false);
+      if (visibleIds.length === 0) {
+        compListEl.innerHTML = '<div class="no-select">Belum ada komponen</div>';
+        transformPanelEl.innerHTML = '';
+        return;
+      }
+      visibleIds.forEach(id => {
+        const btn = document.createElement('button');
+        btn.className = `comp-btn ${selectedComponent === id ? 'active' : ''}`;
+        btn.innerHTML = `<span class="comp-dot"></span>${id.charAt(0).toUpperCase() + id.slice(1)}`;
+        btn.onclick = () => { selectedComponent = id; refreshCompList(); renderTransformPanel(id); };
+        compListEl.appendChild(btn);
+      });
+      if (selectedComponent && visibleIds.includes(selectedComponent)) {
+        renderTransformPanel(selectedComponent);
+      } else if (!selectedComponent && visibleIds.length > 0) {
+        // Auto-select nothing, show placeholder
+        transformPanelEl.innerHTML = '<div class="no-select">Pilih komponen untuk edit transform</div>';
+      }
+    }
+
+    // ============================================
+    // SIDEBAR — Transform Panel
+    // ============================================
+    function renderTransformPanel(id) {
+      const group = loadedModels[id];
+      if (!group) return;
+      const t = TRANSFORMS[id];
+      const pivot = group.userData.pivot;
+
+      transformPanelEl.innerHTML = `
+        <div class="transform-panel">
+          <div class="tp-section">
+            <div class="tp-label">📐 Size (Scale)</div>
+            <div class="tp-row">
+              <input type="range" class="tp-slider" id="s_size" min="0.1" max="30" step="0.1" value="${t.size}">
+              <input type="number" class="tp-input" id="n_size" value="${t.size}" step="0.1">
+            </div>
+          </div>
+          <div class="tp-section">
+            <div class="tp-label">📍 Position</div>
+            ${['x','y','z'].map((axis, i) => `
+              <div class="tp-row">
+                <span class="tp-axis ${axis}">${axis.toUpperCase()}</span>
+                <input type="range" class="tp-slider" id="s_pos_${axis}" min="-15" max="15" step="0.05" value="${t.pos[i]}">
+                <input type="number" class="tp-input" id="n_pos_${axis}" value="${t.pos[i]}" step="0.05">
+              </div>
+            `).join('')}
+          </div>
+          <div class="tp-section">
+            <div class="tp-label">🔄 Rotation (rad)</div>
+            ${['x','y','z'].map((axis, i) => `
+              <div class="tp-row">
+                <span class="tp-axis ${axis}">${axis.toUpperCase()}</span>
+                <input type="range" class="tp-slider" id="s_rot_${axis}" min="${-Math.PI}" max="${Math.PI}" step="0.01" value="${t.rot ? t.rot[i] : 0}">
+                <input type="number" class="tp-input" id="n_rot_${axis}" value="${(t.rot ? t.rot[i] : 0).toFixed(2)}" step="0.01">
+              </div>
+            `).join('')}
+          </div>
+          <button class="tp-btn" id="btn_reset">🔄 Reset ke Default</button>
+          <button class="tp-btn copy" id="btn_copy">📋 Copy Config JSON</button>
+        </div>
+      `;
+
+      // SIZE
+      const sSize = document.getElementById('s_size');
+      const nSize = document.getElementById('n_size');
+      const syncSize = (val) => {
+        t.size = parseFloat(val);
+        const newScale = t.size / (group.userData.baseSize / group.userData.baseScale * group.userData.baseScale);
+        // Recalculate scale from original
+        const ratio = t.size / group.userData.baseSize;
+        group.userData.model.scale.set(
+          group.userData.baseScale * ratio,
+          group.userData.baseScale * ratio,
+          group.userData.baseScale * ratio
+        );
+      };
+      sSize.oninput = () => { nSize.value = sSize.value; syncSize(sSize.value); };
+      nSize.onchange = () => { sSize.value = nSize.value; syncSize(nSize.value); };
+
+      // POSITION
+      ['x','y','z'].forEach((axis, i) => {
+        const slider = document.getElementById(`s_pos_${axis}`);
+        const num = document.getElementById(`n_pos_${axis}`);
+        const sync = (val) => {
+          t.pos[i] = parseFloat(val);
+          group.position.set(t.pos[0], t.pos[1], t.pos[2]);
+          group.userData.targetY = t.pos[1]; // Stop animation override
+        };
+        slider.oninput = () => { num.value = slider.value; sync(slider.value); };
+        num.onchange = () => { slider.value = num.value; sync(num.value); };
+      });
+
+      // ROTATION
+      ['x','y','z'].forEach((axis, i) => {
+        if (!t.rot) t.rot = [0, 0, 0];
+        const slider = document.getElementById(`s_rot_${axis}`);
+        const num = document.getElementById(`n_rot_${axis}`);
+        const sync = (val) => {
+          t.rot[i] = parseFloat(val);
+          pivot.rotation.set(t.rot[0], t.rot[1], t.rot[2]);
+        };
+        slider.oninput = () => { num.value = parseFloat(slider.value).toFixed(2); sync(slider.value); };
+        num.onchange = () => { slider.value = num.value; sync(num.value); };
+      });
+
+      // RESET
+      document.getElementById('btn_reset').onclick = () => {
+        const def = DEFAULT_TRANSFORMS[id];
+        TRANSFORMS[id] = JSON.parse(JSON.stringify(def));
+        // Re-apply
+        const tt = TRANSFORMS[id];
+        if (tt.pos) { group.position.set(tt.pos[0], tt.pos[1], tt.pos[2]); group.userData.targetY = tt.pos[1]; }
+        if (tt.rot) pivot.rotation.set(tt.rot[0], tt.rot[1], tt.rot[2]);
+        const ratio = tt.size / group.userData.baseSize;
+        group.userData.model.scale.set(group.userData.baseScale*ratio, group.userData.baseScale*ratio, group.userData.baseScale*ratio);
+        renderTransformPanel(id);
+      };
+
+      // COPY CONFIG
+      document.getElementById('btn_copy').onclick = () => {
+        const allConfig = {};
+        Object.keys(TRANSFORMS).forEach(k => {
+          if (loadedModels[k]) allConfig[k] = TRANSFORMS[k];
+        });
+        navigator.clipboard.writeText(JSON.stringify(allConfig, null, 2));
+        const btn = document.getElementById('btn_copy');
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => { btn.textContent = '📋 Copy Config JSON'; }, 1500);
+      };
+    }
+
+    // ============================================
+    // MESSAGE HANDLER FROM REACT
+    // ============================================
+    window.addEventListener('message', (event) => {
+      if (event.data?.type === 'UPDATE_ASSEMBLY') {
+        const assembledList = event.data.assembled || [];
+        const modelSrcs = event.data.modelSrcs || {};
+
+        assembledList.forEach(id => {
+          // Check if specific model URL changed for this component category
+          if (modelSrcs[id] && MODEL_URLS[id] !== modelSrcs[id]) {
+            // Remove the old model if it exists
+            if (loadedModels[id]) {
+              scene.remove(loadedModels[id]);
+              delete loadedModels[id];
+            }
+            // Update to new model URL
+            MODEL_URLS[id] = modelSrcs[id];
+          }
+
+          if (!loadedModels[id]) {
+            loadComponent(id);
+          } else if (!loadedModels[id].visible) {
+            const t = TRANSFORMS[id];
+            const targetY = t?.pos ? t.pos[1] : 0;
+            const offset = (id === 'case') ? -10 : 10;
+            loadedModels[id].position.y = targetY + offset;
+            loadedModels[id].visible = true;
+          }
+        });
+        Object.keys(loadedModels).forEach(id => {
+          if (!assembledList.includes(id)) loadedModels[id].visible = false;
+        });
+        
+        if (assembledList.length === 0) {
+          log('Meja Perakitan Kosong');
+          document.getElementById('loader').classList.add('hidden');
+        } else {
+          // Cek jika semua sudah ter-load, pastikan loader tertutup
+          const allLoaded = assembledList.every(id => loadedModels[id]);
+          if (allLoaded) {
+             document.getElementById('loader').classList.add('hidden');
+          }
+        }
+        refreshCompList();
+      }
+    });
+
+    // ============================================
+    // RESIZE & ANIMATE
+    // ============================================
+    function handleResize() {
+      const w = sidebarOpen ? window.innerWidth - 280 : window.innerWidth;
+      const h = window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      Object.keys(loadedModels).forEach(id => {
+        const group = loadedModels[id];
+        if (group.visible && group.userData.targetY !== undefined) {
+          const dist = group.userData.targetY - group.position.y;
+          if (Math.abs(dist) > 0.001) group.position.y += dist * 0.1;
+          else group.position.y = group.userData.targetY;
+        }
+      });
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>

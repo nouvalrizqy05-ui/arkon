@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#111827}
+model-viewer{width:100%;height:100%;display:block}
+.ar-btn{
+  position:absolute;bottom:16px;right:16px;
+  background:linear-gradient(135deg,#8b5cf6,#6366f1);
+  color:#fff;border:none;border-radius:12px;
+  padding:10px 20px;font-weight:800;font-size:13px;cursor:pointer;
+  display:flex;align-items:center;gap:8px;
+  box-shadow:0 4px 20px rgba(139,92,246,.5);
+  font-family:'Segoe UI',sans-serif;z-index:50;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.ar-btn:hover{ transform: translateY(-2px); box-shadow:0 8px 28px rgba(139,92,246,.7); }
+.overlay{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;
+  background:#111827;z-index:10;
+  transition:opacity .4s ease;
+  font-family:'Segoe UI',sans-serif;
+}
+.overlay.hidden{opacity:0;pointer-events:none}
+
+/* Loading state */
+.spinner{
+  width:44px;height:44px;
+  border:4px solid rgba(99,102,241,0.2);
+  border-top-color:#6366f1;
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{ to{transform:rotate(360deg)} }
+.loading-text{color:#818cf8;font-weight:700;font-size:14px;}
+
+/* Error state */
+.error-icon{font-size:40px}
+.error-title{color:#f87171;font-weight:800;font-size:15px;text-align:center;}
+.error-sub{color:#6b7280;font-size:12px;text-align:center;max-width:240px;line-height:1.6}
+.retry-btn{
+  margin-top:8px;background:#374151;color:#d1d5db;border:1px solid #4b5563;
+  border-radius:8px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:'Segoe UI',sans-serif;transition:background 0.2s;
+}
+.retry-btn:hover{background:#4b5563;}
+</style>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div class="overlay" id="loader">
+  <div class="spinner"></div>
+  <p class="loading-text">Memuat Model 3D…</p>
+</div>
+
+<!-- Error Overlay -->
+<div class="overlay hidden" id="errorOverlay">
+  <div class="error-icon">⚠️</div>
+  <p class="error-title">Gagal Memuat Model 3D</p>
+  <p class="error-sub">File model tidak ditemukan atau koneksi terputus. Pastikan server berjalan dan file .glb tersedia.</p>
+  <button class="retry-btn" onclick="retryLoad()">🔄 Coba Lagi</button>
+</div>
+
+
+<model-viewer
+  id="viewer"
+  ar
+  ar-modes="webxr scene-viewer quick-look"
+  camera-controls
+  touch-action="pan-y"
+  auto-rotate
+  bounds="tight"
+  shadow-intensity="1"
+  shadow-softness="0.5"
+  exposure="1.1"
+  environment-image="neutral"
+  style="width:100%;height:100%"
+>
+  <button slot="ar-button" class="ar-btn">📱 View in AR</button>
+</model-viewer>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const src = params.get('src');
+  const viewer = document.getElementById('viewer');
+  const loader = document.getElementById('loader');
+  const errorOverlay = document.getElementById('errorOverlay');
+  let loadTimeout;
+
+  function showError() {
+    loader.classList.add('hidden');
+    errorOverlay.classList.remove('hidden');
+  }
+
+  function retryLoad() {
+    errorOverlay.classList.add('hidden');
+    loader.classList.remove('hidden');
+    clearTimeout(loadTimeout);
+    if (src) {
+      // Force reload by briefly clearing and resetting src
+      viewer.removeAttribute('src');
+      setTimeout(() => {
+        viewer.setAttribute('src', src);
+        startTimeout();
+      }, 100);
+    }
+  }
+
+  function startTimeout() {
+    loadTimeout = setTimeout(() => {
+      if (!loader.classList.contains('hidden')) {
+        showError();
+      }
+    }, 15000); // 15 detik timeout
+  }
+
+  if (src) {
+    viewer.setAttribute('src', src);
+    startTimeout();
+
+    window.currentAssembledList = [];
+
+    function applyVisibility(assembledList) {
+      if (!viewer.model) return;
+      
+      try {
+        const symbols = Object.getOwnPropertySymbols(viewer);
+        const sceneSymbol = symbols.find(s => s.description === 'scene' || s.toString().includes('scene'));
+        if (sceneSymbol) {
+          const scene = viewer[sceneSymbol];
+          // scene logic can go here if needed for assembly visibility
+        }
+      } catch (e) {
+        console.error('Visibility error:', e);
+      }
+    }
+
+    viewer.addEventListener('load', () => {
+      clearTimeout(loadTimeout);
+      loader.classList.add('hidden');
+      applyVisibility(window.currentAssembledList);
+    });
+
+    viewer.addEventListener('error', () => {
+      clearTimeout(loadTimeout);
+      showError();
+    });
+
+    // --- ASSEMBLY CHALLENGE LOGIC ---
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'UPDATE_ASSEMBLY') {
+        window.currentAssembledList = event.data.assembled || [];
+        applyVisibility(window.currentAssembledList);
+      }
+    });
+    // --------------------------------
+
+    // --- HOTSPOT & QUIZ LOGIC ---
+    let activeHotspot = null;
+
+    function createHotspot(id, position, normal, text, question, answer) {
+      const button = document.createElement('button');
+      button.className = 'hotspot';
+      button.setAttribute('slot', `hotspot-${id}`);
+      button.setAttribute('data-position', position);
+      button.setAttribute('data-normal', normal);
+      button.setAttribute('data-id', id);
+      
+      const annotation = document.createElement('div');
+      annotation.className = 'annotation';
+      annotation.innerHTML = `
+        <p class="ann-title">${text}</p>
+        <div class="ann-quiz hidden" id="quiz-${id}">
+          <p class="ann-question">${question}</p>
+          <div class="ann-options">
+            <button onclick="checkAnnAnswer('${id}', 'true', '${answer === 'true'}')">✅ Benar</button>
+            <button onclick="checkAnnAnswer('${id}', 'false', '${answer === 'false'}')">❌ Salah</button>
+          </div>
+        </div>
+      `;
+      
+      button.appendChild(annotation);
+      button.onclick = () => {
+        const quiz = document.getElementById(`quiz-${id}`);
+        quiz.classList.toggle('hidden');
+      };
+      
+      viewer.appendChild(button);
+    }
+
+    window.checkAnnAnswer = (id, choice, isCorrect) => {
+      const quiz = document.getElementById(`quiz-${id}`);
+      if (isCorrect === 'true') {
+        quiz.innerHTML = '<p class="ann-correct">✨ Benar! +10 Koin</p>';
+        window.parent.postMessage({ type: 'EARN_COINS', amount: 10, reason: 'AR Hotspot Quiz' }, '*');
+        setTimeout(() => quiz.parentElement.parentElement.remove(), 2000);
+      } else {
+        quiz.innerHTML = '<p class="ann-wrong">❌ Coba lagi!</p>';
+        setTimeout(() => {
+          quiz.innerHTML = `
+            <p class="ann-question">${quiz.getAttribute('data-q')}</p>
+            <div class="ann-options">
+              <button onclick="checkAnnAnswer('${id}', 'true', '${isCorrect === 'true'}')">✅ Benar</button>
+              <button onclick="checkAnnAnswer('${id}', 'false', '${isCorrect === 'false'}')">❌ Salah</button>
+            </div>
+          `;
+        }, 2000);
+      }
+    };
+
+    // Example Hotspots based on component type (mocked logic)
+    viewer.addEventListener('load', () => {
+      const componentName = src.split('/').pop().toLowerCase();
+      if (componentName.includes('cpu')) {
+        createHotspot('pins', '-0.1 0.05 0.1', '0 1 0', 'CPU Pins', 'Pin CPU berfungsi sebagai jalur data?', 'true');
+      } else if (componentName.includes('motherboard')) {
+        createHotspot('slot', '0.2 0.1 -0.1', '0 1 0', 'RAM Slot', 'Slot ini mendukung DDR5?', 'true');
+      }
+    });
+
+  } else {
+    showError();
+  }
+</script>
+
+<style>
+/* Hotspot Styles */
+.hotspot {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background-color: #8b5cf6;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.hotspot:not([data-visible]) {
+  opacity: 0;
+  pointer-events: none;
+}
+.hotspot:hover {
+  transform: scale(1.4);
+}
+.annotation {
+  position: absolute;
+  background-color: #ffffff;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  width: 200px;
+  left: 25px;
+  top: -10px;
+  font-family: sans-serif;
+  pointer-events: auto;
+}
+.ann-title { font-weight: 800; font-size: 13px; color: #111827; margin-bottom: 4px; }
+.ann-quiz { border-top: 1px solid #f3f4f6; margin-top: 8px; padding-top: 8px; }
+.ann-question { font-size: 11px; color: #4b5563; margin-bottom: 8px; }
+.ann-options { display: flex; gap: 8px; }
+.ann-options button { 
+  flex: 1; padding: 6px; font-size: 10px; font-bold: 700; border-radius: 6px; 
+  border: 1px solid #e5e7eb; background: #f9fafb; cursor: pointer;
+}
+.ann-options button:hover { background: #f3f4f6; }
+.ann-correct { color: #10b981; font-weight: 700; font-size: 11px; }
+.ann-wrong { color: #ef4444; font-weight: 700; font-size: 11px; }
+.hidden { display: none; }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+Model Information:
+* title:	AMD Ryzen 5 5600X Processor
+* source:	https://sketchfab.com/3d-models/amd-ryzen-5-5600x-processor-1649601de2014dbeab4f201010a7c366
+* author:	PolyDavid (https://sketchfab.com/PolyDavid)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "AMD Ryzen 5 5600X Processor" (https://sketchfab.com/3d-models/amd-ryzen-5-5600x-processor-1649601de2014dbeab4f201010a7c366) by PolyDavid (https://sketchfab.com/PolyDavid) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

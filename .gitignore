@@ -1,0 +1,59 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment variables (ALL .env files across project)
+.env
+.env.local
+.env.*.local
+arch-ai-backend/.env
+
+# Backend debug/scratch files
+arch-ai-backend/scratch/
+arch-ai-backend/error.log
+arch-ai-backend/test-*.js
+arch-ai-backend/test_*.js
+arch-ai-backend/scratch_*.js
+
+# PDF uploads (tracked in database, not git)
+arch-ai-backend/uploads/
+!arch-ai-backend/uploads/.gitkeep
+
+# Root debug/utility files
+scratch_*.js
+copy-icons.js
+delete-pdfs.js
+compress-models.ps1
+restart-and-diagnose.ps1
+cleanup.ps1
+run-cleanup.js
+run-cleanup.ps1
+
+# User uploads (contains user data, don't commit)
+arch-ai-backend/uploads/
+
+# Large media files
+*.mp4
+*.avi
+*.mov
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

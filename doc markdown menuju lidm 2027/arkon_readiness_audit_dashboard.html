@@ -1,0 +1,189 @@
+
+<style>
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.metric-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px}
+.metric-label{font-size:11px;color:var(--color-text-secondary);margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em}
+.metric-val{font-size:22px;font-weight:500;color:var(--color-text-primary);margin:0}
+.metric-sub{font-size:11px;color:var(--color-text-secondary);margin:2px 0 0}
+.section-header{font-size:13px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin:20px 0 10px;padding-bottom:6px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.audit-row{display:grid;grid-template-columns:220px 1fr 80px 80px;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);padding:7px 0;align-items:center;cursor:pointer}
+.audit-row:hover{background:var(--color-background-secondary);border-radius:4px}
+.audit-row:last-child{border-bottom:none}
+.audit-name{font-size:12px;color:var(--color-text-primary);padding-right:8px}
+.audit-name code{font-size:10px;color:var(--color-text-secondary);font-family:var(--font-mono)}
+.bar-wrap{height:8px;background:var(--color-border-tertiary);border-radius:4px;overflow:hidden;margin:0 8px}
+.bar-fill{height:100%;border-radius:4px;transition:width .5s ease}
+.bar-done{background:#639922}
+.bar-partial{background:#BA7517}
+.bar-zero{background:#E24B4A}
+.status-pill{font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px;text-align:center}
+.pill-done{background:var(--color-background-success);color:var(--color-text-success)}
+.pill-partial{background:var(--color-background-warning);color:var(--color-text-warning)}
+.pill-critical{background:var(--color-background-danger);color:var(--color-text-danger)}
+.pill-zero{background:var(--color-background-danger);color:var(--color-text-danger)}
+.prio-tag{font-size:10px;padding:1px 6px;border-radius:8px;border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary)}
+.filter-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.fbtn{font-size:11px;padding:4px 12px;border-radius:16px;border:0.5px solid var(--color-border-secondary);cursor:pointer;background:transparent;color:var(--color-text-secondary)}
+.fbtn.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.detail-note{font-size:11px;color:var(--color-text-secondary);margin-top:3px;padding-left:4px;border-left:2px solid var(--color-border-secondary)}
+.category-score{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.cat-name{font-size:12px;font-weight:500;min-width:180px}
+.cat-bar{flex:1;height:10px;background:var(--color-border-tertiary);border-radius:5px;overflow:hidden}
+.cat-pct{font-size:12px;font-weight:500;min-width:36px;text-align:right}
+</style>
+
+<h2 class="sr-only">ARKON v2.0 Readiness Audit — Skor kesiapan aktual dari codebase per domain, dibandingkan target production dan LIDM 2027</h2>
+
+<div class="metric-grid">
+  <div class="metric-card">
+    <p class="metric-label">Kesiapan overall</p>
+    <p class="metric-val" style="color:var(--color-text-warning)">61%</p>
+    <p class="metric-sub">dari target production v3.0</p>
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Tasks done</p>
+    <p class="metric-val" style="color:var(--color-text-success)">18</p>
+    <p class="metric-sub">dari 40+ tasks di breakdown</p>
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Critical gaps</p>
+    <p class="metric-val" style="color:var(--color-text-danger)">7</p>
+    <p class="metric-sub">blocker sebelum LIDM</p>
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Secrets exposed</p>
+    <p class="metric-val" style="color:var(--color-text-danger)">4</p>
+    <p class="metric-sub">API key, DB pass, JWT di .env</p>
+  </div>
+</div>
+
+<div class="section-header">Skor per kategori (dari codebase aktual)</div>
+
+<div id="cat-scores"></div>
+
+<div class="section-header" style="margin-top:22px">Audit detail — per task dari dokumen 01–05</div>
+
+<div class="filter-row">
+  <button class="fbtn active" onclick="filter('all')">Semua</button>
+  <button class="fbtn" onclick="filter('done')">Done</button>
+  <button class="fbtn" onclick="filter('partial')">Partial</button>
+  <button class="fbtn" onclick="filter('critical')">Critical gap</button>
+  <button class="fbtn" onclick="filter('zero')">Belum sama sekali</button>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr 80px 80px;gap:0;padding:0 0 6px;border-bottom:0.5px solid var(--color-border-secondary)">
+  <span style="font-size:11px;color:var(--color-text-secondary)">Item</span>
+  <span style="font-size:11px;color:var(--color-text-secondary);padding-left:8px">Progress</span>
+  <span style="font-size:11px;color:var(--color-text-secondary);text-align:center">Status</span>
+  <span style="font-size:11px;color:var(--color-text-secondary);text-align:center">Prioritas</span>
+</div>
+
+<div id="audit-list"></div>
+
+<script>
+const items = [
+  {cat:'Security', name:'Token Revocation (FR-AUTH-006)', code:'SEC-001', pct:85, status:'partial', prio:'critical', note:'Migration 003+006 ada, logout endpoint implementasi ✅. Tapi: tidak ada cron untuk expired token cleanup. ioredis belum di package.json.'},
+  {cat:'Security', name:'Socket.io per-event auth (NFR-SEC)', code:'SEC-003', pct:90, status:'done', prio:'high', note:'verifyRoomMembership() diimplementasi di socket.service.js. JWT verify saat connect. ✅'},
+  {cat:'Security', name:'File upload hardening', code:'SEC-002', pct:55, status:'partial', prio:'high', note:'Multer ada, tapi tidak ada MIME type server-side check, tidak ada virus scanning.'},
+  {cat:'Security', name:'.env secrets exposed', code:'SEC-004', pct:0, status:'critical', prio:'critical', note:'FATAL: .env dan arch-ai-backend/.env TERCOMMIT dalam zip. DB password, JWT secret, Gemini API key, Resend key semuanya plaintext. Harus di-gitignore & rotasi.'},
+  {cat:'Performance', name:'Redis integration (NFR-SCALE-001)', code:'PERF-001', pct:40, status:'critical', prio:'critical', note:'config/redis.js dibuat dengan logic yang baik. Tapi: ioredis & @socket.io/redis-adapter TIDAK ADA di package.json. Kode ada, dependency tidak. Redis tidak bisa jalan.'},
+  {cat:'Performance', name:'3D asset optimization', code:'PERF-002', pct:10, status:'critical', prio:'critical', note:'Model masih referensi file .glb lokal (/models/*.glb). Tidak ada Draco compression, tidak ada CDN. File gaming pc evo.glb 48MB+ masih ada.'},
+  {cat:'Performance', name:'DB index audit (PERF-003)', code:'PERF-003', pct:95, status:'done', prio:'medium', note:'Migration 004_indexes.sql lengkap: 12 index production-grade ditambahkan. ✅'},
+  {cat:'Performance', name:'Bundle analysis (Vite)', code:'PERF-004', pct:80, status:'done', prio:'medium', note:'rollup-plugin-visualizer sudah di vite.config.js. VitePWA juga sudah dikonfigurasi. ✅'},
+  {cat:'Features Core', name:'IRT Adaptive Quiz', code:'F-002', pct:95, status:'done', prio:'done', note:'irt.service.js lengkap, Newton-Raphson MLE, Max Info selection. Unit tests ada dan pass. ✅'},
+  {cat:'Features Core', name:'3D PC Assembly', code:'F-003', pct:75, status:'partial', prio:'high', note:'Logic kompatibilitas dan benchmark ada. Tapi model .glb belum teroptimasi, dan drag-drop tidak optimal di mobile.'},
+  {cat:'Features Core', name:'AR Hardware Lab', code:'F-005', pct:80, status:'done', prio:'done', note:'ARHardwareLab.tsx dan ArLab.jsx ada. WebXR/Google Model Viewer. Fallback statis belum eksplisit di semua path. ✅'},
+  {cat:'Features Core', name:'CPU Visual Simulator', code:'F-004', pct:90, status:'done', prio:'done', note:'Svelte bundle di-deploy, simulatorRoutes.js baru (log simulasi), migration 007 untuk CPU logs. ✅'},
+  {cat:'Features Core', name:'Live Quiz real-time', code:'F-006', pct:85, status:'done', prio:'done', note:'Socket.io events lengkap, per-event auth ditambahkan. Integration test belum ada. ✅'},
+  {cat:'Features Core', name:'Gamification system', code:'F-007', pct:90, status:'done', prio:'done', note:'Coin, badge, leaderboard, tournament, detective, boss raid semua ada. gamification.test.js pass. ✅'},
+  {cat:'Features Core', name:'AI Assistant (Gemini)', code:'F-008', pct:80, status:'done', prio:'done', note:'Model rotation, AI_UNAVAILABLE_RESPONSE, heuristic fallback (heuristic.service.js). ai.routes.test.js baru ada. ✅'},
+  {cat:'Features Core', name:'Analytics Dashboard', code:'F-009', pct:70, status:'partial', prio:'high', note:'Heatmap, N-Gain service, StudentInsight ada. PDF report export = 0%. Belum ada aggregasi per-institusi.'},
+  {cat:'Features New', name:'Theta UI → level nama', code:'FEAT-002', pct:60, status:'partial', prio:'high', note:'ThetaProgressCard.jsx + theta.js dibuat lengkap (Pemula→Master). Tapi QuizGame & QuizLevelMap masih pakai TheoProgressCard lama, bukan ThetaProgressCard baru.'},
+  {cat:'Features New', name:'PDF report export', code:'FEAT-001', pct:0, status:'critical', prio:'critical', note:'Tidak ada implementasi. Tidak ada puppeteer/pdfkit di package.json. Endpoint /api/analytics/report tidak ada. BLOCKER untuk dosen saat pilot.'},
+  {cat:'Features New', name:'Room archive', code:'FEAT-003', pct:95, status:'done', prio:'medium', note:'Migration 005 menambah status kolom. PATCH /:id/archive endpoint ada di rooms.routes.js. ✅'},
+  {cat:'Features New', name:'AI graceful fallback', code:'FEAT-004', pct:90, status:'done', prio:'high', note:'AI_UNAVAILABLE_RESPONSE, heuristic.service.js sebagai fallback, model rotation. ✅'},
+  {cat:'Scalability', name:'Multi-tenant foundation', code:'TENANT-001', pct:40, status:'partial', prio:'critical', note:'Migration 005 menambah institutions table & institution_id FK di users/rooms. Tapi: tidak ada middleware tenant isolation, tidak ada query filtering per institution_id. Hanya schema, belum logic.'},
+  {cat:'Scalability', name:'Admin panel institusi', code:'TENANT-002', pct:0, status:'zero', prio:'high', note:'Belum ada. Tidak ada route, tidak ada UI untuk admin_institusi role.'},
+  {cat:'Scalability', name:'CI/CD pipeline', code:'DEPLOY-002', pct:85, status:'done', prio:'high', note:'.github/workflows/ci-cd.yml ada: test backend, lint frontend, build check. Redis & PostgreSQL service di CI. ✅'},
+  {cat:'Scalability', name:'Production infra', code:'DEPLOY-001', pct:45, status:'partial', prio:'critical', note:'Docker compose ada, Dockerfile ada, nginx.conf ada. Tapi: Redis tidak di docker-compose (ioredis tidak diinstall). Tidak ada cloud deployment aktual. Belum verified berjalan.'},
+  {cat:'Content', name:'Quiz bank ≥200 soal', code:'CONTENT-001', pct:30, status:'critical', prio:'critical', note:'AKTUAL: 145 soal, 14 level. Level 11-14 hanya 5 soal masing-masing (jauh dari ≥30/topik yang valid secara IRT). Level 6-10 hanya 10 soal. IRT validity saat ini diragukan untuk topik lanjut.'},
+  {cat:'Content', name:'Content authoring tool', code:'CONTENT-002', pct:0, status:'zero', prio:'high', note:'Tidak ada UI authoring untuk dosen tambah soal. Dosen tidak bisa tambah soal tanpa developer.'},
+  {cat:'Adaptive', name:'Prerequisite graph (ALP)', code:'ALP-001', pct:60, status:'partial', prio:'high', note:'prerequisite-graph.js lengkap dengan dependency AOK. AI endpoint /learning-path ada di ai.routes.js. Tapi: tidak ada frontend UI untuk menampilkan learning path ke mahasiswa.'},
+  {cat:'Adaptive', name:'Personalized insight', code:'ALP-002', pct:50, status:'partial', prio:'medium', note:'heuristic.service.js generateLearningPath() ada sebagai fallback. AI endpoint ada. Frontend panel belum diimplementasi.'},
+  {cat:'Testing', name:'Backend unit tests', code:'TEST-core', pct:80, status:'done', prio:'done', note:'irt.service.test.js, ngain.service.test.js, auth.test.js, gamification.test.js, ai.routes.test.js (baru). ✅'},
+  {cat:'Testing', name:'Integration tests (supertest)', code:'TEST-001', pct:30, status:'partial', prio:'high', note:'supertest ada di devDependencies. ai.routes.test.js pakai supertest. Tapi live-quiz, rooms, IRT endpoints belum punya integration test.'},
+  {cat:'Testing', name:'E2E tests (Playwright)', code:'TEST-003', pct:0, status:'zero', prio:'medium', note:'Tidak ada Playwright atau Cypress. Tidak ada file e2e. Frontend hanya 1 test: Login.test.jsx.'},
+  {cat:'Testing', name:'Load testing (k6)', code:'TEST-002', pct:0, status:'zero', prio:'critical', note:'Tidak ada k6 scripts. Tidak ada evidence sistem bisa handle 50 concurrent users. Wajib sebelum demo LIDM.'},
+  {cat:'UX', name:'Onboarding tour', code:'UX-onboard', pct:85, status:'done', prio:'done', note:'OnboardingTour.jsx ada dan terintegrasi. ✅'},
+  {cat:'UX', name:'Dark/light mode', code:'UX-theme', pct:85, status:'done', prio:'done', note:'ThemeContext.jsx ada, toggle berjalan. ✅'},
+  {cat:'UX', name:'Mobile responsiveness', code:'MOBILE-002', pct:30, status:'critical', prio:'high', note:'WorkspaceSidebar hidden di mobile (hidden md:flex). Tidak ada bottom nav. 3D drag-drop tidak touch-friendly. PWA manifest ada tapi mobile layout belum dioptimasi.'},
+  {cat:'UX', name:'PWA service worker', code:'MOBILE-001', pct:65, status:'partial', prio:'medium', note:'sw.js ada, VitePWA dikonfigurasi di vite.config.js, manifest.json ada. Tapi: offline quiz sync belum ada. Push notification belum diimplementasi.'},
+  {cat:'Pilot', name:'Data empiris N-Gain', code:'PILOT', pct:5, status:'critical', prio:'critical', note:'SANGAT KRITIS: research-data.js berisi data SIMULASI (bukan nyata). 23 mahasiswa dengan data pre/post yang jelas dibuat-buat (semua naik signifikan). Tidak ada data dari PT nyata. Ini akan terdeteksi juri LIDM.'},
+  {cat:'Pilot', name:'LMS Integration (Moodle)', code:'LMS', pct:0, status:'zero', prio:'medium', note:'Tidak ada implementasi OAuth2/SSO Moodle. Tidak ada grade sync. Bukan blocker tapi differentiator.'},
+  {cat:'Docs', name:'API documentation', code:'DOC-api', pct:15, status:'partial', prio:'medium', note:'PHASE-2-COMPLETION.md menyebut "Next Steps" termasuk API docs tapi belum diimplementasi. Tidak ada Swagger/Postman collection.'},
+  {cat:'Docs', name:'Technical report LIDM', code:'DOC-001', pct:0, status:'zero', prio:'critical', note:'Belum ada. Dokumen yang ada (PRD, SSD, dll) adalah perencanaan internal, bukan format laporan ITDP LIDM.'},
+];
+
+const catData = [
+  {name:'Security & Auth', score:55, color:'#E24B4A'},
+  {name:'Core features', score:84, color:'#639922'},
+  {name:'Performance & Scaling', score:36, color:'#E24B4A'},
+  {name:'New features (Phase 1)', score:56, color:'#BA7517'},
+  {name:'Content & Quiz bank', score:15, color:'#E24B4A'},
+  {name:'Testing & QA', score:28, color:'#E24B4A'},
+  {name:'UX & Mobile', score:61, color:'#BA7517'},
+  {name:'Pilot & Evidence', score:3, color:'#E24B4A'},
+  {name:'Documentation', score:5, color:'#E24B4A'},
+  {name:'Adaptive learning', score:55, color:'#BA7517'},
+];
+
+const catEl = document.getElementById('cat-scores');
+catData.forEach(c => {
+  const row = document.createElement('div');
+  row.className = 'category-score';
+  const col = c.score >= 70 ? '#639922' : c.score >= 40 ? '#BA7517' : '#E24B4A';
+  row.innerHTML = `<span class="cat-name">${c.name}</span>
+    <div class="cat-bar"><div style="width:${c.score}%;height:100%;background:${col};border-radius:5px;transition:width .6s"></div></div>
+    <span class="cat-pct" style="color:${col}">${c.score}%</span>`;
+  catEl.appendChild(row);
+});
+
+let currentFilter = 'all';
+
+function filter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.fbtn').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase().includes(f) || (f==='all' && b.textContent==='Semua'));
+  });
+  renderList();
+}
+
+function renderList() {
+  const el = document.getElementById('audit-list');
+  const filtered = currentFilter === 'all' ? items : items.filter(i => {
+    if (currentFilter === 'done') return i.status === 'done';
+    if (currentFilter === 'partial') return i.status === 'partial';
+    if (currentFilter === 'critical') return i.status === 'critical';
+    if (currentFilter === 'zero') return i.status === 'zero';
+    return true;
+  });
+  
+  el.innerHTML = filtered.map(item => {
+    const pillClass = item.status === 'done' ? 'pill-done' : item.status === 'partial' ? 'pill-partial' : item.status === 'critical' ? 'pill-critical' : 'pill-zero';
+    const pillText = item.status === 'done' ? 'Done' : item.status === 'partial' ? 'Partial' : item.status === 'critical' ? 'Critical' : 'Belum';
+    const barClass = item.pct >= 80 ? 'bar-done' : item.pct >= 30 ? 'bar-partial' : 'bar-zero';
+    const prioColor = item.prio === 'critical' ? 'var(--color-text-danger)' : item.prio === 'high' ? 'var(--color-text-warning)' : 'var(--color-text-secondary)';
+    return `<div class="audit-row" onclick="sendPrompt('Jelaskan detail task ${item.code} di ARKON: ${item.name}')">
+      <div class="audit-name">[${item.cat}] ${item.name}<br><code>${item.code}</code>
+        <div class="detail-note">${item.note}</div>
+      </div>
+      <div class="bar-wrap"><div class="bar-fill ${barClass}" style="width:${item.pct}%"></div></div>
+      <div style="text-align:center"><span class="status-pill ${pillClass}">${pillText}</span></div>
+      <div style="text-align:center"><span class="prio-tag" style="color:${prioColor};border-color:${prioColor}">${item.prio}</span></div>
+    </div>`;
+  }).join('');
+}
+
+renderList();
+</script>

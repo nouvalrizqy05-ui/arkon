@@ -1,0 +1,232 @@
+
+<style>
+.ph-header{font-size:13px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;padding:0 0 6px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:10px}
+.sprint-row{display:grid;grid-template-columns:180px 1fr;gap:0;margin-bottom:4px;align-items:start}
+.sprint-label{font-size:12px;color:var(--color-text-secondary);padding:6px 8px 6px 0;line-height:1.4}
+.tasks-bar{display:flex;flex-wrap:wrap;gap:4px;padding:4px 0}
+.task{font-size:11px;padding:3px 8px;border-radius:4px;cursor:pointer;border:0.5px solid transparent;transition:opacity .15s}
+.task:hover{opacity:.75}
+.task.critical{background:var(--color-background-danger);color:var(--color-text-danger);border-color:var(--color-border-danger)}
+.task.high{background:var(--color-background-warning);color:var(--color-text-warning);border-color:var(--color-border-warning)}
+.task.medium{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.task.done{background:var(--color-background-success);color:var(--color-text-success);border-color:var(--color-border-success)}
+.phase-block{margin-bottom:28px}
+.milestone{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);margin-top:8px;font-size:12px;color:var(--color-text-secondary)}
+.milestone i{font-size:15px;flex-shrink:0}
+.ms-critical{border-color:var(--color-border-danger);color:var(--color-text-danger)}
+.ms-done{border-color:var(--color-border-success);color:var(--color-text-success)}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.filter-btn{font-size:12px;padding:4px 12px;border-radius:20px;border:0.5px solid var(--color-border-secondary);cursor:pointer;background:transparent;color:var(--color-text-secondary);transition:all .15s}
+.filter-btn.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary)}
+.leg-dot{width:10px;height:10px;border-radius:2px}
+.leg-critical{background:var(--color-background-danger);border:0.5px solid var(--color-border-danger)}
+.leg-high{background:var(--color-background-warning);border:0.5px solid var(--color-border-warning)}
+.leg-medium{background:var(--color-background-info);border:0.5px solid var(--color-border-info)}
+.leg-done{background:var(--color-background-success);border:0.5px solid var(--color-border-success)}
+.phase-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.phase-badge{font-size:11px;font-weight:500;padding:2px 10px;border-radius:10px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.month-range{font-size:12px;color:var(--color-text-secondary)}
+</style>
+
+<h2 class="sr-only">ARKON v3.0 Development Roadmap — 12 Bulan menuju LIDM 2027</h2>
+
+<div class="legend">
+  <span class="leg-item"><span class="leg-dot leg-critical"></span>Critical</span>
+  <span class="leg-item"><span class="leg-dot leg-high"></span>High</span>
+  <span class="leg-item"><span class="leg-dot leg-medium"></span>Medium</span>
+  <span class="leg-item"><span class="leg-dot leg-done"></span>Sudah ada</span>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterTasks('all')">Semua</button>
+  <button class="filter-btn" onclick="filterTasks('critical')">Critical only</button>
+  <button class="filter-btn" onclick="filterTasks('high')">High+</button>
+</div>
+
+<div id="roadmap"></div>
+
+<script>
+const phases = [
+  {
+    label: "Phase 1 — Production Hardening",
+    months: "Jun – Agt 2026",
+    sprints: [
+      {
+        label: "Sprint 1.1\nSecurity",
+        tasks: [
+          {id:"SEC-001", text:"Token revocation", prio:"critical", prompt:"Jelaskan kenapa token revocation di ARKON itu critical"},
+          {id:"SEC-002", text:"File upload hardening", prio:"high", prompt:"Apa risiko keamanan upload file di ARKON?"},
+          {id:"SEC-003", text:"Socket.io auth per-event", prio:"high", prompt:"Bagaimana cara implementasi socket auth per event?"},
+          {id:"SEC-004", text:"Secrets audit", prio:"high", prompt:"Apa saja best practice manajemen secrets untuk production?"},
+        ]
+      },
+      {
+        label: "Sprint 1.2\nPerformance",
+        tasks: [
+          {id:"PERF-001", text:"Redis integration", prio:"critical", prompt:"Kenapa Redis sangat penting untuk ARKON production?"},
+          {id:"PERF-002", text:"3D asset optimization", prio:"high", prompt:"Bagaimana cara compress model 3D GLB dengan Draco?"},
+          {id:"PERF-003", text:"DB index audit", prio:"medium", prompt:"Index database mana yang paling kritis untuk ARKON?"},
+          {id:"PERF-004", text:"Bundle analysis", prio:"medium", prompt:"Cara audit bundle size React dengan vite-bundle-visualizer"},
+        ]
+      },
+      {
+        label: "Sprint 1.3\nCore Gaps",
+        tasks: [
+          {id:"FEAT-001", text:"PDF report export", prio:"critical", prompt:"Bagaimana implementasi PDF report N-Gain di ARKON?"},
+          {id:"FEAT-002", text:"Theta UI (level nama)", prio:"high", prompt:"Bagaimana mapping theta IRT ke nama level yang user-friendly?"},
+          {id:"FEAT-003", text:"Room archive", prio:"medium", prompt:"Apa kegunaan fitur room archive untuk dosen?"},
+          {id:"FEAT-004", text:"AI graceful fallback", prio:"high", prompt:"Bagaimana cara handle Gemini API down tanpa crash?"},
+        ]
+      }
+    ],
+    milestones: [
+      {text:"Platform aman dan stabil untuk deployment", critical:true},
+    ]
+  },
+  {
+    label: "Phase 2 — Pilot & Konten",
+    months: "Sep – Nov 2026",
+    sprints: [
+      {
+        label: "Sprint 2.1\nMulti-tenant",
+        tasks: [
+          {id:"TENANT-001", text:"Multi-tenant (institution_id)", prio:"critical", prompt:"Bagaimana cara implementasi multi-tenant row-level di PostgreSQL?"},
+          {id:"TENANT-002", text:"Admin panel institusi", prio:"high", prompt:"Fitur apa yang dibutuhkan admin institusi di ARKON?"},
+          {id:"ONBOARD-001", text:"Wizard onboarding dosen", prio:"high", prompt:"Bagaimana onboarding dosen baru yang efektif di ARKON?"},
+        ]
+      },
+      {
+        label: "Sprint 2.2\nKonten",
+        tasks: [
+          {id:"CONTENT-001", text:"Quiz bank → 200+ soal", prio:"critical", prompt:"Topik AOK apa saja yang perlu diprioritaskan untuk quiz bank?"},
+          {id:"CONTENT-002", text:"Content authoring tool", prio:"high", prompt:"Fitur apa yang harus ada di quiz authoring tool untuk dosen?"},
+        ]
+      },
+      {
+        label: "Sprint 2.3\nDeploy & Pilot",
+        tasks: [
+          {id:"DEPLOY-001", text:"Production infra setup", prio:"critical", prompt:"Rekomendasi cloud provider mana untuk ARKON production?"},
+          {id:"DEPLOY-002", text:"CI/CD pipeline", prio:"high", prompt:"Bagaimana setup GitHub Actions CI/CD untuk ARKON?"},
+          {id:"PILOT-001", text:"PT pilot onboarding", prio:"critical", prompt:"Bagaimana strategi mendekati PT untuk pilot ARKON?"},
+        ]
+      }
+    ],
+    milestones: [
+      {text:"≥1 PT pilot aktif, data N-Gain mulai dikumpulkan", critical:true},
+      {text:"Quiz bank valid (≥200 soal, ≥30 per topik)", critical:true},
+    ]
+  },
+  {
+    label: "Phase 3 — LIDM Differentiators",
+    months: "Des 2026 – Feb 2027",
+    sprints: [
+      {
+        label: "Sprint 3.1\nAdaptive LP",
+        tasks: [
+          {id:"ALP-001", text:"Learning path engine", prio:"high", prompt:"Bagaimana algoritma adaptive learning path bekerja?"},
+          {id:"ALP-002", text:"Personalized insight", prio:"medium", prompt:"Contoh insight personalisasi yang bermakna untuk mahasiswa?"},
+        ]
+      },
+      {
+        label: "Sprint 3.2\nLMS & Mobile",
+        tasks: [
+          {id:"LMS-001", text:"Moodle OAuth2 SSO", prio:"medium", prompt:"Bagaimana cara integrasi SSO Moodle di ARKON?"},
+          {id:"LMS-002", text:"Grade sync Moodle", prio:"medium", prompt:"Endpoint Moodle REST API mana yang digunakan untuk grade sync?"},
+          {id:"MOBILE-001", text:"PWA service worker", prio:"medium", prompt:"Bagaimana cara setup PWA offline-first di Vite React?"},
+          {id:"MOBILE-002", text:"Mobile UI audit & fix", prio:"high", prompt:"Komponen ARKON mana yang paling butuh perbaikan di mobile?"},
+        ]
+      }
+    ],
+    milestones: [
+      {text:"Fitur unik yang tidak ada di platform lain tersedia", critical:false},
+    ]
+  },
+  {
+    label: "Phase 4 — Polish & LIDM Submit",
+    months: "Mar – Mei 2027",
+    sprints: [
+      {
+        label: "Sprint 4.1\nPolish",
+        tasks: [
+          {id:"UX-001", text:"Design system audit", prio:"high", prompt:"Accessibility gaps apa yang paling kritis di ARKON?"},
+          {id:"UX-002", text:"Onboarding improvements", prio:"high", prompt:"Cara membuat onboarding tour yang lebih efektif?"},
+          {id:"UX-003", text:"Loading performance", prio:"medium", prompt:"Optimasi apa yang paling efektif untuk perceived performance?"},
+        ]
+      },
+      {
+        label: "Sprint 4.2\nTesting",
+        tasks: [
+          {id:"TEST-001", text:"Integration test suite", prio:"high", prompt:"Endpoint mana yang paling kritis untuk integration test di ARKON?"},
+          {id:"TEST-002", text:"Load testing (k6)", prio:"critical", prompt:"Bagaimana setup load test k6 untuk live quiz Socket.io?"},
+          {id:"TEST-003", text:"E2E critical paths", prio:"medium", prompt:"Critical path E2E test mana yang paling penting untuk ARKON?"},
+        ]
+      },
+      {
+        label: "Sprint 4.3\nDokumentasi",
+        tasks: [
+          {id:"DOC-001", text:"Technical report (ITDP)", prio:"critical", prompt:"Bagaimana struktur laporan teknis ITDP LIDM yang ideal?"},
+          {id:"DOC-002", text:"Demo video produksi", prio:"critical", prompt:"Script demo video ARKON yang paling efektif untuk juri LIDM?"},
+          {id:"DOC-003", text:"Proposal LIDM submit", prio:"critical", prompt:"Poin apa yang paling perlu ditekankan di proposal LIDM ARKON?"},
+        ]
+      }
+    ],
+    milestones: [
+      {text:"Load test passed: 50 concurrent users tanpa degradasi", critical:true},
+      {text:"N-Gain empiris ≥0.30 terdokumentasi dari pilot", critical:true},
+      {text:"PROPOSAL LIDM 2027 SUBMITTED ✓", critical:true},
+    ]
+  }
+];
+
+let currentFilter = 'all';
+
+function filterTasks(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().includes(f) || (f==='all' && b.textContent==='Semua')));
+  render();
+}
+
+function shouldShow(prio) {
+  if (currentFilter === 'all') return true;
+  if (currentFilter === 'critical') return prio === 'critical';
+  if (currentFilter === 'high') return prio === 'critical' || prio === 'high';
+  return true;
+}
+
+function render() {
+  const el = document.getElementById('roadmap');
+  el.innerHTML = phases.map(ph => {
+    const sprintsHtml = ph.sprints.map(sp => {
+      const visibleTasks = sp.tasks.filter(t => shouldShow(t.prio));
+      if (!visibleTasks.length) return '';
+      return `<div class="sprint-row">
+        <div class="sprint-label">${sp.label.replace('\n','<br>')}</div>
+        <div class="tasks-bar">${visibleTasks.map(t =>
+          `<span class="task ${t.prio}" onclick="sendPrompt('${t.prompt}')" title="${t.id}">${t.text}</span>`
+        ).join('')}</div>
+      </div>`;
+    }).join('');
+    if (!sprintsHtml.trim()) return '';
+    const milesHtml = ph.milestones.map(m =>
+      `<div class="milestone ${m.critical?'ms-critical':'ms-done'}">
+        <i class="ti ${m.critical?'ti-flag-2':'ti-circle-check'}" aria-hidden="true"></i>
+        <span>${m.text}</span>
+      </div>`
+    ).join('');
+    return `<div class="phase-block">
+      <div class="phase-meta">
+        <div class="ph-header" style="border:none;margin:0;padding:0">${ph.label}</div>
+        <span class="month-range">— ${ph.months}</span>
+      </div>
+      <div style="border-left:2px solid var(--color-border-secondary);padding-left:12px">
+        ${sprintsHtml}
+        ${milesHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+render();
+</script>

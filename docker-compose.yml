@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: arkon-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres123}
+      POSTGRES_DB: ${DB_NAME:-arkon_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - arkon-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis (Session, Socket.io Adapter, Cache)
+  redis:
+    image: redis:7-alpine
+    container_name: arkon-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - arkon-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API Server (Node.js/Express)
+  backend:
+    build:
+      context: ./arch-ai-backend
+      dockerfile: Dockerfile
+    container_name: arkon-backend
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: ${PORT:-3000}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres123}
+      DB_NAME: ${DB_NAME:-arkon_db}
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
+      REFRESH_SECRET: ${REFRESH_SECRET:-your-refresh-secret-change-in-production}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:3000}
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - arkon-network
+    volumes:
+      - ./arch-ai-backend:/app
+      - /app/node_modules
+    command: npm run dev
+
+  # Frontend (Vite + React)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_API_URL: http://localhost:3000
+    container_name: arkon-frontend
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - arkon-network
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - /app/node_modules
+    command: npm run dev
+
+networks:
+  arkon-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local

@@ -1,0 +1,11 @@
+.env
+arch-ai-backend\.env
+arch-ai-backend\.env.example
+node_modules\
+arch-ai-backend\node_modules\
+arch-ai-backend\uploads\
+arch-ai-backend\error.log
+student-productivity-v2\js\supabase.js
+student-productivity-v2\supabase\.temp\
+.git\
+.gemini\
