@@ -20,7 +20,9 @@ try {
 }
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
-const CACHE_TTL = parseInt(process.env.REDIS_CACHE_TTL) || 30; // seconds
+const CACHE_TTL = parseInt(process.env.REDIS_CACHE_TTL) || 30;
+
+const isAzureRedis = REDIS_URL.includes('redis.cache.windows.net');
 
 let redisClient = null;
 let redisPub = null;
@@ -116,7 +118,7 @@ async function cacheGet(key, fetchFn, ttl = CACHE_TTL) {
 
     const fresh = await fetchFn();
     // Don't await cache set — fire and forget
-    redisClient.setex(key, ttl, JSON.stringify(fresh)).catch(() => {});
+    redisClient.setex(key, ttl, JSON.stringify(fresh)).catch(() => { });
     return fresh;
   } catch {
     // Redis error — fallback to direct fetch

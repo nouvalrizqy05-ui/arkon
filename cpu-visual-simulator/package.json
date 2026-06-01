@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c rollup.config.mjs",
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
     "check": "svelte-check --tsconfig ./tsconfig.json",
