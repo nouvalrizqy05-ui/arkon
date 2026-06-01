@@ -10,6 +10,9 @@
  * with in-memory state (single-instance mode).
  * 
  * Satisfies: NFR-SCALE-001, NFR-SCALE-002
+ * 
+ * Azure Fix: lazyConnect: false agar koneksi langsung dibuat saat startup
+ *            sehingga health check bisa membaca status yang benar.
  */
 
 let Redis;
@@ -48,26 +51,35 @@ function initRedis() {
     const commonOptions = {
       tls: isAzureRedis ? { rejectUnauthorized: false } : undefined,
       retryStrategy(times) {
-        // Capped backoff at 5 seconds, retry forever so the app never crashes when Redis is down
-        const delay = Math.min(times * 500, 5000);
-        if (times % 10 === 1) { // Log every 10 attempts to keep logs clean
-          console.warn(`⚠️ [Redis] Connection failed, retrying in ${delay}ms (attempt ${times})`);
+        // Berhenti retry setelah 5x saat startup agar tidak hang terlalu lama
+        if (times > 5) {
+          console.error('❌ [Redis] Max retries reached, giving up');
+          return null;
         }
+        const delay = Math.min(times * 500, 3000);
+        console.warn(`⚠️ [Redis] Retrying connection in ${delay}ms (attempt ${times})`);
         return delay;
       },
-      maxRetriesPerRequest: null,
-      lazyConnect: true,
+      maxRetriesPerRequest: 3,
+      // FIX: false agar koneksi langsung dibuat saat initRedis() dipanggil
+      // sehingga isRedisAvailable bisa di-set true sebelum health check pertama
+      lazyConnect: false,
       enableReadyCheck: true,
+      connectTimeout: 10000,  // 10 detik timeout koneksi (Azure bisa lambat)
     };
 
     redisClient = new Redis(REDIS_URL, { ...commonOptions, keyPrefix: 'arkon:' });
     redisPub = new Redis(REDIS_URL, commonOptions);
     redisSub = new Redis(REDIS_URL, commonOptions);
 
-    // Event handlers
-    redisClient.on('connect', () => {
-      console.log('✅ [Redis] Connected successfully');
+    // Event handlers — update isRedisAvailable secara real-time
+    redisClient.on('ready', () => {
+      console.log('✅ [Redis] Connected and ready');
       isRedisAvailable = true;
+    });
+
+    redisClient.on('connect', () => {
+      console.log('✅ [Redis] Connection established');
     });
 
     redisClient.on('error', (err) => {
@@ -80,20 +92,18 @@ function initRedis() {
       isRedisAvailable = false;
     });
 
-    redisPub.on('error', () => { /* Suppress unhandled error crash */ });
-    redisSub.on('error', () => { /* Suppress unhandled error crash */ });
-
-    // Connect all instances
-    Promise.all([
-      redisClient.connect(),
-      redisPub.connect(),
-      redisSub.connect()
-    ]).catch(err => {
-      console.error('❌ [Redis] Failed to connect:', err.message);
+    redisClient.on('reconnecting', () => {
+      console.warn('⚠️ [Redis] Reconnecting...');
       isRedisAvailable = false;
     });
 
+    redisPub.on('error', () => { /* Suppress unhandled error crash */ });
+    redisSub.on('error', () => { /* Suppress unhandled error crash */ });
+
+    // Dengan lazyConnect: false, koneksi sudah berjalan di background
+    // Tidak perlu await di sini — event 'ready' akan update isRedisAvailable
     return { client: redisClient, pub: redisPub, sub: redisSub, available: true };
+
   } catch (err) {
     console.error('❌ [Redis] Initialization failed:', err.message);
     return { client: null, pub: null, sub: null, available: false };
