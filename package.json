@@ -14,7 +14,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm run copy:sim && vite",
-    "build": "npm run build:sim && npm run copy:sim && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "build:sim": "npm run build --prefix cpu-visual-simulator",
