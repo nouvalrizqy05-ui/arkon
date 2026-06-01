@@ -75,15 +75,23 @@ app.set('io', io);
 // Graceful fallback: if Redis unavailable, uses in-memory
 // ==========================================
 const redis = initRedis();
-if (redis.available && redis.pub && redis.sub) {
-  try {
-    const { createAdapter } = require('@socket.io/redis-adapter');
-    io.adapter(createAdapter(redis.pub, redis.sub));
-    console.log('✅ [Socket.io] Redis adapter attached — horizontal scaling enabled');
-  } catch (err) {
-    console.warn('⚠️ [Socket.io] Redis adapter not available:', err.message);
-    console.warn('⚠️ [Socket.io] Running in single-instance mode');
-  }
+
+if (redis.pub && redis.sub) {
+  // Hanya pasang adapter JIKA dan KETIKA Redis sudah benar-benar terhubung
+  redis.pub.on('ready', () => {
+    try {
+      const { createAdapter } = require('@socket.io/redis-adapter');
+      io.adapter(createAdapter(redis.pub, redis.sub));
+      console.log('✅ [Socket.io] Redis adapter attached — horizontal scaling enabled');
+    } catch (err) {
+      console.error('❌ [Socket.io] Gagal memasang Redis adapter:', err.message);
+    }
+  });
+
+  // Jika Redis terputus, Socket.io akan otomatis jatuh ke in-memory mode
+  redis.pub.on('error', (err) => {
+    console.warn('⚠️ [Socket.io] Redis terputus, berjalan di mode single-instance');
+  });
 } else {
   console.warn('⚠️ [Socket.io] No Redis — running in single-instance mode');
 }
