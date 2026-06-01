@@ -37,9 +37,20 @@ const commonConfig = {
   keepAlive: true,
 };
 
-const poolConfig = process.env.DATABASE_URL
+let databaseUrl = process.env.DATABASE_URL;
+if (databaseUrl) {
+  try {
+    const urlObj = new URL(databaseUrl);
+    urlObj.searchParams.delete('sslmode');
+    databaseUrl = urlObj.toString();
+  } catch (err) {
+    // Fallback to original if URL parsing fails
+  }
+}
+
+const poolConfig = databaseUrl
   ? {
-    connectionString: process.env.DATABASE_URL,
+    connectionString: databaseUrl,
     ssl: sslConfig,
     ...commonConfig
   }
