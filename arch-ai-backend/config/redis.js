@@ -49,6 +49,7 @@ function initRedis() {
 
   try {
     const commonOptions = {
+      family: 4, // FIX AZURE: Node 17+ prefers IPv6, but Azure App Service often fails with ETIMEDOUT. Force IPv4.
       tls: isAzureRedis ? { rejectUnauthorized: false } : undefined,
       retryStrategy(times) {
         // Berhenti retry setelah 5x saat startup agar tidak hang terlalu lama
