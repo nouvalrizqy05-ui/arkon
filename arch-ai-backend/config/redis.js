@@ -48,13 +48,14 @@ function initRedis() {
     const commonOptions = {
       tls: isAzureRedis ? { rejectUnauthorized: false } : undefined,
       retryStrategy(times) {
-        if (times > 3) {
-          console.error('❌ [Redis] Max retries reached, giving up');
-          return null; // Stop retrying
+        // Capped backoff at 5 seconds, retry forever so the app never crashes when Redis is down
+        const delay = Math.min(times * 500, 5000);
+        if (times % 10 === 1) { // Log every 10 attempts to keep logs clean
+          console.warn(`⚠️ [Redis] Connection failed, retrying in ${delay}ms (attempt ${times})`);
         }
-        return Math.min(times * 200, 2000);
+        return delay;
       },
-      maxRetriesPerRequest: 3,
+      maxRetriesPerRequest: null,
       lazyConnect: true,
       enableReadyCheck: true,
     };
