@@ -61,6 +61,7 @@ function initRedis() {
         console.warn(`⚠️ [Redis] Retrying connection in ${delay}ms (attempt ${times})`);
         return delay;
       },
+      enableOfflineQueue: false, // 👈 FIX: Mencegah unhandled error dari Socket.io saat Redis menyerah
       maxRetriesPerRequest: null, // FIX AZURE: Mencegah MaxRetriesPerRequestError dari Socket.io saat offline queue penuh
       // FIX: false agar koneksi langsung dibuat saat initRedis() dipanggil
       // sehingga isRedisAvailable bisa di-set true sebelum health check pertama
