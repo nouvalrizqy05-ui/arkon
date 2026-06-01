@@ -89,9 +89,15 @@ function initRedis() {
       }
     }
 
-    redisClient = new Redis(parsedUrl, { ...clientOptions, keyPrefix: 'arkon:' });
-    redisPub = new Redis(parsedUrl, clientOptions);
-    redisSub = new Redis(parsedUrl, clientOptions);
+    if (parsedUrl) {
+      redisClient = new Redis(parsedUrl, { ...clientOptions, keyPrefix: 'arkon:' });
+      redisPub = new Redis(parsedUrl, clientOptions);
+      redisSub = new Redis(parsedUrl, clientOptions);
+    } else {
+      redisClient = new Redis({ ...clientOptions, keyPrefix: 'arkon:' });
+      redisPub = new Redis(clientOptions);
+      redisSub = new Redis(clientOptions);
+    }
 
     // Event handlers — update isRedisAvailable secara real-time
     redisClient.on('ready', () => {
