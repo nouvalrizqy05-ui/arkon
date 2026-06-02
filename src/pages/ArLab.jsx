@@ -64,13 +64,13 @@ function buildGlbViewerUrl(relativePath) {
 
 const MODEL_URLS = {
   motherboard: { type: 'glb', src: '/models/motherboard.glb' },
-  cpu: { type: 'glb', src: '/models/intel_core_i3-3220_cpu.glb' },
+  cpu: { type: 'glb', src: '/models/cpu/amd_ryzen_5_5600x_processor/scene_compressed.glb' },
   gpu: { type: 'glb', src: '/models/geforce_rtx_3080_graphics_card.glb' },
   ram: { type: 'glb', src: '/models/random_access_memory.glb' },
   storage: { type: 'glb', src: '/models/storage_ssd_hdd_m.2.glb' },
   psu: { type: 'glb', src: '/models/psu_power_supply_unit.glb' },
-  cooling: { type: 'glb', src: '/models/pc_cooler_2.glb' },
-  case: { type: 'glb', src: '/models/computer_case_based_off_of_nzxt_510b.glb' },
+  cooling: { type: 'glb', src: '/models/cooler/corsair_h150i_elitie_cpu_liquid_cooler/scene_compressed.glb' },
+  case: { type: 'glb', src: '/models/case/cabinet/scene_compressed.glb' },
 };
 
 const COMPONENTS = [

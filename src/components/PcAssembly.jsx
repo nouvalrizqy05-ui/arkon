@@ -158,13 +158,13 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
   // Default Components for Learning Mode
   const DEFAULT_COMPONENTS = useMemo(() => [
     { id: 'def_mobo', name: 'Learning Motherboard', category: 'motherboard', emoji: '🖥️', modelSrc: '/models/motherboard.glb', specs: { socket: 'Universal', ddr: 'Universal' }, desc: 'Komponen standar untuk belajar merakit.' },
-    { id: 'def_cpu', name: 'Learning CPU', category: 'cpu', emoji: '🧠', modelSrc: '/models/intel_core_i3-3220_cpu.glb', specs: { socket: 'Universal' }, desc: 'Komponen standar untuk belajar merakit.' },
+    { id: 'def_cpu', name: 'Learning CPU', category: 'cpu', emoji: '🧠', modelSrc: '/models/cpu/amd_ryzen_5_5600x_processor/scene_compressed.glb', specs: { socket: 'Universal' }, desc: 'Komponen standar untuk belajar merakit.' },
     { id: 'def_gpu', name: 'Learning GPU', category: 'gpu', emoji: '🎮', modelSrc: '/models/geforce_rtx_3080_graphics_card.glb', specs: { pcie: 'Universal' }, desc: 'Komponen standar untuk belajar merakit.' },
     { id: 'def_ram', name: 'Learning RAM', category: 'ram', emoji: '💾', modelSrc: '/models/random_access_memory.glb', specs: { ddr: 'Universal' }, desc: 'Komponen standar untuk belajar merakit.' },
     { id: 'def_storage', name: 'Learning Storage', category: 'storage', emoji: '💿', modelSrc: '/models/storage_ssd_hdd_m.2.glb', specs: { type: 'Universal' }, desc: 'Komponen standar untuk belajar merakit.' },
     { id: 'def_psu', name: 'Learning PSU', category: 'psu', emoji: '⚡', modelSrc: '/models/psu_power_supply_unit.glb', specs: { wattage: 500 }, desc: 'Komponen standar untuk belajar merakit.' },
-    { id: 'def_cooling', name: 'Learning Cooler', category: 'cooling', emoji: '❄️', modelSrc: '/models/pc_cooler_2.glb', specs: { type: 'Universal' }, desc: 'Komponen standar untuk belajar merakit.' },
-    { id: 'def_case', name: 'Learning Case (NZXT 510B)', category: 'case', emoji: '🗄️', modelSrc: '/models/computer_case_based_off_of_nzxt_510b.glb', specs: { formFactor: 'Universal' }, desc: 'Komponen standar untuk belajar merakit.' },
+    { id: 'def_cooling', name: 'Learning Cooler', category: 'cooling', emoji: '❄️', modelSrc: '/models/cooler/corsair_h150i_elitie_cpu_liquid_cooler/scene_compressed.glb', specs: { type: 'Universal' }, desc: 'Komponen standar untuk belajar merakit.' },
+    { id: 'def_case', name: 'Learning Case (NZXT 510B)', category: 'case', emoji: '🗄️', modelSrc: '/models/case/cabinet/scene_compressed.glb', specs: { formFactor: 'Universal' }, desc: 'Komponen standar untuk belajar merakit.' },
   ], []);
 
   // Toggle equip component

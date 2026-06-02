@@ -131,7 +131,7 @@ export const PC_COMPONENTS = {
       emoji: '🧠',
       price: 1000,
       category: 'cpu',
-      modelSrc: '/models/cpu/intel_coretm_i5-13600k/scene.gltf',
+      modelSrc: '/models/cpu/intel_coretm_i5-13600k/scene_compressed.glb',
       specs: {
         socket: 'LGA1200',
         brand: 'Intel',
@@ -153,7 +153,7 @@ export const PC_COMPONENTS = {
       emoji: '🧠',
       price: 2500,
       category: 'cpu',
-      modelSrc: '/models/cpu/intel_coretm_i7-12700k/scene.gltf',
+      modelSrc: '/models/cpu/intel_coretm_i7-12700k/scene_compressed.glb',
       specs: {
         socket: 'LGA1200',
         brand: 'Intel',
@@ -175,7 +175,7 @@ export const PC_COMPONENTS = {
       emoji: '🧠',
       price: 1500,
       category: 'cpu',
-      modelSrc: '/models/cpu/amd_ryzen_5_5600x_processor/scene.gltf',
+      modelSrc: '/models/cpu/amd_ryzen_5_5600x_processor/scene_compressed.glb',
       specs: {
         socket: 'AM4',
         brand: 'AMD',
@@ -539,7 +539,7 @@ export const PC_COMPONENTS = {
       emoji: '❄️',
       price: 1800,
       category: 'cooling',
-      modelSrc: '/models/cooler/corsair_h150i_elitie_cpu_liquid_cooler/scene.gltf',
+      modelSrc: '/models/cooler/corsair_h150i_elitie_cpu_liquid_cooler/scene_compressed.glb',
       specs: {
         type: 'Liquid (AIO)',
         maxTdp: 300,
@@ -561,7 +561,7 @@ export const PC_COMPONENTS = {
       emoji: '🗄️',
       price: 400,
       category: 'case',
-      modelSrc: '/models/case/cabinet/scene.gltf',
+      modelSrc: '/models/case/cabinet/scene_compressed.glb',
       specs: {
         formFactor: 'ATX',
         fans: 1,
