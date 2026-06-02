@@ -78,6 +78,12 @@ router.post('/:groupId/messages', authenticateToken, async (req, res) => {
   if (!content?.trim()) return res.status(400).json({ error: 'Pesan tidak boleh kosong' });
 
   try {
+    // SECURITY/ROBUSTNESS: Verify if the group actually exists
+    const groupExists = await pool.query('SELECT 1 FROM study_groups WHERE id = $1', [req.params.groupId]);
+    if (groupExists.rows.length === 0) {
+      return res.status(404).json({ error: 'Grup tidak ditemukan atau telah dihapus.' });
+    }
+
     const result = await pool.query(
       'INSERT INTO study_group_messages (group_id, student_id, content, message_type) VALUES ($1, $2, $3, $4) RETURNING *',
       [req.params.groupId, student_id || null, content, message_type || 'chat']
@@ -133,6 +139,52 @@ router.get('/activity/:roomId', authenticateToken, async (req, res) => {
   } catch (err) {
     console.error('🔥 SG MONITOR ERROR:', err);
     res.status(500).json({ error: 'Gagal mengambil aktivitas grup' });
+  }
+});
+
+// Hapus Grup (Only Creator, Owner of room, or Lecturer)
+router.delete('/:groupId', authenticateToken, async (req, res) => {
+  try {
+    const groupResult = await pool.query('SELECT * FROM study_groups WHERE id = $1', [req.params.groupId]);
+    if (groupResult.rows.length === 0) return res.status(404).json({ error: 'Grup tidak ditemukan.' });
+    
+    const group = groupResult.rows[0];
+    const userId = req.user.id;
+    const userRole = req.user.role;
+    
+    let allowed = false;
+    
+    if (userRole === 'dosen') {
+      // Dosen in room has full delete access
+      const roomResult = await pool.query('SELECT dosen_id, owner_id FROM rooms WHERE id = $1', [group.room_id]);
+      if (roomResult.rows.length > 0) {
+        const room = roomResult.rows[0];
+        if (room.dosen_id === userId || room.owner_id === userId) {
+          allowed = true;
+        }
+      }
+    } else {
+      // Mahasiswa: must be the creator of the group
+      if (group.creator_id === userId) {
+        allowed = true;
+      }
+    }
+    
+    if (!allowed) {
+      return res.status(403).json({ error: 'Anda tidak memiliki akses untuk menghapus grup ini.' });
+    }
+    
+    // Delete the group (cascades to members, messages, etc. on database level)
+    await pool.query('DELETE FROM study_groups WHERE id = $1', [req.params.groupId]);
+    
+    // Broadcast via socket to close/kick all online members inside the group
+    const io = req.app.get('io');
+    io.to(`sg:${req.params.groupId}`).emit('sg:group-deleted', { groupId: req.params.groupId });
+    
+    res.json({ message: 'Grup berhasil dihapus.' });
+  } catch (err) {
+    console.error('🔥 SG DELETE ERROR:', err);
+    res.status(500).json({ error: 'Gagal menghapus grup', detail: err.message });
   }
 });
 

@@ -294,12 +294,20 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
     };
     const onMembers = (m) => setMembers(m);
     const onTasks = (t) => setTasks(t);
+    const onGroupDeleted = ({ groupId }) => {
+      if (activeGroup?.id === groupId) {
+        leaveGroup();
+        fetchGroups();
+        toast.info('Grup ini telah dihapus oleh pembuat grup atau dosen.');
+      }
+    };
 
     socket.on('sg:message', onMessage);
     socket.on('sg:note-update', onNote);
     socket.on('sg:typing', onTyping);
     socket.on('sg:member-update', onMembers);
     socket.on('sg:tasks-update', onTasks);
+    socket.on('sg:group-deleted', onGroupDeleted);
 
     return () => {
       socket.emit('sg:leave', { groupId: activeGroup.id, studentId });
@@ -308,6 +316,7 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
       socket.off('sg:typing', onTyping);
       socket.off('sg:member-update', onMembers);
       socket.off('sg:tasks-update', onTasks);
+      socket.off('sg:group-deleted', onGroupDeleted);
     };
   }, [activeGroup, socket, studentId, studentName]);
 
@@ -381,6 +390,29 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
   const leaveGroup = () => {
     setActiveGroup(null); setMessages([]); setMembers([]);
     setTasks([]); setNoteContent(''); setView('lobby');
+  };
+
+  const handleDeleteGroup = async () => {
+    if (!activeGroup) return;
+    if (!window.confirm(`Apakah Anda yakin ingin menghapus grup "${activeGroup.name}" secara permanen? Semua pesan, catatan, dan tugas akan terhapus selamanya.`)) return;
+    
+    try {
+      const res = await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        toast.success('Grup berhasil dihapus.');
+        leaveGroup();
+        fetchGroups();
+      } else {
+        const data = await res.json();
+        toast.error(data.error || 'Gagal menghapus grup.');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Terjadi kesalahan saat menghapus grup.');
+    }
   };
 
   const handleSaveNotesToChat = async () => {
@@ -481,6 +513,15 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                 <span className="text-[10px] font-semibold text-emerald-700">{members.length}</span>
               </div>
+            )}
+            {(isDosen || activeGroup.creator_id === studentId) && (
+              <button
+                onClick={handleDeleteGroup}
+                className="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors shrink-0 ml-1"
+                title="Hapus Grup"
+              >
+                <Trash2 size={16} />
+              </button>
             )}
           </>
         ) : (

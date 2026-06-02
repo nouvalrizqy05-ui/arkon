@@ -8,6 +8,36 @@ const helmet = require('helmet');
 
 // Modular Imports
 const pool = require('./config/db');
+
+// Ensure Study Group tables exist in database on startup
+pool.query(`
+  CREATE TABLE IF NOT EXISTS study_groups (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    room_id UUID REFERENCES rooms(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    group_code VARCHAR(20) UNIQUE NOT NULL,
+    creator_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    current_notes TEXT DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+  
+  CREATE TABLE IF NOT EXISTS study_group_members (
+    group_id UUID REFERENCES study_groups(id) ON DELETE CASCADE,
+    student_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (group_id, student_id)
+  );
+
+  CREATE TABLE IF NOT EXISTS study_group_messages (
+    id SERIAL PRIMARY KEY,
+    group_id UUID REFERENCES study_groups(id) ON DELETE CASCADE,
+    student_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    content TEXT NOT NULL,
+    message_type VARCHAR(20) DEFAULT 'chat',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+`).then(() => console.log('✅ [Database] Study Group tables verified successfully.')).catch(err => console.error('🔥 [Database] Study Group DDL Error:', err.message));
+
 const { initRedis, getRedisHealth, closeRedis } = require('./config/redis');
 const { authenticateToken, requireRole } = require('./middleware/auth');
 const { initializeSocketHandlers } = require('./services/socket.service');
