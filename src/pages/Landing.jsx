@@ -74,7 +74,7 @@ export default function Landing() {
             <Link to="/login" className="text-sm font-semibold text-secondary hover:text-primary transition-colors no-underline hidden sm:block">
               Sign In
             </Link>
-            <Link to="/register" className="px-6 py-2.5 bg-foreground text-foreground rounded-xl font-bold text-sm hover:scale-105 transition-transform shadow-lg no-underline">
+            <Link to="/register" className="px-6 py-2.5 bg-foreground text-white rounded-xl font-bold text-sm hover:scale-105 transition-transform shadow-lg no-underline">
               Get Started
             </Link>
           </div>
@@ -92,7 +92,7 @@ export default function Landing() {
               <div key={idx}
                 className="group w-[300px] md:w-[360px] shrink-0 p-8 rounded-[2rem] bg-white backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center aspect-[4/3]">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-indigo-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-primary/30">
-                  <item.icon className="w-8 h-8 text-foreground" />
+                  <item.icon className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-black mb-3 text-foreground">{item.title}</h3>
                 <p className="text-secondary leading-relaxed font-medium text-sm">{item.desc}</p>
@@ -110,11 +110,11 @@ export default function Landing() {
             <p className="text-secondary text-lg max-w-2xl mx-auto font-medium">Satu platform untuk seluruh kebutuhan pembelajaran Arsitektur Komputer.</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[250px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 md:auto-rows-[250px]">
 
             {/* Box 1: CPU Visual Simulator (Large Left) */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
-              className="col-span-1 md:col-span-2 lg:col-span-2 row-span-2 relative group p-8 rounded-[2.5rem] bg-white border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all"
+              className="col-span-1 md:col-span-2 lg:col-span-2 md:row-span-2 relative group p-8 rounded-[2.5rem] bg-white border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all"
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
               <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center mb-6">
@@ -126,17 +126,17 @@ export default function Landing() {
 
             {/* Box 2: Room System (Highlight Gradient) */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
-              className="col-span-1 md:col-span-1 lg:col-span-2 row-span-1 relative group p-8 rounded-[2.5rem] bg-gradient-to-br from-primary to-indigo-600 text-foreground shadow-xl overflow-hidden hover:-translate-y-1 transition-all flex flex-col justify-center"
+              className="col-span-1 md:col-span-1 lg:col-span-2 md:row-span-1 relative group p-8 rounded-[2.5rem] bg-gradient-to-br from-primary to-indigo-600 text-white shadow-xl overflow-hidden hover:-translate-y-1 transition-all flex flex-col justify-center"
             >
-              <div className="absolute right-[-10%] top-[-10%] opacity-20"><Users className="w-48 h-48" /></div>
+              <div className="absolute right-[-10%] top-[-10%] opacity-20"><Users className="w-48 h-48 text-white/10" /></div>
               <span className="inline-block px-3 py-1 bg-white shadow-sm border border-border backdrop-blur text-foreground text-[10px] font-black uppercase rounded-full w-max mb-3">Room-Based</span>
-              <h3 className="text-2xl font-black mb-2">Tinkercad-Style Room</h3>
-              <p className="text-secondary font-medium text-sm">Semua pembelajaran di dalam Room. Dosen buat tugas, mahasiswa kerjakan, dosen review — semua real-time dan terstruktur.</p>
+              <h3 className="text-2xl font-black mb-2 text-white">Tinkercad-Style Room</h3>
+              <p className="text-white/80 font-medium text-sm">Semua pembelajaran di dalam Room. Dosen buat tugas, mahasiswa kerjakan, dosen review — semua real-time dan terstruktur.</p>
             </motion.div>
 
             {/* Box 3: PC Quest Gamification */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
-              className="col-span-1 md:col-span-1 lg:col-span-1 row-span-1 relative p-8 rounded-[2.5rem] bg-white border border-border shadow-xl overflow-hidden flex flex-col justify-end hover:-translate-y-1 transition-all"
+              className="col-span-1 md:col-span-1 lg:col-span-1 md:row-span-1 relative p-8 rounded-[2.5rem] bg-white border border-border shadow-xl overflow-hidden flex flex-col justify-end hover:-translate-y-1 transition-all"
             >
               <Gamepad2 className="w-10 h-10 text-rose-500 mb-4" />
               <h3 className="text-xl font-black mb-2 text-foreground">PC Quest Map</h3>
@@ -147,7 +147,7 @@ export default function Landing() {
 
             {/* Box 5: Lecturer Analytics (Full Width Bottom) */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }}
-              className="col-span-1 md:col-span-3 lg:col-span-4 row-span-1 relative p-8 rounded-[2.5rem] bg-white border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all flex flex-col md:flex-row items-start md:items-center justify-between"
+              className="col-span-1 md:col-span-3 lg:col-span-4 md:row-span-1 relative p-8 rounded-[2.5rem] bg-white border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all flex flex-col md:flex-row items-start md:items-center justify-between"
             >
               <div className="absolute top-1/2 left-1/2 w-full h-full bg-emerald-500/5 rounded-full -translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
               <div className="max-w-xl z-10">
@@ -164,16 +164,16 @@ export default function Landing() {
 
             {/* Box 6: AR Lab (Highlight Purple) */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.6 }}
-              className="col-span-1 md:col-span-3 lg:col-span-4 row-span-1 relative p-8 rounded-[2.5rem] bg-gradient-to-br from-purple-600 to-violet-700 text-foreground shadow-xl overflow-hidden hover:-translate-y-1 transition-all flex flex-col md:flex-row items-start md:items-center justify-between"
+              className="col-span-1 md:col-span-3 lg:col-span-4 md:row-span-1 relative p-8 rounded-[2.5rem] bg-gradient-to-br from-purple-600 to-violet-700 text-white shadow-xl overflow-hidden hover:-translate-y-1 transition-all flex flex-col md:flex-row items-start md:items-center justify-between"
             >
-              <div className="absolute right-[-5%] bottom-[-20%] opacity-10"><CircuitBoard className="w-64 h-64" /></div>
+              <div className="absolute right-[-5%] bottom-[-20%] opacity-10"><CircuitBoard className="w-64 h-64 text-white/10" /></div>
               <div className="max-w-xl z-10">
                 <span className="inline-block px-3 py-1 bg-white shadow-sm border border-border backdrop-blur text-foreground text-[10px] font-black uppercase rounded-full w-max mb-3">Augmented Reality</span>
                 <div className="flex items-center gap-3 mb-3">
-                  <CircuitBoard className="w-8 h-8 text-foreground" />
-                  <h3 className="text-2xl font-black text-foreground">AR Computer Lab</h3>
+                  <CircuitBoard className="w-8 h-8 text-white" />
+                  <h3 className="text-2xl font-black text-white">AR Computer Lab</h3>
                 </div>
-                <p className="text-secondary font-medium">Jelajahi komponen hardware komputer (CPU, RAM, GPU, Motherboard, dll) secara interaktif. Buka di smartphone untuk pengalaman Augmented Reality.</p>
+                <p className="text-purple-100 font-medium">Jelajahi komponen hardware komputer (CPU, RAM, GPU, Motherboard, dll) secara interaktif. Buka di smartphone untuk pengalaman Augmented Reality.</p>
               </div>
               <div className="mt-6 md:mt-0 z-10">
                 <Link to="/ar-lab" className="px-6 py-3 bg-white text-purple-700 rounded-xl font-bold text-sm hover:scale-105 transition-all shadow-lg flex items-center gap-2 no-underline whitespace-nowrap">
@@ -254,7 +254,7 @@ export default function Landing() {
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 -translate-y-1/2 translate-x-1/2 rounded-full" />
               <div className="w-16 h-16 bg-[#C5192D] rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-red-500/20">
-                <span className="text-foreground font-black text-2xl">4</span>
+                <span className="text-white font-black text-2xl">4</span>
               </div>
               <h3 className="text-2xl font-black text-[#C5192D] mb-4">Quality Education</h3>
               <p className="text-secondary font-medium leading-relaxed">
@@ -267,7 +267,7 @@ export default function Landing() {
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 -translate-y-1/2 translate-x-1/2 rounded-full" />
               <div className="w-16 h-16 bg-[#F36D25] rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-orange-500/20">
-                <span className="text-foreground font-black text-2xl">9</span>
+                <span className="text-white font-black text-2xl">9</span>
               </div>
               <h3 className="text-2xl font-black text-[#F36D25] mb-4">Industry, Innovation & Infrastructure</h3>
               <p className="text-secondary font-medium leading-relaxed">
@@ -295,7 +295,7 @@ export default function Landing() {
                 </div>
                 <p className="text-foreground/80 mb-8 leading-relaxed font-medium text-lg italic">"{item.content}"</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-indigo-500 flex items-center justify-center text-foreground font-black text-lg shadow-md">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-indigo-500 flex items-center justify-center text-white font-black text-lg shadow-md">
                     {item.avatar}
                   </div>
                   <div>
@@ -351,7 +351,7 @@ export default function Landing() {
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-white shadow-sm border border-border rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl pointer-events-none" />
 
             <div className="relative z-10">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground mb-3 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-3 leading-tight">
                 Mulai Belajar<br className="hidden sm:block" /> Arsitektur Komputer
               </h2>
               <p className="text-blue-100 text-sm md:text-base mb-8 max-w-lg mx-auto font-medium leading-relaxed">
@@ -363,19 +363,19 @@ export default function Landing() {
                 <Link to="/register" className="p-5 bg-white shadow-sm border border-border backdrop-blur-sm border border-border rounded-2xl hover:bg-white shadow-sm border border-border transition-all group no-underline">
                   <GraduationCap className="w-8 h-8 text-foreground mx-auto mb-3 group-hover:scale-110 transition-transform" />
                   <p className="text-foreground font-black text-sm mb-1">Dosen</p>
-                  <p className="text-blue-200 text-[10px] font-medium">Buat Room & Kelola Kelas</p>
+                  <p className="text-secondary text-[10px] font-medium">Buat Room & Kelola Kelas</p>
                 </Link>
                 {/* Students */}
                 <Link to="/register" className="p-5 bg-white shadow-sm border border-border backdrop-blur-sm border border-border rounded-2xl hover:bg-white shadow-sm border border-border transition-all group no-underline">
                   <Users className="w-8 h-8 text-foreground mx-auto mb-3 group-hover:scale-110 transition-transform" />
                   <p className="text-foreground font-black text-sm mb-1">Mahasiswa</p>
-                  <p className="text-blue-200 text-[10px] font-medium">Join Room via Kode</p>
+                  <p className="text-secondary text-[10px] font-medium">Join Room via Kode</p>
                 </Link>
                 {/* On your own */}
                 <Link to="/register" className="p-5 bg-white shadow-sm border border-border backdrop-blur-sm border border-border rounded-2xl hover:bg-white shadow-sm border border-border transition-all group no-underline">
                   <Monitor className="w-8 h-8 text-foreground mx-auto mb-3 group-hover:scale-110 transition-transform" />
                   <p className="text-foreground font-black text-sm mb-1">Mandiri</p>
-                  <p className="text-blue-200 text-[10px] font-medium">Buat Room Pribadi</p>
+                  <p className="text-secondary text-[10px] font-medium">Buat Room Pribadi</p>
                 </Link>
               </div>
             </div>
@@ -389,7 +389,7 @@ export default function Landing() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/30">
-                <Layers className="w-5 h-5 text-foreground" />
+                <Layers className="w-5 h-5 text-white" />
               </div>
               <span className="text-2xl font-black tracking-tight text-foreground">AR<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-indigo-500">KON</span></span>
             </div>

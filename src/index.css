@@ -300,3 +300,37 @@ body {
 /* ─── Room dark UI (kept intact) ────────────── */
 [class*="bg-[#0d1224]"] .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; }
 [class*="bg-[#0a0f1e]"] .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; }
+
+/* ─── Robust Marquee & 3D Floating Animations ─── */
+@keyframes float3d {
+  0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+  25%      { transform: translateY(-12px) rotateX(3deg) rotateY(5deg); }
+  50%      { transform: translateY(-6px) rotateX(-2deg) rotateY(-3deg); }
+  75%      { transform: translateY(-15px) rotateX(4deg) rotateY(-4deg); }
+}
+
+@keyframes float3dReverse {
+  0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+  25%      { transform: translateY(-15px) rotateX(-4deg) rotateY(-5deg); }
+  50%      { transform: translateY(-8px) rotateX(3deg) rotateY(4deg); }
+  75%      { transform: translateY(-12px) rotateX(-3deg) rotateY(3deg); }
+}
+
+.animate-float-3d {
+  animation: float3d 6s ease-in-out infinite !important;
+}
+
+.animate-float-3d-reverse {
+  animation: float3dReverse 7s ease-in-out infinite !important;
+}
+
+.animate-marquee {
+  display: flex !important;
+  width: max-content !important;
+  animation: marquee 40s linear infinite !important;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused !important;
+}
+

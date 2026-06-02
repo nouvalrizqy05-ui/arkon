@@ -84,7 +84,7 @@ export default function HeroSection() {
         </motion.div>
 
         <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-5xl md:text-7xl font-black leading-[1.1] mb-6 tracking-tight drop-shadow-sm text-foreground">
+          className="text-3xl sm:text-5xl md:text-7xl font-black leading-[1.1] mb-6 tracking-tight drop-shadow-sm text-foreground">
           Transforming Abstract Architecture into{' '}<br className="hidden md:block" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-indigo-500 to-purple-500">
             Interactive Intelligence.
@@ -92,7 +92,7 @@ export default function HeroSection() {
         </motion.h1>
 
         <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg md:text-xl text-secondary max-w-2xl mx-auto mb-10 font-medium leading-relaxed drop-shadow-sm">
+          className="text-sm sm:text-lg md:text-xl text-secondary max-w-2xl mx-auto mb-10 font-medium leading-relaxed drop-shadow-sm">
           ARKON adalah <strong className="text-primary">"Adaptive Resource"</strong> yang memadukan{' '}
           <strong className="text-primary">Generative AI (RAG)</strong> dengan{' '}
           <strong className="text-indigo-600">Interactive Simulation</strong>. Mengubah materi kuliah pasif menjadi pengalaman belajar interaktif.
@@ -100,8 +100,8 @@ export default function HeroSection() {
 
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-4 justify-center mb-16 relative z-30">
-          <a href="/register" className="px-8 py-4 bg-gradient-to-br from-primary to-indigo-600 text-foreground rounded-2xl font-black text-lg hover:scale-105 transition-all shadow-[0_10px_40px_-10px_rgba(22,93,255,0.8)] flex items-center justify-center gap-2 cursor-pointer no-underline">
-            Mulai Belajar <ArrowRight className="w-5 h-5" />
+          <a href="/register" className="px-8 py-4 bg-gradient-to-br from-primary to-indigo-600 text-white rounded-2xl font-black text-lg hover:scale-105 transition-all shadow-[0_10px_40px_-10px_rgba(22,93,255,0.8)] flex items-center justify-center gap-2 cursor-pointer no-underline">
+            Mulai Belajar <ArrowRight className="w-5 h-5 text-white" />
           </a>
           <a href="/cpu-simulator" className="px-8 py-4 bg-white shadow-sm border border-border backdrop-blur-md border-2 border-blue-100 text-foreground rounded-2xl font-bold text-lg hover:border-primary transition-all flex items-center justify-center cursor-pointer shadow-sm group no-underline">
             Coba CPU Simulator <Cpu className="w-5 h-5 ml-2 text-secondary group-hover:text-primary transition-colors" />
