@@ -23,6 +23,24 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error, errorInfo) {
     this.setState({ errorInfo });
     console.error(`🔥 [ErrorBoundary${this.props.name ? `: ${this.props.name}` : ''}] Caught error:`, error, errorInfo);
+
+    // Auto-reload on Dynamic Import / Chunk Load Errors (highly critical for production deployments)
+    const errorStr = error?.toString() || '';
+    if (
+      errorStr.includes('Failed to fetch dynamically imported module') ||
+      errorStr.includes('ChunkLoadError') ||
+      errorStr.includes('Loading chunk')
+    ) {
+      const now = Date.now();
+      const lastRetry = sessionStorage.getItem('arkon_chunk_retry_time');
+      
+      // If we haven't retried in the last 10 seconds, reload the page to get the fresh asset bundle
+      if (!lastRetry || now - parseInt(lastRetry, 10) > 10000) {
+        sessionStorage.setItem('arkon_chunk_retry_time', now.toString());
+        console.warn('🔄 Dynamic import/chunk load error detected. Reloading page to fetch latest version...');
+        window.location.reload();
+      }
+    }
   }
 
   handleReload = () => {
