@@ -45,7 +45,7 @@ router.get('/debug', async (req, res) => {
       const exactQuery = await pool.query(`
         SELECT m.*, COALESCE(u.full_name, 'System') as student_name 
         FROM study_group_messages m
-        LEFT JOIN users u ON m.student_id = u.id
+        LEFT JOIN users u ON m.sender_id = u.id
         WHERE m.group_id = $1 ORDER BY m.created_at ASC
       `, ['acf48fd9-e0d4-4fe3-9225-1e2218264b2c']);
       results.exact_query_result = { success: true, count: exactQuery.rows.length };
@@ -125,7 +125,7 @@ router.get('/:groupId/messages', authenticateToken, async (req, res) => {
     const result = await pool.query(`
       SELECT m.*, COALESCE(u.full_name, 'System') as student_name 
       FROM study_group_messages m
-      LEFT JOIN users u ON m.student_id = u.id
+      LEFT JOIN users u ON m.sender_id = u.id
       WHERE m.group_id = $1 ORDER BY m.created_at ASC
     `, [req.params.groupId]);
     res.json(result.rows);
@@ -138,7 +138,7 @@ router.get('/:groupId/messages', authenticateToken, async (req, res) => {
 // Simpan pesan
 router.post('/:groupId/messages', authenticateToken, async (req, res) => {
   const { content, message_type } = req.body;
-  const student_id = req.user.id; // SECURITY: Enforce authenticated ID
+  const sender_id = req.user.id; // SECURITY: Enforce authenticated ID
   if (!content?.trim()) return res.status(400).json({ error: 'Pesan tidak boleh kosong' });
 
   try {
@@ -149,14 +149,14 @@ router.post('/:groupId/messages', authenticateToken, async (req, res) => {
     }
 
     const result = await pool.query(
-      'INSERT INTO study_group_messages (group_id, student_id, content, message_type) VALUES ($1, $2, $3, $4) RETURNING *',
-      [req.params.groupId, student_id || null, content, message_type || 'chat']
+      'INSERT INTO study_group_messages (group_id, sender_id, content, message_type) VALUES ($1, $2, $3, $4) RETURNING *',
+      [req.params.groupId, sender_id || null, content, message_type || 'chat']
     );
 
     // Get student name safely
     let studentName = 'System';
-    if (student_id) {
-      const userResult = await pool.query('SELECT full_name FROM users WHERE id = $1', [student_id]);
+    if (sender_id) {
+      const userResult = await pool.query('SELECT full_name FROM users WHERE id = $1', [sender_id]);
       if (userResult.rows.length > 0) studentName = userResult.rows[0].full_name;
     }
     const message = { ...result.rows[0], student_name: studentName };
