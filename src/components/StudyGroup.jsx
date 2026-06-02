@@ -286,7 +286,25 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
     if (!activeGroup || !socket) return;
     socket.emit('sg:join', { groupId: activeGroup.id, studentId, studentName });
 
-    const onMessage = (msg) => setMessages(prev => [...prev, msg]);
+    const onMessage = (msg) => {
+      // Deduplicate: don't add if we already have this message (from optimistic update or duplicate broadcast)
+      setMessages(prev => {
+        // Check by database id if available, or by content+timestamp combo for optimistic messages
+        const isDuplicate = prev.some(m => 
+          (m.id && msg.id && m.id === msg.id) ||
+          (m._optimistic && m.content === msg.content && m.student_id === msg.student_id)
+        );
+        if (isDuplicate) {
+          // Replace optimistic message with real server message (has proper id, created_at, etc.)
+          return prev.map(m => 
+            (m._optimistic && m.content === msg.content && m.student_id === msg.student_id) 
+              ? msg 
+              : m
+          );
+        }
+        return [...prev, msg];
+      });
+    };
     const onNote = (c) => setNoteContent(c);
     const onTyping = ({ studentName: who, isTyping: on }) => {
       if (who === studentName) return;
@@ -319,6 +337,29 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
       socket.off('sg:group-deleted', onGroupDeleted);
     };
   }, [activeGroup, socket, studentId, studentName]);
+
+  // Fallback polling: periodically sync messages from database in case WebSocket misses any
+  useEffect(() => {
+    if (!activeGroup || !token || !apiUrl) return;
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/messages`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const serverMessages = await res.json();
+          setMessages(prev => {
+            // Only update if server has more messages than local (avoid overwriting optimistic)
+            if (serverMessages.length > prev.filter(m => !m._optimistic).length) {
+              return serverMessages;
+            }
+            return prev;
+          });
+        }
+      } catch (err) { /* silent — polling is a fallback */ }
+    }, 8000); // Poll every 8 seconds
+    return () => clearInterval(interval);
+  }, [activeGroup, token, apiUrl]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -379,13 +420,37 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
     if (!inputText.trim() || !activeGroup) return;
     const content = inputText;
     setInputText('');
+
+    // Optimistic update: show message immediately on sender's screen
+    const optimisticMsg = {
+      _optimistic: true,
+      id: `opt_${Date.now()}`,
+      student_id: studentId,
+      student_name: studentName,
+      content,
+      message_type: 'chat',
+      created_at: new Date().toISOString(),
+    };
+    setMessages(prev => [...prev, optimisticMsg]);
+
     try {
-      await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/messages`, {
+      const res = await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ content, message_type: 'chat', student_id: studentId })
+        body: JSON.stringify({ content, message_type: 'chat' })
       });
-    } catch (err) { console.error(err); }
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        console.error('❌ Send message failed:', res.status, errData);
+        toast.error(errData.error || 'Gagal mengirim pesan');
+        // Remove the optimistic message on failure
+        setMessages(prev => prev.filter(m => m.id !== optimisticMsg.id));
+      }
+    } catch (err) {
+      console.error('❌ Send message network error:', err);
+      toast.error('Gagal mengirim pesan. Periksa koneksi internet Anda.');
+      setMessages(prev => prev.filter(m => m.id !== optimisticMsg.id));
+    }
   };
 
   const handleTypingEvent = () => {
@@ -427,15 +492,37 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
 
   const handleSaveNotesToChat = async () => {
     if (!noteContent.trim() || !activeGroup) return;
+    
+    // Optimistic: show note bubble immediately
+    const optimisticNote = {
+      _optimistic: true,
+      id: `opt_note_${Date.now()}`,
+      student_id: studentId,
+      student_name: studentName,
+      content: noteContent,
+      message_type: 'note',
+      created_at: new Date().toISOString(),
+    };
+    setMessages(prev => [...prev, optimisticNote]);
+    setView('chat');
+
     try {
-      await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/messages`, {
+      const res = await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ content: noteContent, message_type: 'note', student_id: studentId })
+        body: JSON.stringify({ content: noteContent, message_type: 'note' })
       });
-      setView('chat');
-      toast.success('Catatan dikirim ke chat!');
-    } catch (err) { console.error(err); }
+      if (res.ok) {
+        toast.success('Catatan dikirim ke chat!');
+      } else {
+        toast.error('Gagal mengirim catatan.');
+        setMessages(prev => prev.filter(m => m.id !== optimisticNote.id));
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Gagal mengirim catatan.');
+      setMessages(prev => prev.filter(m => m.id !== optimisticNote.id));
+    }
   };
 
   const [addingTaskFor, setAddingTaskFor] = useState(null);
