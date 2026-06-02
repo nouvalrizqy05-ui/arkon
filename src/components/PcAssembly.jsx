@@ -605,7 +605,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
       )}
 
       {/* 3D View - Main Assembly Area (Expanded) */}
-      <div className={`${isFullscreen ? 'fixed inset-0 z-[100] m-0 rounded-0' : 'flex-1 min-h-[600px] md:min-h-[700px] relative mb-4 rounded-2xl border border-border'} overflow-hidden bg-slate-50 shadow-lg transition-all duration-300`}>
+      <div className={`${isFullscreen ? 'fixed inset-0 z-[100] m-0 rounded-0' : 'w-full h-[500px] md:h-[700px] lg:h-[800px] relative mb-8 rounded-2xl border border-border'} overflow-hidden bg-slate-50 shadow-lg transition-all duration-300`}>
         {/* Fullscreen Toggle Button - Moved to Left to avoid overlapping with Transform Config */}
         <button
           onClick={() => setIsFullscreen(!isFullscreen)}
