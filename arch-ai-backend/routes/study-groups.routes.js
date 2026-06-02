@@ -98,7 +98,7 @@ router.post('/:groupId/messages', authenticateToken, async (req, res) => {
     const message = { ...result.rows[0], student_name: studentName };
     
     // Broadcast via Socket.IO
-    const io = req.app.get('io');
+    const io = req.app.get('io') || global.io;
     if (message_type === 'note') {
       io.to(`sg:${req.params.groupId}`).emit('sg:note-update', content);
     } else {
@@ -178,7 +178,7 @@ router.delete('/:groupId', authenticateToken, async (req, res) => {
     await pool.query('DELETE FROM study_groups WHERE id = $1', [req.params.groupId]);
     
     // Broadcast via socket to close/kick all online members inside the group
-    const io = req.app.get('io');
+    const io = req.app.get('io') || global.io;
     io.to(`sg:${req.params.groupId}`).emit('sg:group-deleted', { groupId: req.params.groupId });
     
     res.json({ message: 'Grup berhasil dihapus.' });
