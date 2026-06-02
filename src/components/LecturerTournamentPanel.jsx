@@ -175,7 +175,7 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
         {activeTournament && bracketData && (
           <button 
             onClick={() => setIsProjectorMode(true)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-foreground rounded-xl font-bold shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition"
+            className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition"
           >
             <MonitorPlay size={18} /> Projector Mode
           </button>
@@ -195,7 +195,7 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
                 onChange={e => setNewTitle(e.target.value)}
                 className="w-full px-4 py-3 bg-gray-50 border border-border rounded-xl text-sm outline-none focus:border-rose-500 transition"
               />
-              <button disabled={creating || !newTitle} className="w-full py-3 bg-rose-500 text-foreground rounded-xl font-bold shadow-lg shadow-rose-500/20 disabled:opacity-50 flex justify-center items-center gap-2">
+              <button disabled={creating || !newTitle} className="w-full py-3 bg-rose-500 text-white rounded-xl font-bold shadow-lg shadow-rose-500/20 disabled:opacity-50 flex justify-center items-center gap-2">
                 {creating ? <Loader2 size={16} className="animate-spin" /> : <Trophy size={16} />}
                 Create Tournament
               </button>
@@ -242,7 +242,7 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
                     <p className="text-xs text-secondary">{bracketData.participants.length} pemain terdaftar</p>
                   </div>
                   {activeTournament.status === 'registration' && (
-                    <button onClick={() => handleStartTournament(activeTournament.id)} className="px-6 py-2 bg-emerald-500 text-foreground font-bold rounded-xl shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 transition">
+                    <button onClick={() => handleStartTournament(activeTournament.id)} className="px-6 py-2 bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 transition">
                       Tutup Pendaftaran & Generate Bracket
                     </button>
                   )}
@@ -282,7 +282,7 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
                                 
                                 {match.status === 'pending' && match.player1_id && match.player2_id && (
                                   <div className="p-2 bg-gray-50 border-t border-border">
-                                    <button onClick={() => handleStartMatch(match.id)} className="w-full py-2 bg-indigo-500 text-foreground rounded-lg text-xs font-bold hover:bg-indigo-600 transition flex items-center justify-center gap-2" aria-label="Swords">
+                                    <button onClick={() => handleStartMatch(match.id)} className="w-full py-2 bg-indigo-500 text-white rounded-lg text-xs font-bold hover:bg-indigo-600 transition flex items-center justify-center gap-2" aria-label="Swords">
                                       <Swords size={14} /> Start Duel
                                     </button>
                                   </div>

@@ -4,9 +4,11 @@ import quizData from '../data/quizzes.json';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
-const DIFFICULTY_LABELS = { 1: { label: 'Mudah', color: 'text-green-600 bg-green-50', dot: 'bg-green-500' },
-  2: { label: 'Sedang', color: 'text-yellow-700 bg-yellow-50', dot: 'bg-yellow-500' },
-  3: { label: 'Sulit',  color: 'text-red-600 bg-red-50',   dot: 'bg-red-500' } };
+const DIFFICULTY_LABELS = { 
+  1: { label: 'Mudah', color: 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/30', dot: 'bg-green-500' },
+  2: { label: 'Sedang', color: 'text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/30', dot: 'bg-yellow-500' },
+  3: { label: 'Sulit',  color: 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30',   dot: 'bg-red-500' } 
+};
 
 const TOPICS = [
   'CPU Architecture','Memory Hierarchy','ALU & Arithmetic','Cache Memory',

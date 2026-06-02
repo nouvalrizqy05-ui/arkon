@@ -268,7 +268,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
                   <div key={optIdx} className="flex items-center gap-2">
                     <button
                       onClick={() => updateQuestion(qIdx, 'correct_index', optIdx)}
-                      className={`w-8 h-8 rounded-lg text-xs font-black shrink-0 transition-all ${q.correct_index === optIdx ? `${OPTION_COLORS[optIdx]} text-foreground shadow-md` : 'bg-gray-100 text-secondary hover:bg-gray-200'}`}
+                      className={`w-8 h-8 rounded-lg text-xs font-black shrink-0 transition-all ${q.correct_index === optIdx ? `${OPTION_COLORS[optIdx]} text-white shadow-md` : 'bg-gray-100 text-secondary hover:bg-gray-200'}`}
                     >
                       {OPTION_LABELS[optIdx]}
                     </button>
@@ -298,7 +298,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
             <button
               onClick={startQuiz}
               disabled={!isConnected || isCreating}
-              className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-foreground rounded-xl font-bold text-sm hover:bg-purple-700 transition-all shadow-lg shadow-purple-500/20 active:scale-95 disabled:opacity-40"
+              className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-xl font-bold text-sm hover:bg-purple-700 transition-all shadow-lg shadow-purple-500/20 active:scale-95 disabled:opacity-40"
             >
               {isCreating ? <Loader2 className="animate-spin" size={18} /> : <Play size={18} />}
               {isCreating ? 'Mempersiapkan...' : 'Mulai Kuis Live!'}
@@ -312,10 +312,10 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
         <div className="space-y-6">
           {/* Current Question Control */}
           {currentQIndex < 0 ? (
-            <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-3xl p-10 text-center text-foreground shadow-xl">
+            <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-3xl p-10 text-center text-white shadow-xl">
               <Gamepad2 size={48} className="mx-auto mb-4 opacity-80" />
-              <h3 className="text-2xl font-black mb-2">Kuis Siap Dimulai!</h3>
-              <p className="text-secondary mb-6">{sessionData.questions.length} soal | {onlineCount} mahasiswa online</p>
+              <h3 className="text-2xl font-black mb-2 text-white">Kuis Siap Dimulai!</h3>
+              <p className="text-purple-100/80 mb-6">{sessionData.questions.length} soal | {onlineCount} mahasiswa online</p>
               <button
                 onClick={sendNextQuestion}
                 className="px-8 py-3 bg-white text-purple-700 rounded-xl font-black text-sm hover:bg-purple-50 transition-all shadow-lg active:scale-95"
@@ -355,7 +355,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
                           : 'border-gray-200 bg-gray-50 text-gray-700'
                       }`}
                     >
-                      <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black text-foreground ${OPTION_COLORS[i]}`}>
+                      <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black text-white ${OPTION_COLORS[i]}`}>
                         {OPTION_LABELS[i]}
                       </span>
                       {opt}
@@ -369,15 +369,15 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
               {/* Controls */}
               <div className="flex items-center justify-between">
                 {revealedAnswer === null ? (
-                  <button onClick={revealAnswer} className="px-6 py-3 bg-amber-500 text-foreground rounded-xl font-bold text-sm hover:bg-amber-600 transition-all shadow-lg active:scale-95">
+                  <button onClick={revealAnswer} className="px-6 py-3 bg-amber-500 text-white rounded-xl font-bold text-sm hover:bg-amber-600 transition-all shadow-lg active:scale-95">
                     <CheckCircle2 size={16} className="inline mr-2" /> Reveal Jawaban
                   </button>
                 ) : currentQIndex < sessionData.questions.length - 1 ? (
-                  <button onClick={sendNextQuestion} className="px-6 py-3 bg-purple-600 text-foreground rounded-xl font-bold text-sm hover:bg-purple-700 transition-all shadow-lg active:scale-95">
+                  <button onClick={sendNextQuestion} className="px-6 py-3 bg-purple-600 text-white rounded-xl font-bold text-sm hover:bg-purple-700 transition-all shadow-lg active:scale-95">
                     Soal Berikutnya <ChevronRight size={16} className="inline ml-1" />
                   </button>
                 ) : (
-                  <button onClick={endQuiz} className="px-6 py-3 bg-emerald-600 text-foreground rounded-xl font-bold text-sm hover:bg-emerald-700 transition-all shadow-lg active:scale-95" aria-label="Trophy">
+                  <button onClick={endQuiz} className="px-6 py-3 bg-emerald-600 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 transition-all shadow-lg active:scale-95" aria-label="Trophy">
                     <Trophy size={16} className="inline mr-2" /> Selesai & Lihat Hasil
                   </button>
                 )}
@@ -392,7 +392,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
                   <div className="space-y-2">
                     {leaderboard.slice(0, 5).map((entry, i) => (
                       <div key={entry.student_id} className={`flex items-center gap-3 p-3 rounded-xl ${i === 0 ? 'bg-amber-50 border border-amber-200' : 'bg-gray-50'}`}>
-                        <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black ${i === 0 ? 'bg-amber-500 text-foreground' : i === 1 ? 'bg-gray-400 text-foreground' : i === 2 ? 'bg-amber-700 text-foreground' : 'bg-gray-200 text-gray-600'}`}>
+                        <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black ${i === 0 ? 'bg-amber-500 text-white' : i === 1 ? 'bg-gray-400 text-white' : i === 2 ? 'bg-amber-700 text-white' : 'bg-gray-200 text-gray-600'}`}>
                           #{i + 1}
                         </span>
                         <span className="flex-1 font-bold text-sm text-foreground">{entry.student_name}</span>
@@ -411,10 +411,10 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
       {/* ===== RESULTS PHASE ===== */}
       {phase === PHASE.RESULTS && (
         <div className="space-y-6">
-          <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl p-10 text-center text-foreground shadow-xl">
+          <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl p-10 text-center text-white shadow-xl">
             <Trophy size={48} className="mx-auto mb-4" />
-            <h3 className="text-2xl font-black mb-2">Kuis Selesai! 🎉</h3>
-            <p className="text-secondary">Hasil dan koin sudah otomatis terdistribusi ke 3 besar</p>
+            <h3 className="text-2xl font-black mb-2 text-white">Kuis Selesai! 🎉</h3>
+            <p className="text-emerald-100/90">Hasil dan koin sudah otomatis terdistribusi ke 3 besar</p>
           </div>
 
           {/* Final Leaderboard */}
@@ -428,7 +428,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
               <div className="space-y-2">
                 {leaderboard.map((entry, i) => (
                   <div key={entry.student_id} className={`flex items-center gap-3 p-4 rounded-xl border ${i < 3 ? 'bg-amber-50 border-amber-200' : 'bg-gray-50 border-gray-100'}`}>
-                    <span className={`w-10 h-10 rounded-full flex items-center justify-center font-black ${i === 0 ? 'bg-amber-500 text-foreground text-lg' : i === 1 ? 'bg-gray-400 text-foreground' : i === 2 ? 'bg-amber-700 text-foreground' : 'bg-gray-200 text-gray-600 text-sm'}`}>
+                    <span className={`w-10 h-10 rounded-full flex items-center justify-center font-black ${i === 0 ? 'bg-amber-500 text-white text-lg' : i === 1 ? 'bg-gray-400 text-white' : i === 2 ? 'bg-amber-700 text-white' : 'bg-gray-200 text-gray-600 text-sm'}`}>
                       {i < 3 ? ['🥇', '🥈', '🥉'][i] : `#${i + 1}`}
                     </span>
                     <div className="flex-1">
@@ -445,7 +445,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
             )}
           </div>
 
-          <button onClick={resetToSetup} className="w-full px-6 py-3 bg-[#2467ce] text-foreground rounded-xl font-bold text-sm hover:bg-[#1a4f9e] transition-all shadow-md">
+          <button onClick={resetToSetup} className="w-full px-6 py-3 bg-[#2467ce] text-white rounded-xl font-bold text-sm hover:bg-[#1a4f9e] transition-all shadow-md">
             Buat Kuis Baru
           </button>
         </div>

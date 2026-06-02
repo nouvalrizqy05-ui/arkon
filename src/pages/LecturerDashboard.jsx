@@ -220,7 +220,7 @@ export default function LecturerDashboard() {
       <aside className="hidden lg:flex flex-col w-[260px] h-full bg-white border-r border-gray-200 shrink-0 z-40">
         <div className="flex items-center gap-3 h-[70px] px-6 border-b border-gray-100 shrink-0">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-emerald-sm" style={{background:"linear-gradient(135deg,#059669,#047857)"}}>
-            <Layers className="w-5 h-5 text-foreground" />
+            <Layers className="w-5 h-5 text-white" />
           </div>
           <div>
             <h1 className="font-bold text-lg leading-none text-gray-900">ARKON</h1>
@@ -277,7 +277,7 @@ export default function LecturerDashboard() {
               const AvatarIcon = iconComponents[av.icon] || User;
               return (
                 <div className={`w-9 h-9 rounded-full flex items-center justify-center bg-gradient-to-br ${av.color} shadow-sm`}>
-                  <AvatarIcon size={18} className="text-foreground" />
+                  <AvatarIcon size={18} className="text-white" />
                 </div>
               );
             })() : (

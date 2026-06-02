@@ -221,21 +221,21 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
                   <button
                     onClick={() => handleGrade('approved')}
                     disabled={isGrading}
-                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-600 text-foreground rounded-xl text-xs font-bold hover:bg-emerald-700 transition disabled:opacity-50"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition disabled:opacity-50"
                   >
                     <ThumbsUp size={12} /> Setujui
                   </button>
                   <button
                     onClick={() => handleGrade('graded')}
                     disabled={isGrading}
-                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-indigo-600 text-foreground rounded-xl text-xs font-bold hover:bg-indigo-700 transition disabled:opacity-50"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition disabled:opacity-50"
                   >
                     <Star size={12} /> Beri Nilai
                   </button>
                   <button
                     onClick={() => handleGrade('revision_needed')}
                     disabled={isGrading}
-                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-500 text-foreground rounded-xl text-xs font-bold hover:bg-amber-600 transition disabled:opacity-50"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-500 text-white rounded-xl text-xs font-bold hover:bg-amber-600 transition disabled:opacity-50"
                   >
                     <RotateCcw size={12} /> Revisi
                   </button>
@@ -287,7 +287,7 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
               key={tab.id}
               onClick={() => setFilter(tab.id)}
               className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-                filter === tab.id ? 'bg-indigo-600 text-foreground shadow-md' : 'text-gray-500 hover:bg-gray-50'
+                filter === tab.id ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'
               }`}
             >
               {tab.label}
@@ -361,7 +361,7 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
                       )}
                       <button
                         onClick={() => handleTinkerThis(work)}
-                        className="px-4 py-2 bg-indigo-600 text-foreground rounded-xl text-xs font-bold hover:bg-indigo-700 transition opacity-0 group-hover:opacity-100 shadow-md shadow-indigo-500/20"
+                        className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition opacity-0 group-hover:opacity-100 shadow-md shadow-indigo-500/20"
                       >
                         Tinker This →
                       </button>

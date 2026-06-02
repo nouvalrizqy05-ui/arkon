@@ -28,7 +28,7 @@ function StatCard({ icon: Icon, label, value, sub, color }) {
     <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
       <div className="flex items-center gap-3 mb-3">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
-          <Icon size={20} className="text-foreground" />
+          <Icon size={20} className="text-white" />
         </div>
         <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{label}</p>
       </div>
@@ -65,7 +65,7 @@ function ThetaDistribution({ students }) {
                 style={{ minWidth: d.count > 0 ? '32px' : '0' }}
               >
                 {d.count > 0 && (
-                  <span className="text-[11px] font-black text-foreground">{d.count}</span>
+                  <span className="text-[11px] font-black text-white">{d.count}</span>
                 )}
               </motion.div>
             </div>
