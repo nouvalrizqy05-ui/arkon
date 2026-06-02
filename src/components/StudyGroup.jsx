@@ -1,98 +1,303 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useToast } from './Toast';
-import { 
-  Users, Send, MessageSquare, BookOpen, UserPlus, 
-  ChevronRight, LogOut, Code, Clock, Hash, 
-  MoreVertical, Pin, Paperclip, Share2, AlertCircle,
-  CheckCircle2, Loader2, Info, Layout, Plus, Trash2, CheckCircle
+import {
+  Users, Send, MessageSquare, BookOpen, UserPlus,
+  ChevronRight, LogOut, Hash, Plus, Trash2, Check,
+  CheckCircle2, Loader2, Info, Layout, Clock, ArrowLeft,
+  Search, Eye, Activity, Shield
 } from 'lucide-react';
 
+// ─── Avatar helper ───────────────────────────────────────────────────────────
+const AVATAR_COLORS = [
+  'bg-emerald-100 text-emerald-700',
+  'bg-sky-100 text-sky-700',
+  'bg-violet-100 text-violet-700',
+  'bg-amber-100 text-amber-700',
+  'bg-rose-100 text-rose-700',
+  'bg-teal-100 text-teal-700',
+];
+function getAvatarColor(name = '') {
+  const idx = name.charCodeAt(0) % AVATAR_COLORS.length;
+  return AVATAR_COLORS[idx];
+}
+function Avatar({ name = '?', size = 'sm' }) {
+  const cls = size === 'sm' ? 'w-7 h-7 text-xs' : 'w-9 h-9 text-sm';
+  return (
+    <div className={`${cls} ${getAvatarColor(name)} rounded-full flex items-center justify-center font-bold shrink-0`}>
+      {name.charAt(0).toUpperCase()}
+    </div>
+  );
+}
+
+// ─── Typing dots ─────────────────────────────────────────────────────────────
+function TypingDots({ users }) {
+  if (!users.length) return null;
+  return (
+    <div className="flex items-center gap-2 px-4 py-1.5 bg-white border-t border-border">
+      <div className="flex gap-0.5">
+        <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+        <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+        <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+      </div>
+      <span className="text-[11px] text-secondary">
+        {users.slice(0, 2).join(', ')}{users.length > 2 ? ` +${users.length - 2}` : ''} sedang mengetik...
+      </span>
+    </div>
+  );
+}
+
+// ─── Chat bubble ─────────────────────────────────────────────────────────────
+function ChatBubble({ msg, isMe }) {
+  const isNote = msg.message_type === 'note';
+  const isSystem = msg.message_type === 'system';
+  const time = new Date(msg.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+  if (isSystem) {
+    return (
+      <div className="flex justify-center my-1">
+        <span className="text-[10px] bg-slate-100 text-secondary px-3 py-1 rounded-full border border-border font-medium">
+          {msg.content}
+        </span>
+      </div>
+    );
+  }
+
+  if (isNote) {
+    return (
+      <div className="flex justify-center my-2">
+        <div className="max-w-[85%] bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 w-full">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <BookOpen size={12} className="text-amber-600" />
+            <span className="text-[10px] font-semibold text-amber-600 uppercase tracking-wide">Catatan dari {msg.student_name}</span>
+          </div>
+          <p className="text-sm text-amber-900 leading-relaxed italic">{msg.content}</p>
+          <p className="text-[10px] text-amber-500 mt-1.5 text-right">{time}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`flex items-end gap-2 mb-3 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
+      {!isMe && <Avatar name={msg.student_name} size="sm" />}
+      <div className={`flex flex-col gap-0.5 max-w-[75%] ${isMe ? 'items-end' : 'items-start'}`}>
+        {!isMe && (
+          <span className="text-[11px] font-semibold text-secondary px-1">{msg.student_name}</span>
+        )}
+        <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
+          isMe
+            ? 'bg-primary text-white rounded-br-sm'
+            : 'bg-white border border-border text-foreground rounded-bl-sm'
+        }`}>
+          {msg.content}
+        </div>
+        <span className="text-[10px] text-secondary px-1">{time}</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── Group card ───────────────────────────────────────────────────────────────
+function GroupCard({ group, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full p-4 bg-white border border-border rounded-2xl hover:border-primary/30 hover:shadow-card-hover transition-all text-left group flex items-center gap-3"
+    >
+      <div className="w-10 h-10 bg-primary-soft border border-primary/20 rounded-xl flex items-center justify-center shrink-0">
+        <Hash size={16} className="text-primary" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <h4 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+          {group.name}
+        </h4>
+        <div className="flex items-center gap-2 mt-0.5">
+          <span className="text-[10px] text-secondary font-mono">{group.group_code}</span>
+          <span className="text-[10px] text-secondary flex items-center gap-1">
+            <Users size={9} /> {group.member_count || 0}
+          </span>
+        </div>
+      </div>
+      <ChevronRight size={16} className="text-secondary group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
+    </button>
+  );
+}
+
+// ─── Dosen Monitor Lobby ──────────────────────────────────────────────────────
+function DosenMonitorView({ onEnterGroup, token, apiUrl, roomId }) {
+  const [activityData, setActivityData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    const fetchActivity = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`${apiUrl}/api/study-groups/activity/${roomId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) setActivityData(await res.json());
+      } catch (err) { console.error(err); }
+      finally { setIsLoading(false); }
+    };
+    fetchActivity();
+  }, [roomId, token, apiUrl]);
+
+  const filtered = activityData.filter(g =>
+    g.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="flex-1 overflow-y-auto custom-scrollbar">
+      <div className="p-4 bg-slate-50 border-b border-border">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-8 bg-primary-soft rounded-lg flex items-center justify-center">
+            <Shield size={15} className="text-primary" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-foreground">Mode Observer</p>
+            <p className="text-[10px] text-secondary">Pantau semua grup aktif di kelas ini</p>
+          </div>
+        </div>
+        <div className="relative">
+          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Cari nama grup..."
+            className="w-full bg-white border border-border rounded-xl pl-8 pr-3 py-2 text-xs text-foreground outline-none focus:border-primary transition-colors"
+          />
+        </div>
+      </div>
+
+      <div className="p-4 space-y-3">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12 gap-2">
+            <Loader2 size={18} className="text-primary animate-spin" />
+            <span className="text-xs text-secondary">Memuat data grup...</span>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-10">
+            <Users size={32} className="text-slate-300 mx-auto mb-2" />
+            <p className="text-sm text-secondary">Belum ada grup di kelas ini</p>
+          </div>
+        ) : (
+          filtered.map(group => (
+            <div key={group.id} className="bg-white border border-border rounded-2xl p-4">
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 bg-primary-soft rounded-xl flex items-center justify-center">
+                    <Hash size={15} className="text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{group.name}</p>
+                    <p className="text-[10px] font-mono text-secondary">{group.group_code}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => onEnterGroup(group)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-primary bg-primary-soft border border-primary/20 rounded-xl hover:bg-primary hover:text-white transition-all shrink-0"
+                >
+                  <Eye size={12} /> Pantau
+                </button>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { label: 'Anggota', value: group.member_count || 0 },
+                  { label: 'Pesan', value: group.message_count || 0 },
+                  { label: 'Online', value: group.online_count || 0, dot: true },
+                ].map(stat => (
+                  <div key={stat.label} className="bg-slate-50 rounded-xl p-2.5 text-center">
+                    {stat.dot ? (
+                      <div className="flex items-center justify-center gap-1">
+                        <div className={`w-2 h-2 rounded-full ${stat.value > 0 ? 'bg-emerald-500' : 'bg-slate-300'}`} />
+                        <p className="text-base font-bold text-foreground">{stat.value}</p>
+                      </div>
+                    ) : (
+                      <p className="text-base font-bold text-foreground">{stat.value}</p>
+                    )}
+                    <p className="text-[9px] text-secondary uppercase tracking-wide mt-0.5">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+              {group.last_activity && (
+                <p className="text-[10px] text-secondary mt-2.5 flex items-center gap-1">
+                  <Activity size={9} />
+                  {new Date(group.last_activity).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                </p>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 export default function StudyGroup({ roomId, studentId, studentName, token, apiUrl, socket, onOpenClassroomRoom, userRole }) {
   const isDosen = userRole === 'dosen';
   const toast = useToast();
-  const [activeTab, setActiveTab] = useState('lobby'); // lobby, chat, notes
+
+  const [view, setView] = useState('lobby');
   const [groups, setGroups] = useState([]);
   const [activeGroup, setActiveGroup] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [noteContent, setNoteContent] = useState('');
   const [members, setMembers] = useState([]);
-  const [isTyping, setIsTyping] = useState(false);
   const [typingUsers, setTypingUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [joinCode, setJoinCode] = useState('');
   const [tasks, setTasks] = useState([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
-  
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showJoinForm, setShowJoinForm] = useState(false);
+
   const chatEndRef = useRef(null);
+  const inputRef = useRef(null);
   const lastTypingTime = useRef(0);
 
-  // Fetch groups in this room
-  const fetchGroups = async () => {
+  const fetchGroups = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await fetch(`${apiUrl}/api/study-groups/room/${roomId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      if (res.ok) {
-        const data = await res.json();
-        setGroups(data);
-      }
-    } catch (err) {
-      console.error('Failed to fetch groups:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      if (res.ok) setGroups(await res.json());
+    } catch (err) { console.error(err); }
+    finally { setIsLoading(false); }
+  }, [apiUrl, roomId, token]);
 
-  useEffect(() => {
-    fetchGroups();
-  }, [roomId]);
+  useEffect(() => { fetchGroups(); }, [fetchGroups]);
 
-  // Socket.IO Setup
   useEffect(() => {
     if (!activeGroup || !socket) return;
-
     socket.emit('sg:join', { groupId: activeGroup.id, studentId, studentName });
 
-    const handleMessage = (message) => {
-      setMessages(prev => [...prev, message]);
+    const onMessage = (msg) => setMessages(prev => [...prev, msg]);
+    const onNote = (c) => setNoteContent(c);
+    const onTyping = ({ studentName: who, isTyping: on }) => {
+      if (who === studentName) return;
+      setTypingUsers(prev => on ? [...new Set([...prev, who])] : prev.filter(u => u !== who));
     };
+    const onMembers = (m) => setMembers(m);
+    const onTasks = (t) => setTasks(t);
 
-    const handleNoteUpdate = (content) => {
-      setNoteContent(content);
-    };
-
-    const handleTyping = ({ studentName: typingUser, isTyping: typingStatus }) => {
-      if (typingUser === studentName) return;
-      setTypingUsers(prev => {
-        if (typingStatus) return [...new Set([...prev, typingUser])];
-        return prev.filter(u => u !== typingUser);
-      });
-    };
-
-    const handleMemberUpdate = (updatedMembers) => {
-      setMembers(updatedMembers);
-    };
-
-    const handleTasksUpdate = (updatedTasks) => {
-      setTasks(updatedTasks);
-    };
-
-    socket.on('sg:message', handleMessage);
-    socket.on('sg:note-update', handleNoteUpdate);
-    socket.on('sg:typing', handleTyping);
-    socket.on('sg:member-update', handleMemberUpdate);
-    socket.on('sg:tasks-update', handleTasksUpdate);
+    socket.on('sg:message', onMessage);
+    socket.on('sg:note-update', onNote);
+    socket.on('sg:typing', onTyping);
+    socket.on('sg:member-update', onMembers);
+    socket.on('sg:tasks-update', onTasks);
 
     return () => {
       socket.emit('sg:leave', { groupId: activeGroup.id, studentId });
-      socket.off('sg:message', handleMessage);
-      socket.off('sg:note-update', handleNoteUpdate);
-      socket.off('sg:typing', handleTyping);
-      socket.off('sg:member-update', handleMemberUpdate);
-      socket.off('sg:tasks-update', handleTasksUpdate);
+      socket.off('sg:message', onMessage);
+      socket.off('sg:note-update', onNote);
+      socket.off('sg:typing', onTyping);
+      socket.off('sg:member-update', onMembers);
+      socket.off('sg:tasks-update', onTasks);
     };
   }, [activeGroup, socket, studentId, studentName]);
 
@@ -103,518 +308,435 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
   const handleCreateGroup = async (e) => {
     e.preventDefault();
     if (!newGroupName.trim()) return;
-
     try {
       const res = await fetch(`${apiUrl}/api/study-groups`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ 
-          room_id: roomId, 
-          name: newGroupName, 
-          creator_id: studentId 
-        })
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ room_id: roomId, name: newGroupName, creator_id: studentId })
       });
-      if (res.ok) {
-        setNewGroupName('');
-        fetchGroups();
-      }
-    } catch (err) {
-      console.error(err);
-    }
+      if (res.ok) { setNewGroupName(''); setShowCreateForm(false); fetchGroups(); toast.success('Grup berhasil dibuat!'); }
+    } catch (err) { console.error(err); }
   };
 
   const handleJoinGroup = async (e) => {
     e.preventDefault();
     if (!joinCode.trim()) return;
-
     try {
       const res = await fetch(`${apiUrl}/api/study-groups/join`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ student_id: studentId, group_code: joinCode.trim() })
       });
-      if (res.ok) {
-        setJoinCode('');
-        fetchGroups();
-      } else {
-        toast.error('Kode grup tidak valid atau Anda sudah bergabung.');
-      }
-    } catch (err) {
-      console.error(err);
-    }
+      if (res.ok) { setJoinCode(''); setShowJoinForm(false); fetchGroups(); toast.success('Berhasil bergabung!'); }
+      else toast.error('Kode grup tidak valid atau Anda sudah bergabung.');
+    } catch (err) { console.error(err); }
   };
 
   const enterGroup = async (group) => {
     setActiveGroup(group);
-    setActiveTab('chat');
+    setView('chat');
     setIsLoading(true);
-    
     try {
-      const msgRes = await fetch(`${apiUrl}/api/study-groups/${group.id}/messages`, {
+      const res = await fetch(`${apiUrl}/api/study-groups/${group.id}/messages`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      if (msgRes.ok) {
-        const data = await msgRes.json();
-        setMessages(data);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
+      if (res.ok) setMessages(await res.json());
+    } catch (err) { console.error(err); }
+    finally { setIsLoading(false); }
+    setTimeout(() => inputRef.current?.focus(), 100);
   };
 
   const sendMessage = async () => {
     if (!inputText.trim() || !activeGroup) return;
-
-    const messageData = {
-      content: inputText,
-      message_type: 'chat'
-    };
-
+    const content = inputText;
+    setInputText('');
     try {
       await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/messages`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ ...messageData, student_id: studentId })
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ content, message_type: 'chat', student_id: studentId })
       });
-      setInputText('');
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) { console.error(err); }
   };
 
-  // Throttle note updates to DB
-  const noteTimeoutRef = useRef(null);
-  const updateNote = (newContent) => {
-    setNoteContent(newContent);
-    
-    // Immediate broadcast to others
-    socket?.emit('sg:note-update', { 
-      groupId: activeGroup.id, 
-      content: newContent 
-    });
-
-    // Throttled save to DB logic is now handled on server-side 
-    // but we can add a local indicator if needed.
-  };
-
-  const handleSaveNotesToChat = async () => {
-    if (!noteContent.trim() || !activeGroup) return;
-    
-    try {
-      await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/messages`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ 
-          content: noteContent, 
-          message_type: 'note', 
-          student_id: studentId 
-        })
-      });
-      setActiveTab('chat');
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleTyping = () => {
+  const handleTypingEvent = () => {
     const now = Date.now();
     if (now - lastTypingTime.current > 1000) {
-      socket?.emit('sg:typing', { 
-        groupId: activeGroup.id, 
-        studentName, 
-        isTyping: true 
-      });
+      socket?.emit('sg:typing', { groupId: activeGroup.id, studentName, isTyping: true });
       lastTypingTime.current = now;
-      
-      setTimeout(() => {
-        socket?.emit('sg:typing', { 
-          groupId: activeGroup.id, 
-          studentName, 
-          isTyping: false 
-        });
-      }, 3000);
+      setTimeout(() => socket?.emit('sg:typing', { groupId: activeGroup.id, studentName, isTyping: false }), 3000);
     }
   };
 
   const leaveGroup = () => {
-    setActiveGroup(null);
-    setMessages([]);
-    setMembers([]);
-    setTasks([]);
-    setActiveTab('lobby');
+    setActiveGroup(null); setMessages([]); setMembers([]);
+    setTasks([]); setNoteContent(''); setView('lobby');
+  };
+
+  const handleSaveNotesToChat = async () => {
+    if (!noteContent.trim() || !activeGroup) return;
+    try {
+      await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ content: noteContent, message_type: 'note', student_id: studentId })
+      });
+      setView('chat');
+      toast.success('Catatan dikirim ke chat!');
+    } catch (err) { console.error(err); }
   };
 
   const addTask = () => {
     if (!newTaskTitle.trim() || !activeGroup) return;
-    const newTask = {
-      id: Date.now(),
-      title: newTaskTitle,
-      status: 'todo',
-      assignee: studentName,
-      created_at: new Date()
-    };
-    const updatedTasks = [...tasks, newTask];
-    setTasks(updatedTasks);
-    setNewTaskTitle('');
-    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updatedTasks });
+    const updated = [...tasks, { id: Date.now(), title: newTaskTitle, status: 'todo', assignee: studentName, created_at: new Date() }];
+    setTasks(updated); setNewTaskTitle('');
+    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updated });
   };
 
-  const toggleTaskStatus = (taskId) => {
-    const updatedTasks = tasks.map(t => {
-      if (t.id === taskId) {
-        return { ...t, status: t.status === 'done' ? 'todo' : 'done' };
-      }
-      return t;
-    });
-    setTasks(updatedTasks);
-    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updatedTasks });
+  const toggleTask = (id) => {
+    const updated = tasks.map(t => t.id === id ? { ...t, status: t.status === 'done' ? 'todo' : 'done' } : t);
+    setTasks(updated);
+    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updated });
   };
 
-  const deleteTask = (taskId) => {
-    const updatedTasks = tasks.filter(t => t.id !== taskId);
-    setTasks(updatedTasks);
-    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updatedTasks });
+  const deleteTask = (id) => {
+    const updated = tasks.filter(t => t.id !== id);
+    setTasks(updated);
+    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updated });
   };
+
+  const myGroups = isDosen ? [] : groups.filter(g => g.is_member);
+  const availableGroups = isDosen ? [] : groups.filter(g => !g.is_member);
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0f172a] overflow-hidden border-l border-border animate-in slide-in-from-right duration-300">
-      {/* Header */}
-      <div className="px-5 py-4 border-b border-border bg-white/[0.02] flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${activeGroup ? 'bg-cyan-500 shadow-cyan-500/20' : 'bg-white shadow-sm border border-border'}`}>
-            <Users size={22} className="text-foreground" />
-          </div>
-          <div>
-            <h2 className="font-black text-sm text-foreground tracking-tight">
-              {activeGroup ? activeGroup.name : 'Group Chat'}
-            </h2>
-            <p className="text-[10px] text-secondary font-bold uppercase tracking-widest">
-              {activeGroup ? `KODE: ${activeGroup.group_code}` : 'Kolaborasi & Diskusi'}
-              {isDosen && activeGroup && ' • MODE OBSERVER'}
-            </p>
-          </div>
-        </div>
-        {activeGroup && (
-          <button onClick={leaveGroup} className="p-2 text-secondary hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors" aria-label="LogOut">
-            <LogOut size={18} />
-          </button>
+    <div className="w-full h-full flex flex-col bg-white overflow-hidden">
+
+      {/* Top bar */}
+      <div className="px-4 py-3 border-b border-border bg-white flex items-center gap-3 shrink-0 shadow-sm">
+        {activeGroup ? (
+          <>
+            <button onClick={leaveGroup} className="p-1.5 text-secondary hover:text-foreground hover:bg-slate-100 rounded-lg transition-colors" aria-label="Kembali">
+              <ArrowLeft size={16} />
+            </button>
+            <div className="w-8 h-8 bg-primary-soft rounded-xl flex items-center justify-center">
+              <Hash size={15} className="text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-semibold text-sm text-foreground truncate">{activeGroup.name}</h2>
+              <p className="text-[10px] text-secondary font-mono">
+                {activeGroup.group_code}
+                {isDosen && <span className="ml-1.5 text-primary font-sans not-italic">• Observer</span>}
+              </p>
+            </div>
+            {members.length > 0 && (
+              <div className="flex items-center gap-1 px-2.5 py-1 bg-emerald-50 border border-emerald-200 rounded-full shrink-0">
+                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                <span className="text-[10px] font-semibold text-emerald-700">{members.length}</span>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <div className="w-8 h-8 bg-primary-soft rounded-xl flex items-center justify-center">
+              <MessageSquare size={15} className="text-primary" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-sm text-foreground">Group Chat</h2>
+              <p className="text-[10px] text-secondary">{isDosen ? 'Monitor semua grup kelas' : 'Kolaborasi & Diskusi'}</p>
+            </div>
+          </>
         )}
       </div>
 
-      {/* Tabs */}
+      {/* Sub-tabs (inside group) */}
       {activeGroup && (
-        <div className="flex p-1 bg-white/[0.03] border-b border-border shrink-0">
-          <button
-            onClick={() => setActiveTab('chat')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${activeTab === 'chat' ? 'bg-white shadow-sm border border-border text-cyan-400 shadow-sm' : 'text-secondary hover:text-secondary'}`}
-          >
-            <MessageSquare size={14} /> Chat
-          </button>
-          <button
-            onClick={() => setActiveTab('notes')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${activeTab === 'notes' ? 'bg-white shadow-sm border border-border text-amber-600 shadow-sm' : 'text-secondary hover:text-secondary'}`}
-          >
-            <BookOpen size={14} /> Notes
-          </button>
-          <button
-            onClick={() => setActiveTab('tasks')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${activeTab === 'tasks' ? 'bg-white shadow-sm border border-border text-emerald-600 shadow-sm' : 'text-secondary hover:text-secondary'}`}
-          >
-            <Layout size={14} /> Tasks
-          </button>
-          <button
-            onClick={() => setActiveTab('lobby')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${activeTab === 'lobby' ? 'bg-white shadow-sm border border-border text-foreground shadow-sm' : 'text-secondary hover:text-secondary'}`}
-          >
-            <Users size={14} /> Grup
-          </button>
+        <div className="flex border-b border-border bg-white shrink-0">
+          {[
+            { id: 'chat',  label: 'Chat',    icon: MessageSquare },
+            { id: 'notes', label: 'Catatan', icon: BookOpen },
+            { id: 'tasks', label: 'Tugas',   icon: Layout },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setView(tab.id)}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-semibold transition-all border-b-2 ${
+                view === tab.id ? 'border-primary text-primary' : 'border-transparent text-secondary hover:text-foreground'
+              }`}
+            >
+              <tab.icon size={13} /> {tab.label}
+            </button>
+          ))}
         </div>
       )}
 
-      {/* View Content */}
-      {isLoading ? (
-        <div className="flex-1 flex flex-col items-center justify-center gap-3">
-          <Loader2 size={24} className="text-cyan-500 animate-spin" />
-          <p className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">Sinkronisasi...</p>
+      {/* Content */}
+      {isLoading && !activeGroup ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-2">
+          <Loader2 size={22} className="text-primary animate-spin" />
+          <p className="text-xs text-secondary">Memuat grup...</p>
         </div>
       ) : (
         <>
-          {/* ===== LOBBY VIEW ===== */}
-          {activeTab === 'lobby' && (
-            <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
-              <div>
-                <h3 className="text-xs font-black text-secondary uppercase tracking-widest mb-3 flex items-center gap-2">
-                  <CheckCircle2 size={12} className="text-emerald-500" /> {isDosen ? 'Semua Grup di Room' : 'Grup Saya'}
-                </h3>
-                <div className="space-y-2">
-                  {(isDosen ? groups : groups.filter(g => g.is_member)).length === 0 && (
-                    <p className="text-[10px] text-secondary italic px-2">{isDosen ? 'Belum ada grup di room ini.' : 'Anda belum bergabung ke grup manapun.'}</p>
+          {/* LOBBY — Mahasiswa */}
+          {view === 'lobby' && !isDosen && (
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
+              <div className="p-4 space-y-4">
+
+                {/* My groups */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-[11px] font-semibold text-secondary uppercase tracking-widest">Grup Saya</p>
+                    <span className="text-[10px] bg-primary-soft text-primary px-2 py-0.5 rounded-full font-semibold">{myGroups.length}</span>
+                  </div>
+                  {myGroups.length === 0 ? (
+                    <div className="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-5 text-center">
+                      <Users size={24} className="text-slate-300 mx-auto mb-2" />
+                      <p className="text-sm text-secondary">Belum ada grup</p>
+                      <p className="text-[11px] text-secondary/70 mt-1">Buat atau join menggunakan kode</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {myGroups.map(g => <GroupCard key={g.id} group={g} onClick={() => enterGroup(g)} />)}
+                    </div>
                   )}
-                  {(isDosen ? groups : groups.filter(g => g.is_member)).map(group => (
-                    <button
-                      key={group.id}
-                      onClick={() => enterGroup(group)}
-                      className="w-full p-4 bg-white/[0.03] border border-border rounded-2xl hover:bg-white shadow-sm border border-border transition-all text-left group flex items-center justify-between"
-                    >
-                      <div>
-                        <h4 className="text-sm font-bold text-foreground group-hover:text-cyan-400 transition-colors">{group.name}</h4>
-                        <p className="text-[10px] text-secondary font-mono mt-1 uppercase tracking-tight">{group.group_code}</p>
-                      </div>
-                      <ChevronRight size={16} className="text-secondary group-hover:text-cyan-400 transform group-hover:translate-x-1 transition-all" />
-                    </button>
-                  ))}
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 gap-4 pt-4 border-t border-border">
-                <form onSubmit={handleJoinGroup} className="space-y-2">
-                  <label className="text-[10px] font-bold text-secondary uppercase tracking-widest px-1">Join via Kode</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={joinCode}
-                      onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-                      placeholder="CONTOH: CS101-ABCD"
-                      className="flex-1 bg-white shadow-sm border border-border border border-border rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-cyan-500 transition-all font-mono"
-                    />
-                    <button type="submit" disabled={isLoading} className="p-2 bg-cyan-500 text-foreground rounded-xl hover:bg-cyan-600 transition shadow-lg shadow-cyan-500/20 disabled:opacity-50">
-                      <UserPlus size={16} />
-                    </button>
+                {/* Action buttons */}
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => { setShowJoinForm(!showJoinForm); setShowCreateForm(false); }}
+                    className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold border transition-all ${showJoinForm ? 'bg-primary text-white border-primary' : 'bg-white text-foreground border-border hover:border-primary/40'}`}
+                  >
+                    <UserPlus size={14} /> Join Grup
+                  </button>
+                  <button
+                    onClick={() => { setShowCreateForm(!showCreateForm); setShowJoinForm(false); }}
+                    className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold border transition-all ${showCreateForm ? 'bg-primary text-white border-primary' : 'bg-white text-foreground border-border hover:border-primary/40'}`}
+                  >
+                    <Plus size={14} /> Buat Grup
+                  </button>
+                </div>
+
+                {showJoinForm && (
+                  <form onSubmit={handleJoinGroup} className="bg-sky-50 border border-sky-200 rounded-2xl p-4 space-y-2">
+                    <p className="text-[11px] font-semibold text-sky-700 uppercase tracking-wide">Kode Grup</p>
+                    <div className="flex gap-2">
+                      <input type="text" value={joinCode} onChange={e => setJoinCode(e.target.value.toUpperCase())}
+                        placeholder="Contoh: KEL-1234"
+                        className="flex-1 bg-white border border-sky-200 rounded-xl px-3 py-2 text-xs font-mono text-foreground outline-none focus:border-primary transition-colors" />
+                      <button type="submit" className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary-hover transition-colors">Join</button>
+                    </div>
+                  </form>
+                )}
+
+                {showCreateForm && (
+                  <form onSubmit={handleCreateGroup} className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 space-y-2">
+                    <p className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wide">Nama Grup</p>
+                    <div className="flex gap-2">
+                      <input type="text" value={newGroupName} onChange={e => setNewGroupName(e.target.value)}
+                        placeholder="Contoh: Kelompok 1"
+                        className="flex-1 bg-white border border-emerald-200 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary transition-colors" />
+                      <button type="submit" className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary-hover transition-colors">Buat</button>
+                    </div>
+                  </form>
+                )}
+
+                {availableGroups.length > 0 && (
+                  <div>
+                    <p className="text-[11px] font-semibold text-secondary uppercase tracking-widest mb-2 pt-2 border-t border-border">Grup Lain di Kelas</p>
+                    <div className="space-y-2">
+                      {availableGroups.map(g => <GroupCard key={g.id} group={g} onClick={() => enterGroup(g)} />)}
+                    </div>
                   </div>
-                </form>
+                )}
 
-                <form onSubmit={handleCreateGroup} className="space-y-2">
-                  <label className="text-[10px] font-bold text-secondary uppercase tracking-widest px-1">Buat Grup Baru</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={newGroupName}
-                      onChange={(e) => setNewGroupName(e.target.value)}
-                      placeholder="Nama Grup..."
-                      className="flex-1 bg-white shadow-sm border border-border border border-border rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-cyan-500 transition-all"
-                    />
-                    <button type="submit" disabled={isLoading} className="p-2 bg-emerald-500 text-foreground rounded-xl hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/20 disabled:opacity-50">
-                      <Hash size={16} />
-                    </button>
-                  </div>
-                </form>
-              </div>
-
-              <button
-                onClick={fetchGroups}
-                className="w-full py-2 text-[10px] font-black text-secondary hover:text-secondary uppercase tracking-[0.2em] transition-colors"
-              >
-                Refresh Group List
-              </button>
-
-              <div className="p-4 bg-white/[0.02] border border-border rounded-2xl">
-                <div className="flex items-start gap-3">
-                  <Info size={16} className="text-cyan-400 mt-0.5" />
-                  <p className="text-[10px] text-secondary leading-relaxed">
-                    {isDosen
-                      ? 'Mode Dosen: Anda dapat melihat semua grup dan memantau aktivitas mahasiswa.'
-                      : 'Group Chat bersifat privat. Hanya mahasiswa di kelas ini yang bisa bergabung melalui kode unik grup.'}
+                <div className="p-3 bg-slate-50 border border-border rounded-xl flex items-start gap-2.5">
+                  <Info size={14} className="text-secondary mt-0.5 shrink-0" />
+                  <p className="text-[11px] text-secondary leading-relaxed">
+                    Hanya mahasiswa dalam kelas ini yang bisa bergabung. Bagikan kode grup ke teman sekelasmu.
                   </p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* ===== CHAT VIEW ===== */}
-          {activeTab === 'chat' && activeGroup && (
-            <div className="flex-1 flex flex-col overflow-hidden">
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
-                {messages.map((msg, idx) => {
-                  const isMe = msg.student_id === studentId;
-                  const isNote = msg.message_type === 'note';
-                  const isSystem = msg.message_type === 'system';
+          {/* LOBBY — Dosen */}
+          {view === 'lobby' && isDosen && (
+            <DosenMonitorView onEnterGroup={enterGroup} token={token} apiUrl={apiUrl} roomId={roomId} />
+          )}
 
-                  if (isSystem) return (
-                    <div key={idx} className="flex justify-center">
-                      <span className="text-[9px] bg-white shadow-sm border border-border text-secondary px-2 py-0.5 rounded-full uppercase tracking-widest font-black">{msg.content}</span>
-                    </div>
-                  );
-
-                  return (
-                    <div key={idx} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                      <div className="flex items-center gap-2 mb-1 px-1">
-                        {!isMe && <span className="text-[10px] font-black text-secondary">{msg.student_name}</span>}
-                        <span className="text-[8px] text-secondary">{new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                      </div>
-                      <div className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-sm shadow-sm leading-relaxed ${
-                        isNote
-                          ? 'bg-amber-500/10 border border-amber-500/20 text-amber-200 font-medium italic'
-                          : isMe
-                            ? 'bg-cyan-500 text-foreground rounded-tr-none'
-                            : 'bg-white shadow-sm border border-border border border-border text-foreground rounded-tl-none'
-                      }`}>
-                        {isNote && <BookOpen size={12} className="inline mr-2 mb-0.5 opacity-50" />}
-                        {msg.content}
-                      </div>
-                    </div>
-                  );
-                })}
+          {/* CHAT */}
+          {view === 'chat' && activeGroup && (
+            <div className="flex-1 flex flex-col overflow-hidden bg-slate-50">
+              <div className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar">
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-12 gap-2">
+                    <Loader2 size={16} className="text-primary animate-spin" />
+                    <span className="text-xs text-secondary">Memuat pesan...</span>
+                  </div>
+                ) : messages.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <MessageSquare size={32} className="text-slate-300 mb-2" />
+                    <p className="text-sm text-secondary">Belum ada pesan</p>
+                    <p className="text-[11px] text-secondary/70 mt-1">Mulai diskusi kelompokmu di sini 👋</p>
+                  </div>
+                ) : (
+                  messages.map((msg, idx) => (
+                    <ChatBubble key={idx} msg={msg} isMe={msg.student_id === studentId} />
+                  ))
+                )}
                 <div ref={chatEndRef} />
               </div>
 
-              {/* Typing Indicator */}
-              {typingUsers.length > 0 && (
-                <div className="px-4 py-1 flex items-center gap-2">
-                  <div className="flex gap-1">
-                    <span className="w-1 h-1 bg-cyan-400 rounded-full animate-bounce"></span>
-                    <span className="w-1 h-1 bg-cyan-400 rounded-full animate-bounce delay-75"></span>
-                    <span className="w-1 h-1 bg-cyan-400 rounded-full animate-bounce delay-150"></span>
-                  </div>
-                  <p className="text-[9px] text-cyan-400 font-bold uppercase tracking-tighter">
-                    {typingUsers.join(', ')} sedang mengetik...
+              <TypingDots users={typingUsers} />
+
+              {isDosen ? (
+                <div className="px-4 py-3 border-t border-border bg-white shrink-0 text-center">
+                  <p className="text-[11px] text-secondary flex items-center justify-center gap-1.5">
+                    <Eye size={12} className="text-primary" /> Anda sedang memantau percakapan grup ini
                   </p>
                 </div>
-              )}
-
-              {/* Input */}
-              <div className="p-3 bg-white/[0.03] border-t border-border shrink-0">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={inputText}
-                    onChange={(e) => {
-                      setInputText(e.target.value);
-                      handleTyping();
-                    }}
-                    onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-                    placeholder="Ketik pesan..."
-                    autoComplete="off"
-                    className="w-full bg-white shadow-sm border border-border border border-border rounded-xl pl-4 pr-12 py-3 text-sm text-foreground outline-none focus:border-cyan-500 transition-all shadow-inner"
-                  />
-                  <button
-                    onClick={sendMessage}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-cyan-500 text-foreground rounded-lg hover:bg-cyan-600 transition shadow-lg shadow-cyan-500/20"
-                  >
-                    <Send size={14} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ===== TASKS VIEW (KANBAN) ===== */}
-          {activeTab === 'tasks' && activeGroup && (
-            <div className="flex-1 flex flex-col overflow-hidden bg-black/20">
-              <div className="p-4 border-b border-border flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-2">
-                  <Layout className="text-emerald-600" size={16} />
-                  <h4 className="text-xs font-black text-emerald-200 uppercase tracking-widest">Kanban Board</h4>
-                </div>
-              </div>
-              
-              <div className="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-6">
-                {/* Add Task Input */}
-                <div className="bg-white/[0.03] border border-border rounded-2xl p-4">
-                  <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-3">Tambah Tugas Baru</p>
-                  <div className="flex gap-2">
-                    <input 
-                      type="text" 
-                      value={newTaskTitle}
-                      onChange={(e) => setNewTaskTitle(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && addTask()}
-                      placeholder="Apa yang perlu dikerjakan?"
-                      className="flex-1 bg-white shadow-sm border border-border border border-border rounded-xl px-4 py-2 text-xs text-foreground outline-none focus:border-emerald-500 transition-all"
+              ) : (
+                <div className="p-3 border-t border-border bg-white shrink-0">
+                  <div className="flex items-center gap-2">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={inputText}
+                      onChange={e => { setInputText(e.target.value); handleTypingEvent(); }}
+                      onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+                      placeholder="Tulis pesan..."
+                      autoComplete="off"
+                      className="flex-1 bg-slate-50 border border-border rounded-2xl px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:bg-white transition-all"
                     />
-                    <button 
-                      onClick={addTask}
-                      className="p-2 bg-emerald-500 text-foreground rounded-xl hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/20"
+                    <button
+                      onClick={sendMessage}
+                      disabled={!inputText.trim()}
+                      className="p-2.5 bg-primary text-white rounded-2xl hover:bg-primary-hover transition-colors shadow-emerald-sm disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
                     >
-                      <Plus size={18} />
+                      <Send size={16} />
                     </button>
                   </div>
                 </div>
+              )}
+            </div>
+          )}
 
-                {/* Columns */}
-                <div className="space-y-4">
-                  {/* TODO SECTION */}
-                  <div>
-                    <h5 className="text-[9px] font-black text-secondary uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
-                      <Clock size={10} /> To Do ({tasks.filter(t => t.status !== 'done').length})
-                    </h5>
-                    <div className="space-y-2">
-                      {tasks.filter(t => t.status !== 'done').map(task => (
-                        <div key={task.id} className="bg-white shadow-sm border border-border border border-border p-3 rounded-xl group flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <button 
-                              onClick={() => toggleTaskStatus(task.id)}
-                              className="w-5 h-5 rounded-full border border-border hover:border-emerald-500/50 transition-colors"
-                            />
-                            <div>
-                              <p className="text-xs text-foreground font-medium">{task.title}</p>
-                              <p className="text-[8px] text-secondary mt-0.5">Dibuat oleh: {task.assignee}</p>
-                            </div>
-                          </div>
-                          <button onClick={() => deleteTask(task.id)} className="p-1 text-secondary hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+          {/* NOTES */}
+          {view === 'notes' && activeGroup && (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl overflow-hidden mb-3">
+                  <div className="flex items-center gap-2 px-4 py-3 border-b border-amber-200 bg-amber-100/50">
+                    <BookOpen size={14} className="text-amber-600" />
+                    <p className="text-[11px] font-semibold text-amber-700">Catatan Bersama — {activeGroup.name}</p>
                   </div>
+                  <textarea
+                    value={noteContent}
+                    onChange={e => {
+                      setNoteContent(e.target.value);
+                      socket?.emit('sg:note-update', { groupId: activeGroup.id, content: e.target.value });
+                    }}
+                    readOnly={isDosen}
+                    placeholder="Tulis catatan bersama di sini. Semua anggota dapat melihat dan mengedit secara real-time..."
+                    rows={12}
+                    className="w-full bg-transparent px-4 py-3 text-sm text-foreground outline-none resize-none leading-relaxed"
+                  />
+                </div>
+                <p className="text-[10px] text-secondary flex items-center gap-1 px-1">
+                  <Info size={10} /> Sinkron real-time ke semua anggota grup
+                </p>
+              </div>
+              {!isDosen && (
+                <div className="p-3 border-t border-border bg-white shrink-0">
+                  <button
+                    onClick={handleSaveNotesToChat}
+                    disabled={!noteContent.trim()}
+                    className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-40"
+                  >
+                    <Send size={13} /> Kirim Catatan ke Chat
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
-                  {/* DONE SECTION */}
-                  <div className="pt-4 border-t border-border">
-                    <h5 className="text-[9px] font-black text-emerald-500/40 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
-                      <CheckCircle size={10} /> Selesai ({tasks.filter(t => t.status === 'done').length})
-                    </h5>
-                    <div className="space-y-2 opacity-50">
-                      {tasks.filter(t => t.status === 'done').map(task => (
-                        <div key={task.id} className="bg-white shadow-sm border border-border border border-border p-3 rounded-xl flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <button 
-                              onClick={() => toggleTaskStatus(task.id)}
-                              className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-600"
-                            >
-                              <Check size={12} />
-                            </button>
-                            <p className="text-xs text-secondary line-through font-medium">{task.title}</p>
-                          </div>
-                          <button onClick={() => deleteTask(task.id)} className="p-1 text-secondary hover:text-red-400 transition-all">
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+          {/* TASKS */}
+          {view === 'tasks' && activeGroup && (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              {!isDosen && (
+                <div className="p-3 border-b border-border bg-white shrink-0">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newTaskTitle}
+                      onChange={e => setNewTaskTitle(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && addTask()}
+                      placeholder="Tambah tugas baru..."
+                      className="flex-1 bg-slate-50 border border-border rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary transition-colors"
+                    />
+                    <button onClick={addTask} disabled={!newTaskTitle.trim()} className="p-2 bg-primary text-white rounded-xl hover:bg-primary-hover transition-colors disabled:opacity-40">
+                      <Plus size={15} />
+                    </button>
                   </div>
                 </div>
+              )}
+
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                {/* Todo */}
+                <div>
+                  <p className="text-[10px] font-semibold text-secondary uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                    <Clock size={10} /> Perlu Dikerjakan ({tasks.filter(t => t.status !== 'done').length})
+                  </p>
+                  <div className="space-y-2">
+                    {tasks.filter(t => t.status !== 'done').length === 0 && (
+                      <p className="text-[11px] text-secondary/60 italic px-1">Tidak ada tugas pending 🎉</p>
+                    )}
+                    {tasks.filter(t => t.status !== 'done').map(task => (
+                      <div key={task.id} className="bg-white border border-border rounded-xl p-3 flex items-center gap-3 group">
+                        <button onClick={() => toggleTask(task.id)} className="w-5 h-5 rounded-full border-2 border-border hover:border-primary transition-colors shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-foreground font-medium truncate">{task.title}</p>
+                          <p className="text-[9px] text-secondary mt-0.5">{task.assignee}</p>
+                        </div>
+                        {!isDosen && (
+                          <button onClick={() => deleteTask(task.id)} className="p-1 text-slate-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
+                            <Trash2 size={13} />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Done */}
+                {tasks.filter(t => t.status === 'done').length > 0 && (
+                  <div>
+                    <p className="text-[10px] font-semibold text-emerald-600 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                      <CheckCircle2 size={10} /> Selesai ({tasks.filter(t => t.status === 'done').length})
+                    </p>
+                    <div className="space-y-2 opacity-60">
+                      {tasks.filter(t => t.status === 'done').map(task => (
+                        <div key={task.id} className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 flex items-center gap-3">
+                          <button onClick={() => toggleTask(task.id)} className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
+                            <Check size={11} className="text-white" />
+                          </button>
+                          <p className="text-xs text-secondary line-through flex-1 truncate">{task.title}</p>
+                          {!isDosen && (
+                            <button onClick={() => deleteTask(task.id)} className="p-1 text-slate-300 hover:text-red-400 transition-colors">
+                              <Trash2 size={13} />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
         </>
       )}
-
-      {/* Footer / Group Member Info */}
-      {activeGroup && activeTab === 'chat' && (
-        <div className="px-4 py-2 bg-white/[0.01] border-t border-border flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
-          <span className="text-[8px] font-black text-secondary uppercase tracking-widest mr-1">Online:</span>
-          {members.map(m => (
-            <div key={m.student_id} className="flex items-center gap-1 bg-white shadow-sm border border-border px-2 py-0.5 rounded-full border border-border shrink-0">
-              <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-              <span className="text-[9px] font-bold text-secondary">{m.student_name}</span>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
-
