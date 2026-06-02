@@ -16,15 +16,18 @@ const AVATAR_COLORS = [
   'bg-rose-100 text-rose-700',
   'bg-teal-100 text-teal-700',
 ];
-function getAvatarColor(name = '') {
-  const idx = name.charCodeAt(0) % AVATAR_COLORS.length;
+function getAvatarColor(name) {
+  const safeName = name || '?';
+  const code = safeName.charCodeAt(0) || 63;
+  const idx = code % AVATAR_COLORS.length;
   return AVATAR_COLORS[idx];
 }
-function Avatar({ name = '?', size = 'sm' }) {
+function Avatar({ name, size = 'sm' }) {
+  const safeName = name || '?';
   const cls = size === 'sm' ? 'w-7 h-7 text-xs' : 'w-9 h-9 text-sm';
   return (
-    <div className={`${cls} ${getAvatarColor(name)} rounded-full flex items-center justify-center font-bold shrink-0`}>
-      {name.charAt(0).toUpperCase()}
+    <div className={`${cls} ${getAvatarColor(safeName)} rounded-full flex items-center justify-center font-bold shrink-0`}>
+      {safeName.charAt(0).toUpperCase()}
     </div>
   );
 }
@@ -48,9 +51,16 @@ function TypingDots({ users }) {
 
 // ─── Chat bubble ─────────────────────────────────────────────────────────────
 function ChatBubble({ msg, isMe }) {
+  if (!msg) return null;
   const isNote = msg.message_type === 'note';
   const isSystem = msg.message_type === 'system';
-  const time = new Date(msg.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  
+  const dateObj = msg.created_at ? new Date(msg.created_at) : new Date();
+  const time = isNaN(dateObj.getTime())
+    ? new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+    : dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+  const senderName = msg.student_name || 'System';
 
   if (isSystem) {
     return (
@@ -68,7 +78,7 @@ function ChatBubble({ msg, isMe }) {
         <div className="max-w-[85%] bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 w-full">
           <div className="flex items-center gap-1.5 mb-1.5">
             <BookOpen size={12} className="text-amber-600" />
-            <span className="text-[10px] font-semibold text-amber-600 uppercase tracking-wide">Catatan dari {msg.student_name}</span>
+            <span className="text-[10px] font-semibold text-amber-600 uppercase tracking-wide">Catatan dari {senderName}</span>
           </div>
           <p className="text-sm text-amber-900 leading-relaxed italic">{msg.content}</p>
           <p className="text-[10px] text-amber-500 mt-1.5 text-right">{time}</p>
@@ -79,10 +89,10 @@ function ChatBubble({ msg, isMe }) {
 
   return (
     <div className={`flex items-end gap-2 mb-3 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
-      {!isMe && <Avatar name={msg.student_name} size="sm" />}
+      {!isMe && <Avatar name={senderName} size="sm" />}
       <div className={`flex flex-col gap-0.5 max-w-[75%] ${isMe ? 'items-end' : 'items-start'}`}>
         {!isMe && (
-          <span className="text-[11px] font-semibold text-secondary px-1">{msg.student_name}</span>
+          <span className="text-[11px] font-semibold text-secondary px-1">{senderName}</span>
         )}
         <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
           isMe
@@ -386,10 +396,48 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
     } catch (err) { console.error(err); }
   };
 
+  const [addingTaskFor, setAddingTaskFor] = useState(null);
+  const [inlineTaskTitle, setInlineTaskTitle] = useState('');
+
   const addTask = () => {
     if (!newTaskTitle.trim() || !activeGroup) return;
-    const updated = [...tasks, { id: Date.now(), title: newTaskTitle, status: 'todo', assignee: studentName, created_at: new Date() }];
+    const updated = [...tasks, { id: Date.now(), title: newTaskTitle, status: 'todo', assignee: '', created_at: new Date() }];
     setTasks(updated); setNewTaskTitle('');
+    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updated });
+  };
+
+  const addInlineTask = (assigneeName) => {
+    if (!inlineTaskTitle.trim() || !activeGroup) return;
+    const isBacklog = assigneeName === 'Belum Ditugaskan';
+    const newTask = {
+      id: Date.now(),
+      title: inlineTaskTitle.trim(),
+      status: 'todo',
+      assignee: isBacklog ? '' : assigneeName,
+      created_at: new Date()
+    };
+    const updated = [...tasks, newTask];
+    setTasks(updated);
+    setInlineTaskTitle('');
+    setAddingTaskFor(null);
+    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updated });
+  };
+
+  const handleDragStart = (e, taskId) => {
+    e.dataTransfer.setData('text/plain', taskId.toString());
+  };
+
+  const handleDrop = (e, targetAssignee) => {
+    e.preventDefault();
+    const taskIdStr = e.dataTransfer.getData('text/plain');
+    if (!taskIdStr) return;
+    const taskId = Number(taskIdStr);
+    const isBacklog = targetAssignee === 'Belum Ditugaskan';
+    
+    const updated = tasks.map(t => 
+      t.id === taskId ? { ...t, assignee: isBacklog ? '' : targetAssignee } : t
+    );
+    setTasks(updated);
     socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updated });
   };
 
@@ -663,75 +711,152 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
 
           {/* TASKS */}
           {view === 'tasks' && activeGroup && (
-            <div className="flex-1 flex flex-col overflow-hidden">
-              {!isDosen && (
-                <div className="p-3 border-b border-border bg-white shrink-0">
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={newTaskTitle}
-                      onChange={e => setNewTaskTitle(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && addTask()}
-                      placeholder="Tambah tugas baru..."
-                      className="flex-1 bg-slate-50 border border-border rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary transition-colors"
-                    />
-                    <button onClick={addTask} disabled={!newTaskTitle.trim()} className="p-2 bg-primary text-white rounded-xl hover:bg-primary-hover transition-colors disabled:opacity-40">
-                      <Plus size={15} />
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
-                {/* Todo */}
+            <div className="flex-1 flex flex-col overflow-hidden bg-slate-100">
+              {/* Kanban Info / Subtitle */}
+              <div className="px-4 py-3 bg-white border-b border-border shrink-0 flex items-center justify-between">
                 <div>
-                  <p className="text-[10px] font-semibold text-secondary uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                    <Clock size={10} /> Perlu Dikerjakan ({tasks.filter(t => t.status !== 'done').length})
+                  <p className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    📋 Papan Tugas Notion-style
                   </p>
-                  <div className="space-y-2">
-                    {tasks.filter(t => t.status !== 'done').length === 0 && (
-                      <p className="text-[11px] text-secondary/60 italic px-1">Tidak ada tugas pending 🎉</p>
-                    )}
-                    {tasks.filter(t => t.status !== 'done').map(task => (
-                      <div key={task.id} className="bg-white border border-border rounded-xl p-3 flex items-center gap-3 group">
-                        <button onClick={() => toggleTask(task.id)} className="w-5 h-5 rounded-full border-2 border-border hover:border-primary transition-colors shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs text-foreground font-medium truncate">{task.title}</p>
-                          <p className="text-[9px] text-secondary mt-0.5">{task.assignee}</p>
+                  <p className="text-[10px] text-secondary">Seret dan lepas (drag & drop) tugas ke kolom anggota untuk pembagian kerja secara real-time</p>
+                </div>
+              </div>
+
+              {/* Kanban Scroll Container */}
+              <div className="flex-1 overflow-x-auto p-4 flex gap-4 min-h-0 custom-scrollbar select-none">
+                {[
+                  'Belum Ditugaskan',
+                  ...[
+                    ...members.map(m => m.student_name),
+                    ...(!isDosen ? [studentName] : [])
+                  ].filter((v, i, a) => v && v !== 'System' && a.indexOf(v) === i)
+                ].map((colName) => {
+                  const colTasks = tasks.filter(t => {
+                    if (colName === 'Belum Ditugaskan') {
+                      return !t.assignee || t.assignee === 'Belum Ditugaskan';
+                    }
+                    return t.assignee === colName;
+                  });
+
+                  return (
+                    <div
+                      key={colName}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => handleDrop(e, colName)}
+                      className="w-72 bg-slate-50 border border-border rounded-2xl flex flex-col shrink-0 p-3 shadow-sm hover:shadow-card transition-shadow max-h-full"
+                    >
+                      {/* Column Header */}
+                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200/60 shrink-0">
+                        <div className="flex items-center gap-2 min-w-0">
+                          {colName === 'Belum Ditugaskan' ? (
+                            <div className="w-5 h-5 bg-slate-200 text-slate-600 rounded-full flex items-center justify-center text-[10px] font-bold">
+                              📥
+                            </div>
+                          ) : (
+                            <Avatar name={colName} size="sm" />
+                          )}
+                          <p className="text-xs font-bold text-foreground truncate">{colName}</p>
+                          <span className="text-[10px] font-bold bg-slate-200 text-secondary px-1.5 py-0.5 rounded-full shrink-0">
+                            {colTasks.length}
+                          </span>
                         </div>
-                        {!isDosen && (
-                          <button onClick={() => deleteTask(task.id)} className="p-1 text-slate-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
-                            <Trash2 size={13} />
-                          </button>
+                      </div>
+
+                      {/* Column Task Cards */}
+                      <div className="flex-1 overflow-y-auto custom-scrollbar space-y-2 pr-1 mb-2 min-h-[150px]">
+                        {colTasks.length === 0 ? (
+                          <div className="text-center py-8 border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-300">
+                            <span className="text-base mb-1">💤</span>
+                            <p className="text-[10px] text-secondary/60 italic">Belum ada tugas</p>
+                          </div>
+                        ) : (
+                          colTasks.map(task => {
+                            const isDone = task.status === 'done';
+                            return (
+                              <div
+                                key={task.id}
+                                draggable={!isDosen}
+                                onDragStart={(e) => handleDragStart(e, task.id)}
+                                className={`bg-white border border-border hover:border-primary/30 p-3 rounded-xl shadow-sm hover:shadow transition-all group ${
+                                  isDone ? 'opacity-65' : ''
+                                }`}
+                              >
+                                <div className="flex items-start gap-2.5">
+                                  <button
+                                    onClick={() => !isDosen && toggleTask(task.id)}
+                                    disabled={isDosen}
+                                    className={`w-4 h-4 rounded-full border border-border flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                                      isDone ? 'bg-primary border-primary' : 'hover:border-primary bg-white'
+                                    }`}
+                                  >
+                                    {isDone && <Check size={9} className="text-white" />}
+                                  </button>
+                                  <p className={`text-xs font-medium text-foreground leading-tight flex-1 break-words ${
+                                    isDone ? 'line-through text-secondary' : ''
+                                  }`}>
+                                    {task.title}
+                                  </p>
+                                  {!isDosen && (
+                                    <button
+                                      onClick={() => deleteTask(task.id)}
+                                      className="p-0.5 text-slate-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                      <Trash2 size={12} />
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })
                         )}
                       </div>
-                    ))}
-                  </div>
-                </div>
 
-                {/* Done */}
-                {tasks.filter(t => t.status === 'done').length > 0 && (
-                  <div>
-                    <p className="text-[10px] font-semibold text-emerald-600 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                      <CheckCircle2 size={10} /> Selesai ({tasks.filter(t => t.status === 'done').length})
-                    </p>
-                    <div className="space-y-2 opacity-60">
-                      {tasks.filter(t => t.status === 'done').map(task => (
-                        <div key={task.id} className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 flex items-center gap-3">
-                          <button onClick={() => toggleTask(task.id)} className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
-                            <Check size={11} className="text-white" />
-                          </button>
-                          <p className="text-xs text-secondary line-through flex-1 truncate">{task.title}</p>
-                          {!isDosen && (
-                            <button onClick={() => deleteTask(task.id)} className="p-1 text-slate-300 hover:text-red-400 transition-colors">
-                              <Trash2 size={13} />
+                      {/* Inline Add Task inside Column */}
+                      {!isDosen && (
+                        <div className="shrink-0 pt-2 border-t border-slate-200/60">
+                          {addingTaskFor === colName ? (
+                            <div className="space-y-1.5">
+                              <input
+                                autoFocus
+                                type="text"
+                                value={inlineTaskTitle}
+                                onChange={e => setInlineTaskTitle(e.target.value)}
+                                onKeyDown={e => {
+                                  if (e.key === 'Enter') addInlineTask(colName);
+                                  else if (e.key === 'Escape') setAddingTaskFor(null);
+                                }}
+                                placeholder="Tulis tugas & tekan Enter..."
+                                className="w-full bg-white border border-primary rounded-xl px-2.5 py-1.5 text-xs text-foreground outline-none shadow-sm"
+                              />
+                              <div className="flex gap-1.5 justify-end">
+                                <button
+                                  onClick={() => setAddingTaskFor(null)}
+                                  className="px-2 py-1 text-[10px] font-semibold text-secondary hover:bg-slate-200 rounded-lg transition-colors"
+                                >
+                                  Batal
+                                </button>
+                                <button
+                                  onClick={() => addInlineTask(colName)}
+                                  disabled={!inlineTaskTitle.trim()}
+                                  className="px-2.5 py-1 text-[10px] font-semibold bg-primary text-white hover:bg-primary-hover disabled:opacity-40 rounded-lg transition-colors"
+                                >
+                                  Tambah
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => { setAddingTaskFor(colName); setInlineTaskTitle(''); }}
+                              className="w-full py-1.5 text-[10px] font-semibold text-secondary hover:text-primary hover:bg-white border border-dashed border-slate-300 hover:border-primary/40 rounded-xl transition-all flex items-center justify-center gap-1 bg-slate-50"
+                            >
+                              <Plus size={11} /> Tambah Tugas
                             </button>
                           )}
                         </div>
-                      ))}
+                      )}
                     </div>
-                  </div>
-                )}
+                  );
+                })}
               </div>
             </div>
           )}
