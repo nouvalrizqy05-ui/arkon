@@ -36,7 +36,16 @@ pool.query(`
     message_type VARCHAR(20) DEFAULT 'chat',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
-`).then(() => console.log('✅ [Database] Study Group tables verified successfully.')).catch(err => console.error('🔥 [Database] Study Group DDL Error:', err.message));
+
+  CREATE TABLE IF NOT EXISTS study_group_tasks (
+    id SERIAL PRIMARY KEY,
+    group_id UUID REFERENCES study_groups(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    status VARCHAR(20) DEFAULT 'todo',
+    assignee VARCHAR(100) DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+`).then(() => console.log('✅ [Database] Study Group and Kanban Task tables verified successfully.')).catch(err => console.error('🔥 [Database] Study Group DDL Error:', err.message));
 
 const { initRedis, getRedisHealth, closeRedis } = require('./config/redis');
 const { authenticateToken, requireRole } = require('./middleware/auth');

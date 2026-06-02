@@ -188,4 +188,120 @@ router.delete('/:groupId', authenticateToken, async (req, res) => {
   }
 });
 
+// ==========================================
+// KANBAN TASKS DATABASE ENDPOINTS
+// ==========================================
+
+// Get all tasks for a group
+router.get('/:groupId/tasks', authenticateToken, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM study_group_tasks WHERE group_id = $1 ORDER BY created_at ASC',
+      [req.params.groupId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('🔥 SG GET TASKS ERROR:', err);
+    res.status(500).json({ error: 'Gagal mengambil data tugas', detail: err.message });
+  }
+});
+
+// Create a new task in group
+router.post('/:groupId/tasks', authenticateToken, async (req, res) => {
+  const { title, status, assignee } = req.body;
+  if (!title?.trim()) return res.status(400).json({ error: 'Judul tugas tidak boleh kosong' });
+
+  try {
+    const result = await pool.query(
+      'INSERT INTO study_group_tasks (group_id, title, status, assignee) VALUES ($1, $2, $3, $4) RETURNING *',
+      [req.params.groupId, title.trim(), status || 'todo', assignee || '']
+    );
+    
+    const task = result.rows[0];
+    
+    // Fetch all current tasks to broadcast updated list
+    const allTasks = await pool.query('SELECT * FROM study_group_tasks WHERE group_id = $1 ORDER BY created_at ASC', [req.params.groupId]);
+    
+    // Broadcast updated tasks list via Socket.IO
+    const io = req.app.get('io') || global.io;
+    io.to(`sg:${req.params.groupId}`).emit('sg:tasks-update', allTasks.rows);
+    
+    res.status(201).json(task);
+  } catch (err) {
+    console.error('🔥 SG CREATE TASK ERROR:', err);
+    res.status(500).json({ error: 'Gagal membuat tugas', detail: err.message });
+  }
+});
+
+// Update task status or assignee (on drag-drop or inline edit)
+router.put('/:groupId/tasks/:taskId', authenticateToken, async (req, res) => {
+  const { status, assignee, title } = req.body;
+  try {
+    const fields = [];
+    const values = [];
+    let paramIndex = 1;
+
+    if (status !== undefined) {
+      fields.push(`status = $${paramIndex++}`);
+      values.push(status);
+    }
+    if (assignee !== undefined) {
+      fields.push(`assignee = $${paramIndex++}`);
+      values.push(assignee);
+    }
+    if (title !== undefined) {
+      fields.push(`title = $${paramIndex++}`);
+      values.push(title.trim());
+    }
+
+    if (fields.length === 0) return res.status(400).json({ error: 'Tidak ada data untuk diperbarui' });
+
+    values.push(req.params.taskId);
+    values.push(req.params.groupId);
+    
+    const query = `
+      UPDATE study_group_tasks 
+      SET ${fields.join(', ')} 
+      WHERE id = $${paramIndex++} AND group_id = $${paramIndex++} 
+      RETURNING *
+    `;
+
+    const result = await pool.query(query, values);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Tugas tidak ditemukan' });
+
+    // Fetch all tasks and broadcast updated list
+    const allTasks = await pool.query('SELECT * FROM study_group_tasks WHERE group_id = $1 ORDER BY created_at ASC', [req.params.groupId]);
+    
+    const io = req.app.get('io') || global.io;
+    io.to(`sg:${req.params.groupId}`).emit('sg:tasks-update', allTasks.rows);
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('🔥 SG UPDATE TASK ERROR:', err);
+    res.status(500).json({ error: 'Gagal memperbarui tugas', detail: err.message });
+  }
+});
+
+// Delete a task
+router.delete('/:groupId/tasks/:taskId', authenticateToken, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'DELETE FROM study_group_tasks WHERE id = $1 AND group_id = $2 RETURNING *',
+      [req.params.taskId, req.params.groupId]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Tugas tidak ditemukan' });
+
+    // Fetch all tasks and broadcast updated list
+    const allTasks = await pool.query('SELECT * FROM study_group_tasks WHERE group_id = $1 ORDER BY created_at ASC', [req.params.groupId]);
+    
+    const io = req.app.get('io') || global.io;
+    io.to(`sg:${req.params.groupId}`).emit('sg:tasks-update', allTasks.rows);
+
+    res.json({ message: 'Tugas berhasil dihapus' });
+  } catch (err) {
+    console.error('🔥 SG DELETE TASK ERROR:', err);
+    res.status(500).json({ error: 'Gagal menghapus tugas', detail: err.message });
+  }
+});
+
 module.exports = router;

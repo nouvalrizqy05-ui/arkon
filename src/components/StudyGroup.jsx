@@ -356,12 +356,22 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
     setView('chat');
     setIsLoading(true);
     try {
+      // Fetch messages from database
       const res = await fetch(`${apiUrl}/api/study-groups/${group.id}/messages`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) setMessages(await res.json());
-    } catch (err) { console.error(err); }
-    finally { setIsLoading(false); }
+
+      // Fetch persisted Kanban tasks from database
+      const taskRes = await fetch(`${apiUrl}/api/study-groups/${group.id}/tasks`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (taskRes.ok) setTasks(await taskRes.json());
+    } catch (err) { 
+      console.error(err); 
+    } finally { 
+      setIsLoading(false); 
+    }
     setTimeout(() => inputRef.current?.focus(), 100);
   };
 
@@ -431,58 +441,108 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
   const [addingTaskFor, setAddingTaskFor] = useState(null);
   const [inlineTaskTitle, setInlineTaskTitle] = useState('');
 
-  const addTask = () => {
+  const addTask = async () => {
     if (!newTaskTitle.trim() || !activeGroup) return;
-    const updated = [...tasks, { id: Date.now(), title: newTaskTitle, status: 'todo', assignee: '', created_at: new Date() }];
-    setTasks(updated); setNewTaskTitle('');
-    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updated });
+    const title = newTaskTitle.trim();
+    setNewTaskTitle('');
+    try {
+      await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ title, status: 'todo', assignee: '' })
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const addInlineTask = (assigneeName) => {
+  const addInlineTask = async (assigneeName) => {
     if (!inlineTaskTitle.trim() || !activeGroup) return;
     const isBacklog = assigneeName === 'Belum Ditugaskan';
-    const newTask = {
-      id: Date.now(),
+    const payload = {
       title: inlineTaskTitle.trim(),
       status: 'todo',
-      assignee: isBacklog ? '' : assigneeName,
-      created_at: new Date()
+      assignee: isBacklog ? '' : assigneeName
     };
-    const updated = [...tasks, newTask];
-    setTasks(updated);
+    
+    // Reset inputs immediately for responsive feel
     setInlineTaskTitle('');
     setAddingTaskFor(null);
-    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updated });
+
+    try {
+      await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error('Gagal menambahkan tugas ke database.');
+    }
   };
 
   const handleDragStart = (e, taskId) => {
     e.dataTransfer.setData('text/plain', taskId.toString());
   };
 
-  const handleDrop = (e, targetAssignee) => {
+  const handleDrop = async (e, targetAssignee) => {
     e.preventDefault();
     const taskIdStr = e.dataTransfer.getData('text/plain');
-    if (!taskIdStr) return;
+    if (!taskIdStr || !activeGroup) return;
     const taskId = Number(taskIdStr);
     const isBacklog = targetAssignee === 'Belum Ditugaskan';
-    
-    const updated = tasks.map(t => 
-      t.id === taskId ? { ...t, assignee: isBacklog ? '' : targetAssignee } : t
-    );
-    setTasks(updated);
-    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updated });
+    const newAssignee = isBacklog ? '' : targetAssignee;
+
+    // Optimistic local state update for zero lag drag-and-drop
+    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, assignee: newAssignee } : t));
+
+    try {
+      await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ assignee: newAssignee })
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const toggleTask = (id) => {
-    const updated = tasks.map(t => t.id === id ? { ...t, status: t.status === 'done' ? 'todo' : 'done' } : t);
-    setTasks(updated);
-    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updated });
+  const toggleTask = async (id) => {
+    if (!activeGroup) return;
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+    const newStatus = task.status === 'done' ? 'todo' : 'done';
+
+    // Optimistic update
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, status: newStatus } : t));
+
+    try {
+      await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/tasks/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ status: newStatus })
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const deleteTask = (id) => {
-    const updated = tasks.filter(t => t.id !== id);
-    setTasks(updated);
-    socket?.emit('sg:tasks-update', { groupId: activeGroup.id, tasks: updated });
+  const deleteTask = async (id) => {
+    if (!activeGroup) return;
+
+    // Optimistic update
+    setTasks(prev => prev.filter(t => t.id !== id));
+
+    try {
+      await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/tasks/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      toast.success('Tugas berhasil dihapus.');
+    } catch (err) {
+      console.error(err);
+      toast.error('Gagal menghapus tugas.');
+    }
   };
 
   const myGroups = isDosen ? [] : groups.filter(g => g.is_member);
