@@ -22,7 +22,7 @@
 
 export const PILOT_STUDY = {
   metadata: {
-    title: 'Pilot Study ARKON v2.0',
+    title: 'Pilot Study ARKON v1.0',
     institution: 'Program Studi Teknik Informatika',
     semester: 'Semester Gasal 2026/2027',
     course: 'Arsitektur dan Organisasi Komputer',

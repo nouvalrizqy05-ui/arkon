@@ -378,7 +378,7 @@ export default function AboutArkonModal({ isOpen, onClose }) {
             {/* Footer */}
             <div className="sticky bottom-0 px-6 py-3 border-t border-slate-800 bg-[#080c1a]/95 backdrop-blur-xl">
               <p className="text-center text-[10px] text-slate-500 font-bold uppercase tracking-widest">
-                ARKON v2.0 • LIDM 2027 • Kelompok 10
+                ARKON v1.0 • LIDM 2027 • Kelompok 10
               </p>
             </div>
           </motion.div>

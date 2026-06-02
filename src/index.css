@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════
-   ARKON v3 — Emerald Clean Design System
+   ARKON v1 — Emerald Clean Design System
    Base: Pure white (#ffffff), Emerald accent (#059669)
    ═══════════════════════════════════════════════ */
 
@@ -236,7 +236,7 @@ body {
     background-image: linear-gradient(135deg, #059669 0%, #047857 100%);
   }
 
-  /* Dark room sidebar utilities (kept from v2) */
+  /* Dark room sidebar utilities (kept from v1) */
   .glass-3d {
     background: rgba(255,255,255,.08);
     backdrop-filter: blur(12px);

@@ -302,7 +302,7 @@ function CpuSimulator({ embeddedMode = false, onCoinsEarned, userRole }) {
                   <Cpu className="w-5 h-5 text-foreground" />
                 </div>
                 <div>
-                  <span className="font-black text-sm text-foreground block leading-none">System Engine v2.0</span>
+                  <span className="font-black text-sm text-foreground block leading-none">System Engine v1.0</span>
                   <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">Active & Debugging</span>
                 </div>
               </div>
@@ -501,7 +501,7 @@ function CpuSimulator({ embeddedMode = false, onCoinsEarned, userRole }) {
                 </div>
 
                 <div className="p-4 bg-gray-50 border-t border-border">
-                  <p className="text-[9px] text-center text-slate-400 font-black uppercase tracking-widest">ARKON System v2.0</p>
+                  <p className="text-[9px] text-center text-slate-400 font-black uppercase tracking-widest">ARKON System v1.0</p>
                 </div>
               </div>
             )}

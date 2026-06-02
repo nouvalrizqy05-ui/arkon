@@ -36,7 +36,7 @@ function PageLoader() {
         </div>
         <div className="text-center">
           <p className="text-secondary text-sm font-medium mb-1">Memuat halaman...</p>
-          <p className="text-secondary text-[10px] font-medium uppercase tracking-widest">ARKON v3.0</p>
+          <p className="text-secondary text-[10px] font-medium uppercase tracking-widest">ARKON v1.0</p>
         </div>
       </div>
     </div>

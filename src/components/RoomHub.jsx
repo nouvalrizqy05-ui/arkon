@@ -593,7 +593,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
                     <BookOpen size={24} className="text-foreground" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-black text-foreground">Tentang ARKON v3.0</h2>
+                    <h2 className="text-xl font-black text-foreground">Tentang ARKON v1.0</h2>
                     <p className="text-xs text-indigo-600 font-bold">Platform Edukasi Arsitektur Komputer</p>
                   </div>
                 </div>
