@@ -686,6 +686,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
           <div
             role="img"
             aria-label="3D PC Assembly Canvas — area interaktif untuk merakit komponen PC secara visual"
+            className="w-full h-full"
           >
             {/* sr-only: deskripsi lengkap untuk pengguna low-vision */}
             <span className="sr-only">
