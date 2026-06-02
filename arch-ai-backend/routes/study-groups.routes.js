@@ -3,6 +3,70 @@ const router = express.Router();
 const pool = require('../config/db');
 const { authenticateToken } = require('../middleware/auth');
 
+// ═══ TEMPORARY DIAGNOSTIC ENDPOINT (REMOVE AFTER DEBUG) ═══
+router.get('/debug', async (req, res) => {
+  const results = {};
+  try {
+    // 1. Check if tables exist
+    const tablesCheck = await pool.query(`
+      SELECT table_name FROM information_schema.tables 
+      WHERE table_schema = 'public' AND table_name LIKE 'study_group%'
+      ORDER BY table_name
+    `);
+    results.tables = tablesCheck.rows.map(r => r.table_name);
+
+    // 2. Check study_group_messages columns
+    const colCheck = await pool.query(`
+      SELECT column_name, data_type, is_nullable 
+      FROM information_schema.columns 
+      WHERE table_name = 'study_group_messages' 
+      ORDER BY ordinal_position
+    `);
+    results.message_columns = colCheck.rows;
+
+    // 3. Try a simple SELECT on messages
+    try {
+      const msgTest = await pool.query('SELECT COUNT(*) as total FROM study_group_messages');
+      results.message_count = msgTest.rows[0].total;
+    } catch (err) {
+      results.message_query_error = err.message;
+    }
+
+    // 4. Try a simple SELECT on groups
+    try {
+      const grpTest = await pool.query('SELECT id, name FROM study_groups LIMIT 3');
+      results.sample_groups = grpTest.rows;
+    } catch (err) {
+      results.group_query_error = err.message;
+    }
+
+    // 5. Try the exact GET messages query that's failing
+    try {
+      const exactQuery = await pool.query(`
+        SELECT m.*, COALESCE(u.full_name, 'System') as student_name 
+        FROM study_group_messages m
+        LEFT JOIN users u ON m.student_id = u.id
+        WHERE m.group_id = $1 ORDER BY m.created_at ASC
+      `, ['acf48fd9-e0d4-4fe3-9225-1e2218264b2c']);
+      results.exact_query_result = { success: true, count: exactQuery.rows.length };
+    } catch (err) {
+      results.exact_query_error = { message: err.message, code: err.code, detail: err.detail };
+    }
+
+    // 6. Check tasks table too (known working, for comparison)
+    try {
+      const taskTest = await pool.query('SELECT COUNT(*) as total FROM study_group_tasks');
+      results.task_count = taskTest.rows[0].total;
+    } catch (err) {
+      results.task_query_error = err.message;
+    }
+
+    res.json({ status: 'diagnostic_complete', ...results });
+  } catch (err) {
+    res.status(500).json({ status: 'diagnostic_failed', error: err.message, code: err.code });
+  }
+});
+
 // Buat grup baru
 router.post('/', authenticateToken, async (req, res) => {
   const { room_id, name, creator_id } = req.body;
