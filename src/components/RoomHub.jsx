@@ -73,7 +73,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
   };
 
   const [activeTab, setActiveTab] = useState(getInitialTab());
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [userProfile, setUserProfile] = useState(null);
 
   // Gamification

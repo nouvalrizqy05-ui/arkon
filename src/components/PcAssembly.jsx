@@ -285,7 +285,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
   };
 
   return (
-    <div className="min-h-full w-full max-w-full flex flex-col overflow-y-auto overflow-x-hidden px-6 box-border min-w-0" style={{ maxWidth: '100%' }}>
+    <div className="h-full w-full max-w-full flex flex-col overflow-y-auto overflow-x-hidden px-6 box-border min-w-0 custom-scrollbar" style={{ maxWidth: '100%' }}>
       {/* Task Mode Banner */}
       {activeActivity && (
         <div className="mx-6 mt-4 mb-0 bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-center justify-between">
