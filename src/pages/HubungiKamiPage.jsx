@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
   Layers, ArrowLeft, Mail, Github, MapPin, Send,
   Building2, GraduationCap, FlaskConical, Newspaper, MoreHorizontal,
-  Handshake, Database, MessageSquare, Globe
+  Users, Database, MessageSquare, Globe
 } from 'lucide-react';
 
 const fadeUp = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true } };
@@ -197,7 +197,7 @@ export default function HubungiKamiPage() {
               <div className="space-y-5">
                 {[
                   {
-                    icon: Handshake, color: 'text-blue-500', bg: 'bg-blue-50 border-blue-200',
+                    icon: Users, color: 'text-blue-500', bg: 'bg-blue-50 border-blue-200',
                     title: 'Kolaborasi Institusi',
                     desc: 'Universitas, politeknik, atau dinas pendidikan yang ingin uji coba ARKON sebagai media pembelajaran AOK — kami terbuka untuk pilot project.'
                   },
