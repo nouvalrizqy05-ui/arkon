@@ -8,6 +8,7 @@ const pool = require('../config/db');
 const logError = (context, err) => console.error(`❌ [${context}]`, err?.message || err);
 const { validateFullName, validateEmail, validateIdentifier, validatePassword } = require('../utils/validation');
 const { escapeHtml } = require('../utils/sanitize');
+const { authenticateToken } = require('../middleware/auth');
 
 // Rate limiters — mencegah brute-force dan spam
 const authLimiter = rateLimit({
@@ -310,88 +311,88 @@ router.post('/logout', async (req, res) => {
   }
 });
 
-router.post('/forgot-password', async (req, res) => {
-  const { identifier_number } = req.body;
+// Cek apakah email terdaftar (untuk proses ganti password langsung)
+router.post('/check-email', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email wajib diisi.' });
+
   try {
-    const userResult = await pool.query('SELECT id, email, full_name FROM users WHERE identifier_number = $1', [identifier_number]);
+    const userResult = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
     if (userResult.rows.length === 0) {
-      return res.json({ message: 'Jika akun terdaftar, email instruksi akan dikirim.' });
+      return res.status(404).json({ error: 'Email tidak terdaftar di sistem kami.' });
     }
-
-    const user = userResult.rows[0];
-    if (!user.email) return res.status(400).json({ error: 'Akun Anda belum memiliki email terdaftar. Hubungi Admin.' });
-
-    const token = crypto.randomBytes(32).toString('hex');
-    const expires = new Date(Date.now() + 3600000); // 1 jam
-
-    await pool.query(
-      'UPDATE users SET reset_token = $1, reset_token_expires = $2 WHERE id = $3',
-      [token, expires, user.id]
-    );
-
-    const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${token}`;
-    
-    if (process.env.RESEND_API_KEY) {
-      try {
-        await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
-          },
-          body: JSON.stringify({
-            from: process.env.RESEND_FROM_EMAIL || 'Arkon Team <onboarding@resend.dev>',
-            to: [user.email],
-            subject: 'Reset Password ARKON Workspace',
-            html: `
-              <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-                <h2 style="color: #6366f1;">Reset Password</h2>
-                <p>Halo <strong>${escapeHtml(user.full_name)}</strong>,</p>
-                <p>Kami menerima permintaan untuk mereset password akun ARKON Anda. Klik tombol di bawah untuk melanjutkan:</p>
-                <a href="${resetLink}" style="display: inline-block; padding: 12px 24px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0;">Reset Password Saya</a>
-                <p style="color: #666; font-size: 12px;">Link ini akan kedaluwarsa dalam 1 jam. Jika Anda tidak merasa meminta ini, abaikan email ini.</p>
-              </div>
-            `
-          })
-        });
-      } catch (e) {
-        console.error('Resend API Error:', e);
-      }
-    } else {
-      console.log('📧 [DEV MODE] Password Reset Link:', resetLink);
-    }
-
-    res.json({ message: 'Jika akun terdaftar, email instruksi akan dikirim.' });
+    res.json({ message: 'Email ditemukan.' });
   } catch (error) {
-    logError('FORGOT_PASSWORD', error);
-    res.status(500).json({ error: 'Gagal memproses permintaan reset password.' });
+    logError('CHECK_EMAIL', error);
+    res.status(500).json({ error: 'Gagal mengecek email.' });
   }
 });
 
-router.post('/reset-password', async (req, res) => {
-  const { token, newPassword } = req.body;
-  try {
-    const userResult = await pool.query(
-      'SELECT id FROM users WHERE reset_token = $1 AND reset_token_expires > NOW()',
-      [token]
-    );
+// Reset password langsung berdasarkan email (Mode Demo/Bypass Verifikasi)
+router.post('/direct-reset-password', async (req, res) => {
+  const { email, newPassword } = req.body;
+  
+  if (!email || !newPassword) {
+    return res.status(400).json({ error: 'Email dan kata sandi baru wajib diisi.' });
+  }
 
+  try {
+    try {
+      validatePassword(newPassword);
+    } catch (e) {
+      return res.status(400).json({ error: e.message });
+    }
+
+    const userResult = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
     if (userResult.rows.length === 0) {
-      return res.status(400).json({ error: 'Token tidak valid atau sudah kedaluwarsa.' });
+      return res.status(404).json({ error: 'Email tidak ditemukan.' });
     }
 
     const userId = userResult.rows[0].id;
     const password_hash = await bcrypt.hash(newPassword, 10);
 
     await pool.query(
-      'UPDATE users SET password_hash = $1, reset_token = NULL, reset_token_expires = NULL WHERE id = $2',
+      'UPDATE users SET password_hash = $1 WHERE id = $2',
       [password_hash, userId]
     );
 
-    res.json({ message: 'Password berhasil diperbarui! Silakan login kembali.' });
+    res.json({ message: 'Kata sandi berhasil diperbarui! Silakan login.' });
   } catch (error) {
-    logError('RESET_PASSWORD', error);
-    res.status(500).json({ error: 'Gagal mereset password.' });
+    logError('DIRECT_RESET_PASSWORD', error);
+    res.status(500).json({ error: 'Gagal mereset kata sandi.' });
+  }
+});
+
+router.post('/change-password', authenticateToken, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  try {
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Kata sandi lama dan baru wajib diisi.' });
+    }
+    
+    // validate password strength if function exists
+    try {
+      validatePassword(newPassword);
+    } catch (e) {
+      return res.status(400).json({ error: e.message });
+    }
+
+    const userResult = await pool.query('SELECT password_hash FROM users WHERE id = $1', [req.user.id]);
+    if (userResult.rows.length === 0) return res.status(404).json({ error: 'User tidak ditemukan.' });
+
+    const user = userResult.rows[0];
+    if (!user.password_hash) return res.status(400).json({ error: 'Akun ini tidak menggunakan kata sandi.' });
+
+    const validPassword = await bcrypt.compare(currentPassword, user.password_hash);
+    if (!validPassword) return res.status(401).json({ error: 'Kata sandi saat ini salah.' });
+
+    const password_hash = await bcrypt.hash(newPassword, 10);
+    await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [password_hash, req.user.id]);
+
+    res.json({ message: 'Kata sandi berhasil diperbarui.' });
+  } catch (error) {
+    logError('CHANGE_PASSWORD', error);
+    res.status(500).json({ error: 'Gagal mengubah kata sandi.' });
   }
 });
 

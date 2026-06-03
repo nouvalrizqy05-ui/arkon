@@ -1,35 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import {
   User, Shield, Bell, Palette, Link as LinkIcon, Eye,
   Save, AlertTriangle, Monitor, Moon, Sun, Smartphone,
-  CheckCircle2, Globe, FileText, Database, ShieldAlert
+  CheckCircle2, Globe, FileText, Database, ShieldAlert,
+  Loader2
 } from 'lucide-react';
 import { useToast } from '../components/Toast';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const toast = useToast();
+  const navigate = useNavigate();
 
   const userRole = localStorage.getItem('user_role') || 'mahasiswa';
-  const userName = localStorage.getItem('user_name') || 'Pengguna';
+  const dashboardPath = userRole === 'dosen' ? '/dosen' : '/mahasiswa';
+  const token = localStorage.getItem('auth_token');
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-  // State form
+  // Formulir pengaturan umum
   const [generalForm, setGeneralForm] = useState({
-    name: userName,
-    email: 'email@domain.com',
+    name: '',
+    email: '',
     whatsapp: '',
     language: 'id',
     timezone: 'Asia/Jakarta'
   });
 
+  // Formulir pengaturan tampilan (appearance & accessibility)
   const [appearanceForm, setAppearanceForm] = useState({
     theme: 'system',
     density: 'comfortable',
-    reducedMotion: false
+    reducedMotion: false,
+    screenReader: true,
   });
 
+  // Formulir notifikasi
   const [notificationForm, setNotificationForm] = useState({
     emailAnnouncements: true,
     emailActivities: true,
@@ -37,14 +46,235 @@ export default function SettingsPage() {
     sound: true
   });
 
-  const dashboardPath = userRole === 'dosen' ? '/dosen' : '/mahasiswa';
+  // Kata Sandi
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
 
-  const handleSave = () => {
+  // Load Data
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/users/settings`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          setGeneralForm({
+            name: data.full_name || '',
+            email: data.email || '',
+            whatsapp: data.whatsapp || '',
+            language: data.language || 'id',
+            timezone: data.timezone || 'Asia/Jakarta'
+          });
+          
+          setAppearanceForm({
+            theme: data.appearance_theme || 'system',
+            density: data.appearance_density || 'comfortable',
+            reducedMotion: data.accessibility_reduced_motion || false,
+            screenReader: data.accessibility_screen_reader !== false,
+          });
+
+          setNotificationForm({
+            emailAnnouncements: data.notif_email_announcements !== false,
+            emailActivities: data.notif_email_activities !== false,
+            browserPush: data.notif_browser_push || false,
+            sound: data.notif_sound !== false
+          });
+
+          // Apply initial visual settings
+          applyVisualSettings(data.appearance_theme, data.accessibility_reduced_motion);
+        } else {
+          toast.error('Gagal mengambil pengaturan akun.');
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error('Terjadi kesalahan saat menghubungi server.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchSettings();
+  }, [API_URL, token, navigate]);
+
+  const applyVisualSettings = (theme, reducedMotion) => {
+    // Theme logic - normally tailwind handles this via classes on HTML tag
+    if (theme === 'dark') document.documentElement.classList.add('dark');
+    else if (theme === 'light') document.documentElement.classList.remove('dark');
+    else {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    // Reduced motion
+    if (reducedMotion) {
+      document.body.classList.add('reduced-motion');
+    } else {
+      document.body.classList.remove('reduced-motion');
+    }
+  };
+
+  const handleSave = async () => {
     setIsSaving(true);
-    setTimeout(() => {
+    try {
+      const payload = {
+        full_name: generalForm.name,
+        email: generalForm.email,
+        whatsapp: generalForm.whatsapp,
+        language: generalForm.language,
+        timezone: generalForm.timezone,
+        
+        notif_email_announcements: notificationForm.emailAnnouncements,
+        notif_email_activities: notificationForm.emailActivities,
+        notif_browser_push: notificationForm.browserPush,
+        notif_sound: notificationForm.sound,
+        
+        appearance_theme: appearanceForm.theme,
+        appearance_density: appearanceForm.density,
+        accessibility_reduced_motion: appearanceForm.reducedMotion,
+        accessibility_screen_reader: appearanceForm.screenReader
+      };
+
+      const res = await fetch(`${API_URL}/api/users/settings`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        toast.success('Pengaturan berhasil disimpan!');
+        const data = await res.json();
+        if (data.updated_name) {
+          localStorage.setItem('user_name', data.updated_name);
+        }
+        applyVisualSettings(appearanceForm.theme, appearanceForm.reducedMotion);
+      } else {
+        const errorData = await res.json();
+        toast.error(errorData.error || 'Gagal menyimpan pengaturan.');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Terjadi kesalahan jaringan.');
+    } finally {
       setIsSaving(false);
-      toast.success('Pengaturan berhasil disimpan!');
-    }, 800);
+    }
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      return toast.error('Konfirmasi kata sandi baru tidak cocok.');
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/api/auth/change-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message);
+        setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      } else {
+        toast.error(data.error || 'Gagal mengubah kata sandi.');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Terjadi kesalahan jaringan.');
+    }
+  };
+
+  const handleExportData = async () => {
+    try {
+      toast.info('Menyiapkan data ekspor Anda...');
+      const res = await fetch(`${API_URL}/api/users/export-data`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Export failed');
+      
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `arkon-data-${new Date().getTime()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success('Data berhasil diekspor.');
+    } catch (err) {
+      console.error(err);
+      toast.error('Gagal mengekspor data.');
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm('PERINGATAN: Apakah Anda yakin ingin menghapus akun Anda secara permanen? Semua data, riwayat pembelajaran, koin, dan progress akan hilang. Aksi ini tidak dapat dibatalkan.')) return;
+    
+    try {
+      const res = await fetch(`${API_URL}/api/users/me`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (res.ok) {
+        toast.success('Akun berhasil dihapus secara permanen.');
+        localStorage.clear();
+        navigate('/');
+      } else {
+        const data = await res.json();
+        toast.error(data.error || 'Gagal menghapus akun.');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Terjadi kesalahan jaringan.');
+    }
+  };
+
+  const handleBrowserPushToggle = async (checked) => {
+    if (checked) {
+      if (!("Notification" in window)) {
+        toast.error("Browser Anda tidak mendukung push notifications.");
+        return;
+      }
+      
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          setNotificationForm({...notificationForm, browserPush: true});
+          toast.success("Notifikasi push berhasil diaktifkan.");
+        } else {
+          toast.error("Izin notifikasi ditolak oleh browser.");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      setNotificationForm({...notificationForm, browserPush: false});
+    }
   };
 
   const tabs = [
@@ -55,6 +285,15 @@ export default function SettingsPage() {
     { id: 'appearance', label: 'Tampilan', icon: Palette, desc: 'Tema dan personalisasi dashboard' },
     { id: 'integrations', label: 'Integrasi', icon: LinkIcon, desc: 'Koneksi dengan aplikasi lain' },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-slate-50">
+        <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+        <span className="ml-3 font-semibold text-slate-500">Memuat pengaturan...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 max-w-6xl mx-auto min-h-screen">
@@ -85,7 +324,7 @@ export default function SettingsPage() {
                   <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-primary' : 'text-slate-400'}`} />
                   {tab.label}
                 </div>
-                <span className={`text-[11px] pl-8 font-medium ${activeTab === tab.id ? 'text-primary/70' : 'text-slate-400'}`}>
+                <span className={`text-[11px] pl-8 font-medium text-left ${activeTab === tab.id ? 'text-primary/70' : 'text-slate-400'}`}>
                   {tab.desc}
                 </span>
               </button>
@@ -96,22 +335,25 @@ export default function SettingsPage() {
         {/* Content Area */}
         <div className="flex-1 w-full bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
           {/* Header */}
-          <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+          <div className="px-8 py-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
             <div>
               <h2 className="text-xl font-black text-foreground">{tabs.find(t => t.id === activeTab)?.label}</h2>
               <p className="text-sm text-secondary font-medium">{tabs.find(t => t.id === activeTab)?.desc}</p>
             </div>
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="btn-primary px-6 shadow-md"
-            >
-              {isSaving ? (
-                <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Menyimpan...</span>
-              ) : (
-                <span className="flex items-center gap-2"><Save className="w-4 h-4" /> Simpan Perubahan</span>
-              )}
-            </button>
+            
+            {activeTab !== 'integrations' && activeTab !== 'security' && (
+              <button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="btn-primary px-6 shadow-md w-full sm:w-auto"
+              >
+                {isSaving ? (
+                  <span className="flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan...</span>
+                ) : (
+                  <span className="flex items-center justify-center gap-2"><Save className="w-4 h-4" /> Simpan Perubahan</span>
+                )}
+              </button>
+            )}
           </div>
 
           {/* Form Content */}
@@ -156,14 +398,14 @@ export default function SettingsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-xs font-bold text-secondary uppercase tracking-widest">Bahasa Antarmuka</label>
-                        <select className="input-field cursor-pointer" value={generalForm.language} onChange={e => setGeneralForm({...generalForm, language: e.target.value})}>
+                        <select className="input-field cursor-pointer bg-white" value={generalForm.language} onChange={e => setGeneralForm({...generalForm, language: e.target.value})}>
                           <option value="id">Bahasa Indonesia</option>
                           <option value="en">English (US)</option>
                         </select>
                       </div>
                       <div className="space-y-2">
                         <label className="text-xs font-bold text-secondary uppercase tracking-widest">Zona Waktu</label>
-                        <select className="input-field cursor-pointer" value={generalForm.timezone} onChange={e => setGeneralForm({...generalForm, timezone: e.target.value})}>
+                        <select className="input-field cursor-pointer bg-white" value={generalForm.timezone} onChange={e => setGeneralForm({...generalForm, timezone: e.target.value})}>
                           <option value="Asia/Jakarta">WIB (Asia/Jakarta)</option>
                           <option value="Asia/Makassar">WITA (Asia/Makassar)</option>
                           <option value="Asia/Jayapura">WIT (Asia/Jayapura)</option>
@@ -176,44 +418,44 @@ export default function SettingsPage() {
                 {/* ── AKSESIBILITAS ── */}
                 {activeTab === 'accessibility' && (
                   <>
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 flex items-start gap-4">
-                      <div className="bg-emerald-100 p-2 rounded-xl shrink-0"><CheckCircle2 className="w-5 h-5 text-emerald-700" /></div>
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 flex flex-col sm:flex-row items-start gap-4">
+                      <div className="bg-emerald-100 p-2 rounded-xl shrink-0 hidden sm:block"><CheckCircle2 className="w-5 h-5 text-emerald-700" /></div>
                       <div>
-                        <h4 className="text-sm font-bold text-emerald-900 mb-1">Widget Aksesibilitas Aktif</h4>
+                        <h4 className="text-sm font-bold text-emerald-900 mb-1 flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-700 sm:hidden" /> Widget Aksesibilitas Aktif</h4>
                         <p className="text-xs text-emerald-800 font-medium">Anda dapat menggunakan tombol aksesibilitas mengambang di pojok kiri bawah layar untuk mengatur kontras dan ukuran teks kapan saja tanpa harus membuka halaman pengaturan.</p>
                       </div>
                     </div>
 
-                    <div className="space-y-6">
-                      <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors gap-4">
                         <div>
                           <h4 className="text-sm font-bold text-foreground">Mode Dyslexia (OpenDyslexic)</h4>
                           <p className="text-xs text-secondary font-medium">Mengganti font bawaan dengan font khusus yang lebih mudah dibaca.</p>
                         </div>
-                        <div className="w-12 h-6 bg-slate-200 rounded-full relative cursor-not-allowed opacity-50">
+                        <div className="w-12 h-6 bg-slate-200 rounded-full relative cursor-not-allowed opacity-50 shrink-0" title="Gunakan widget aksesibilitas di kiri bawah">
                           <div className="w-4 h-4 bg-white rounded-full absolute left-1 top-1" />
                         </div>
                       </div>
-                      <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors">
+                      <label className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors cursor-pointer gap-4">
                         <div>
                           <h4 className="text-sm font-bold text-foreground">Kurangi Animasi (Reduced Motion)</h4>
                           <p className="text-xs text-secondary font-medium">Mematikan animasi mengambang, parallax, dan transisi berat di seluruh aplikasi.</p>
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
+                        <div className="relative inline-flex items-center cursor-pointer shrink-0">
                           <input type="checkbox" className="sr-only peer" checked={appearanceForm.reducedMotion} onChange={e => setAppearanceForm({...appearanceForm, reducedMotion: e.target.checked})} />
                           <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
-                        </label>
-                      </div>
-                      <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors">
+                        </div>
+                      </label>
+                      <label className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors cursor-pointer gap-4">
                         <div>
                           <h4 className="text-sm font-bold text-foreground">Dukungan Screen Reader Khusus</h4>
                           <p className="text-xs text-secondary font-medium">Mengaktifkan aria-labels tambahan pada elemen grafis kompleks seperti CPU Simulator.</p>
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                          <input type="checkbox" className="sr-only peer" defaultChecked />
+                        <div className="relative inline-flex items-center cursor-pointer shrink-0">
+                          <input type="checkbox" className="sr-only peer" checked={appearanceForm.screenReader} onChange={e => setAppearanceForm({...appearanceForm, screenReader: e.target.checked})} />
                           <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
-                        </label>
-                      </div>
+                        </div>
+                      </label>
                     </div>
                   </>
                 )}
@@ -222,38 +464,38 @@ export default function SettingsPage() {
                 {activeTab === 'security' && (
                   <>
                     <div className="space-y-6">
-                      <div>
+                      <form onSubmit={handleChangePassword}>
                         <h3 className="text-sm font-black text-foreground mb-4">Ubah Kata Sandi</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <input type="password" placeholder="Kata sandi saat ini" className="input-field" />
-                          <div />
-                          <input type="password" placeholder="Kata sandi baru" className="input-field" />
-                          <input type="password" placeholder="Konfirmasi kata sandi baru" className="input-field" />
+                          <input type="password" required placeholder="Kata sandi saat ini" className="input-field" value={passwordForm.currentPassword} onChange={e => setPasswordForm({...passwordForm, currentPassword: e.target.value})} />
+                          <div className="hidden md:block" />
+                          <input type="password" required minLength="6" placeholder="Kata sandi baru" className="input-field" value={passwordForm.newPassword} onChange={e => setPasswordForm({...passwordForm, newPassword: e.target.value})} />
+                          <input type="password" required minLength="6" placeholder="Konfirmasi kata sandi baru" className="input-field" value={passwordForm.confirmPassword} onChange={e => setPasswordForm({...passwordForm, confirmPassword: e.target.value})} />
                         </div>
-                        <button className="mt-4 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors">Perbarui Kata Sandi</button>
-                      </div>
+                        <button type="submit" className="mt-4 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors">Perbarui Kata Sandi</button>
+                      </form>
                       <hr className="border-slate-100" />
                       <div>
                         <h3 className="text-sm font-black text-foreground mb-4">Autentikasi Dua Langkah (2FA)</h3>
-                        <div className="flex items-center justify-between p-5 bg-slate-50 border border-slate-200 rounded-2xl">
-                          <div className="flex gap-4">
-                            <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center"><Smartphone className="w-5 h-5 text-slate-500" /></div>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 bg-slate-50 border border-slate-200 rounded-2xl gap-4">
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center shrink-0"><Smartphone className="w-5 h-5 text-slate-500" /></div>
                             <div>
                               <p className="font-bold text-sm text-foreground">Aplikasi Authenticator</p>
-                              <p className="text-xs text-secondary font-medium">Belum diaktifkan. Gunakan Google Authenticator atau Authy.</p>
+                              <p className="text-xs text-secondary font-medium">Belum diaktifkan. Fitur ini masih dalam tahap beta (LIDM mode).</p>
                             </div>
                           </div>
-                          <button className="px-4 py-2 bg-white border border-slate-300 text-foreground font-bold text-xs rounded-xl shadow-sm hover:bg-slate-50 transition-colors">Aktifkan</button>
+                          <button onClick={() => toast.info('Fitur 2FA belum tersedia untuk versi demo.')} className="px-4 py-2 bg-white border border-slate-300 text-foreground font-bold text-xs rounded-xl shadow-sm hover:bg-slate-50 transition-colors shrink-0">Aktifkan</button>
                         </div>
                       </div>
                       <hr className="border-slate-100" />
                       <div>
                         <h3 className="text-sm font-black text-red-600 mb-4 flex items-center gap-2"><ShieldAlert className="w-4 h-4" /> Zona Berbahaya</h3>
                         <div className="flex flex-col sm:flex-row gap-4">
-                          <button className="flex-1 flex items-center justify-center gap-2 p-4 border border-slate-200 hover:bg-slate-50 rounded-2xl text-foreground font-bold text-sm transition-colors">
+                          <button onClick={handleExportData} className="flex-1 flex items-center justify-center gap-2 p-4 border border-slate-200 hover:bg-slate-50 rounded-2xl text-foreground font-bold text-sm transition-colors">
                             <Database className="w-4 h-4" /> Ekspor Data Pribadi
                           </button>
-                          <button className="flex-1 flex items-center justify-center gap-2 p-4 border border-red-200 bg-red-50 hover:bg-red-100 rounded-2xl text-red-700 font-bold text-sm transition-colors">
+                          <button onClick={handleDeleteAccount} className="flex-1 flex items-center justify-center gap-2 p-4 border border-red-200 bg-red-50 hover:bg-red-100 rounded-2xl text-red-700 font-bold text-sm transition-colors">
                             <AlertTriangle className="w-4 h-4" /> Hapus Akun Permanen
                           </button>
                         </div>
@@ -266,27 +508,27 @@ export default function SettingsPage() {
                 {activeTab === 'notifications' && (
                   <div className="space-y-6">
                     <div className="p-5 border border-slate-200 rounded-2xl">
-                      <div className="flex items-center justify-between mb-4">
+                      <label className="flex items-center justify-between mb-4 cursor-pointer">
                         <div>
                           <h4 className="font-bold text-sm text-foreground">Suara dalam Aplikasi</h4>
                           <p className="text-xs text-secondary font-medium">Bunyikan efek suara saat kuis selesai, badge didapat, atau chat masuk.</p>
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
+                        <div className="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
                           <input type="checkbox" className="sr-only peer" checked={notificationForm.sound} onChange={e => setNotificationForm({...notificationForm, sound: e.target.checked})} />
                           <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
-                        </label>
-                      </div>
+                        </div>
+                      </label>
                       <hr className="border-slate-100 my-4" />
-                      <div className="flex items-center justify-between mb-4">
+                      <label className="flex items-center justify-between cursor-pointer">
                         <div>
                           <h4 className="font-bold text-sm text-foreground">Browser Push Notifications</h4>
                           <p className="text-xs text-secondary font-medium">Terima notifikasi di desktop Anda meskipun ARKON tidak sedang dibuka.</p>
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                          <input type="checkbox" className="sr-only peer" checked={notificationForm.browserPush} onChange={e => setNotificationForm({...notificationForm, browserPush: e.target.checked})} />
+                        <div className="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
+                          <input type="checkbox" className="sr-only peer" checked={notificationForm.browserPush} onChange={e => handleBrowserPushToggle(e.target.checked)} />
                           <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
-                        </label>
-                      </div>
+                        </div>
+                      </label>
                     </div>
 
                     <div>
@@ -316,17 +558,17 @@ export default function SettingsPage() {
                   <div className="space-y-8">
                     <div>
                       <h3 className="text-xs font-bold text-secondary uppercase tracking-widest mb-4">Tema Aplikasi</h3>
-                      <div className="grid grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {[
                           { id: 'light', icon: Sun, label: 'Terang', bg: 'bg-slate-50 border-slate-200' },
                           { id: 'dark', icon: Moon, label: 'Gelap', bg: 'bg-slate-900 border-slate-800 text-white' },
-                          { id: 'system', icon: Monitor, label: 'Sistem', bg: 'bg-gradient-to-br from-slate-100 to-slate-200 border-slate-300' },
+                          { id: 'system', icon: Monitor, label: 'Sistem', bg: 'bg-gradient-to-br from-slate-100 to-slate-200 border-slate-300 text-slate-800' },
                         ].map(theme => (
                           <button
                             key={theme.id}
                             onClick={() => setAppearanceForm({...appearanceForm, theme: theme.id})}
-                            className={`flex flex-col items-center gap-3 p-4 rounded-2xl border-2 transition-all ${
-                              appearanceForm.theme === theme.id ? 'border-emerald-500 ring-4 ring-emerald-500/10' : 'border-transparent'
+                            className={`flex flex-col items-center justify-center gap-3 p-4 rounded-2xl border-2 transition-all ${
+                              appearanceForm.theme === theme.id ? 'border-emerald-500 ring-4 ring-emerald-500/10' : 'border-transparent opacity-80 hover:opacity-100 hover:border-slate-400'
                             } ${theme.bg}`}
                           >
                             <theme.icon className="w-6 h-6" />
@@ -338,12 +580,12 @@ export default function SettingsPage() {
                     
                     <div>
                       <h3 className="text-xs font-bold text-secondary uppercase tracking-widest mb-4">Kepadatan UI (Density)</h3>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <button
                           onClick={() => setAppearanceForm({...appearanceForm, density: 'comfortable'})}
                           className={`p-4 rounded-2xl border-2 text-left transition-all ${appearanceForm.density === 'comfortable' ? 'border-emerald-500 bg-emerald-50/50' : 'border-slate-200 hover:border-slate-300'}`}
                         >
-                          <span className="font-bold text-sm block mb-1">Nyaman (Nyaman)</span>
+                          <span className="font-bold text-sm block mb-1">Nyaman (Comfortable)</span>
                           <span className="text-xs text-secondary block">Lebih banyak ruang putih, elemen lebih besar. Cocok untuk layar sentuh.</span>
                         </button>
                         <button
@@ -361,37 +603,37 @@ export default function SettingsPage() {
                 {/* ── INTEGRASI ── */}
                 {activeTab === 'integrations' && (
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-5 border border-slate-200 rounded-2xl hover:border-slate-300 transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 border border-slate-200 rounded-2xl hover:border-slate-300 transition-colors gap-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-blue-500 text-white rounded-xl flex items-center justify-center font-bold text-xl">G</div>
+                        <div className="w-12 h-12 bg-blue-500 text-white rounded-xl flex items-center justify-center font-bold text-xl shrink-0">G</div>
                         <div>
                           <h4 className="font-bold text-sm text-foreground">Google Calendar</h4>
                           <p className="text-xs text-secondary font-medium">Sinkronisasi deadline tugas dan jadwal Live Quiz ke kalender Anda.</p>
                         </div>
                       </div>
-                      <button className="px-4 py-2 border border-slate-300 text-foreground font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors">Hubungkan</button>
+                      <button onClick={() => toast.info('Fitur Integrasi segera hadir!')} className="px-4 py-2 border border-slate-300 text-foreground font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors shrink-0">Hubungkan</button>
                     </div>
                     
-                    <div className="flex items-center justify-between p-5 border border-slate-200 rounded-2xl hover:border-slate-300 transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 border border-slate-200 rounded-2xl hover:border-slate-300 transition-colors gap-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-sky-500 text-white rounded-xl flex items-center justify-center font-bold text-xl"><Globe className="w-6 h-6" /></div>
+                        <div className="w-12 h-12 bg-sky-500 text-white rounded-xl flex items-center justify-center font-bold text-xl shrink-0"><Globe className="w-6 h-6" /></div>
                         <div>
                           <h4 className="font-bold text-sm text-foreground">Cloud Storage (Drive/OneDrive)</h4>
                           <p className="text-xs text-secondary font-medium">Simpan dan lampirkan file tugas langsung dari cloud Anda.</p>
                         </div>
                       </div>
-                      <button className="px-4 py-2 border border-slate-300 text-foreground font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors">Hubungkan</button>
+                      <button onClick={() => toast.info('Fitur Integrasi segera hadir!')} className="px-4 py-2 border border-slate-300 text-foreground font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors shrink-0">Hubungkan</button>
                     </div>
 
-                    <div className="flex items-center justify-between p-5 border border-slate-200 rounded-2xl hover:border-slate-300 transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 border border-slate-200 rounded-2xl hover:border-slate-300 transition-colors gap-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-xl"><FileText className="w-6 h-6" /></div>
+                        <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-xl shrink-0"><FileText className="w-6 h-6" /></div>
                         <div>
                           <h4 className="font-bold text-sm text-foreground">Aplikasi Catatan (Notion/Evernote)</h4>
                           <p className="text-xs text-secondary font-medium">Ekspor transkrip RAG AI dan ringkasan kelas ke aplikasi catatan Anda.</p>
                         </div>
                       </div>
-                      <button className="px-4 py-2 border border-slate-300 text-foreground font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors">Hubungkan</button>
+                      <button onClick={() => toast.info('Fitur Integrasi segera hadir!')} className="px-4 py-2 border border-slate-300 text-foreground font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors shrink-0">Hubungkan</button>
                     </div>
                   </div>
                 )}

@@ -94,7 +94,7 @@ const server = http.createServer(app);
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:5173'];
 
 const io = new Server(server, {
-  cors: { origin: ALLOWED_ORIGINS, methods: ["GET", "POST"], credentials: true },
+  cors: { origin: true, methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], credentials: true },
   // ─── Azure App Service: ARR Affinity ───────────────────────
   // Azure App Service uses ARR (Application Request Routing) for load balancing.
   // Without sticky sessions, Socket.io reconnects to different instances and loses state.
@@ -144,7 +144,7 @@ app.set('roomOnlineUsers', roomOnlineUsers);
 app.set('sgOnlineUsers', sgOnlineUsers);
 app.set('pollState', pollState);
 
-app.use(cors({ origin: ALLOWED_ORIGINS, credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 app.use(enforceHttps);
 app.use(contentSecurityPolicy);
 
