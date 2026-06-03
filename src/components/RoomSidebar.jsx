@@ -3,8 +3,9 @@ import {
   LayoutDashboard, Gamepad2, ShoppingBag, Trophy,
   Users, Swords, MessageSquare, ClipboardList, Eye, BarChart2,
   Radio, Settings, ChevronDown, ChevronRight, Flame, Shield,
-  ArrowLeft, BookOpen, Layers
+  ArrowLeft, BookOpen, Layers, Menu
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const STUDENT_MENU = [
   { id: 'overview',   label: 'Overview',    icon: LayoutDashboard, color: 'text-primary',   bgActive: 'bg-primary-soft' },
@@ -72,7 +73,8 @@ const DOSEN_TOOLS = [
 const BELAJAR_IDS  = ['assembly','quiz','detective','cpu-simulator','ar-lab'];
 const KOMUNITAS_IDS = ['shop','showroom'];
 
-export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName, roomCode, isCollapsed, onBack }) {
+export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName, roomCode, isCollapsed, onBack, onToggleCollapse }) {
+  const navigate = useNavigate();
   const [openGroup, setOpenGroup] = useState(() => {
     if (BELAJAR_IDS.includes(activeTab))   return 'belajar-group';
     if (KOMUNITAS_IDS.includes(activeTab)) return 'komunitas-group';
@@ -114,21 +116,26 @@ export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName
 
       {/* Room header */}
       <div className={`px-3 py-3 border-b border-slate-100 ${isCollapsed ? 'items-center' : ''}`}>
-        <button onClick={onBack}
-          className={`flex items-center gap-1.5 text-secondary hover:text-primary transition-colors mb-2 text-xs font-medium ${isCollapsed ? 'justify-center w-full' : ''}`}
-          title="Kembali ke Dashboard">
-          <ArrowLeft size={13} />
-          {!isCollapsed && <span>Dashboard</span>}
-        </button>
+        <div className="flex items-center gap-2 mb-2">
+          <button onClick={onToggleCollapse} className="p-1.5 text-secondary hover:text-primary hover:bg-slate-50 rounded-lg transition-colors cursor-pointer hidden md:block">
+            <Menu size={16} />
+          </button>
+          <button onClick={onBack}
+            className={`flex items-center gap-1.5 text-secondary hover:text-primary transition-colors text-xs font-medium ${isCollapsed ? 'justify-center w-full' : ''}`}
+            title="Kembali ke Dashboard">
+            <ArrowLeft size={13} />
+            {!isCollapsed && <span>Dashboard</span>}
+          </button>
+        </div>
         {!isCollapsed ? (
-          <div>
+          <div className="mt-2">
             <h2 className="font-bold text-foreground text-sm leading-tight truncate" title={roomName}>
               {roomName}
             </h2>
             <p className="text-[9px] text-primary font-semibold tracking-widest mt-0.5 uppercase">{roomCode}</p>
           </div>
         ) : (
-          <div className="w-8 h-8 bg-primary-soft border border-primary/20 rounded-lg flex items-center justify-center mx-auto">
+          <div className="w-8 h-8 bg-primary-soft border border-primary/20 rounded-lg flex items-center justify-center mx-auto mt-2">
             <Layers size={14} className="text-primary" />
           </div>
         )}
@@ -208,13 +215,19 @@ export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName
         )}
       </nav>
 
-      {/* Tentang ARKON */}
-      <div className={`px-2 py-2 border-t border-slate-100 ${isCollapsed ? 'flex justify-center' : ''}`}>
+      {/* Footer Links */}
+      <div className={`px-2 py-2 border-t border-slate-100 flex flex-col gap-1 ${isCollapsed ? 'items-center' : ''}`}>
         <button onClick={() => onTabChange('about')}
           title={isCollapsed ? 'Tentang ARKON' : ''}
           className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-medium text-secondary hover:text-primary hover:bg-primary-soft transition-all">
           <span className="text-sm shrink-0">📖</span>
           {!isCollapsed && <span>Tentang ARKON</span>}
+        </button>
+        <button onClick={() => navigate('/settings')}
+          title={isCollapsed ? 'Pengaturan Akun' : ''}
+          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-medium text-secondary hover:text-primary hover:bg-primary-soft transition-all">
+          <Settings size={14} className="shrink-0" />
+          {!isCollapsed && <span>Pengaturan Akun</span>}
         </button>
       </div>
     </aside>

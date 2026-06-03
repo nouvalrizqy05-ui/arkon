@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Routes, Route, Navigate, useParams } from 're
 import { useToast } from '../components/Toast';
 import {
   Layers, Plus, Users, ChevronRight, ChevronDown, Trash2, Loader2, User,
-  Cpu, MemoryStick, MonitorPlay, HardDrive, Zap, Wind
+  Cpu, MemoryStick, MonitorPlay, HardDrive, Zap, Wind, Settings
 } from 'lucide-react';
 
 import RoomHub from '../components/RoomHub';
@@ -262,6 +262,13 @@ export default function LecturerDashboard() {
           >
             <User className="w-5 h-5" />
             <span className="font-bold text-sm">Profil Saya</span>
+          </button>
+          <button
+            onClick={() => navigate('/settings')}
+            className="flex items-center rounded-xl p-3 gap-3 transition-all bg-white text-gray-500 hover:bg-gray-50 mt-auto"
+          >
+            <Settings className="w-5 h-5" />
+            <span className="font-bold text-sm">Pengaturan</span>
           </button>
         </div>
       </aside>

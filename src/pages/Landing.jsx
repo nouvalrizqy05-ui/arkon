@@ -4,13 +4,18 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight, Cpu, BrainCircuit, Server, BarChart2, Code, Terminal,
   Database, Users, BookOpen, ChevronDown, Star, Monitor, Bot, Play,
-  FileCode, Layers, GraduationCap, Shield, CircuitBoard, ChevronRight, Gamepad2, Info
+  FileCode, Layers, GraduationCap, Shield, CircuitBoard, ChevronRight, Gamepad2, Info,
+  Mail, Github
 } from 'lucide-react';
 import HeroSection from './HeroSection';
-import AboutArkonModal from '../components/AboutArkonModal';
 
 export default function Landing() {
   const [aboutOpen, setAboutOpen] = useState(false);
+
+  const isLoggedIn = !!localStorage.getItem('auth_token');
+  const userName = localStorage.getItem('user_name');
+  const userRole = localStorage.getItem('user_role');
+  const dashboardPath = userRole === 'dosen' ? '/dosen' : '/mahasiswa';
 
   const handleNavClick = (e, targetId) => {
     e.preventDefault();
@@ -62,21 +67,26 @@ export default function Landing() {
             <span className="text-2xl font-black tracking-tight text-foreground">AR<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-indigo-500">KON</span></span>
           </Link>
           <div className="hidden md:flex items-center gap-10">
-            <Link to="/cpu-simulator" className="text-sm font-bold text-primary hover:text-primary-hover transition-colors no-underline flex items-center gap-1"><Play className="w-3.5 h-3.5 fill-primary" /> CPU Simulator</Link>
-            <Link to="/ar-lab" className="text-sm font-bold text-purple-500 hover:text-purple-700 transition-colors no-underline flex items-center gap-1"><CircuitBoard className="w-3.5 h-3.5" /> AR Lab</Link>
             <a href="#features" onClick={(e) => handleNavClick(e, 'features')} className="text-sm font-bold text-secondary hover:text-primary transition-colors no-underline">Fitur</a>
-            <a href="#personas" onClick={(e) => handleNavClick(e, 'personas')} className="text-sm font-bold text-secondary hover:text-primary transition-colors no-underline">Untuk Siapa?</a>
-            <a href="#testimonials" onClick={(e) => handleNavClick(e, 'testimonials')} className="text-sm font-bold text-secondary hover:text-primary transition-colors no-underline">Testimoni</a>
-            <a href="#faq" onClick={(e) => handleNavClick(e, 'faq')} className="text-sm font-bold text-secondary hover:text-primary transition-colors no-underline">FAQ</a>
-            <button onClick={() => setAboutOpen(true)} className="text-sm font-bold text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-1 cursor-pointer bg-transparent border-none"><Info className="w-3.5 h-3.5" /> Tentang</button>
+            <Link to="/tentang" className="text-sm font-bold text-secondary hover:text-primary transition-colors no-underline">Tentang</Link>
+            <Link to="/hubungi-kami" className="text-sm font-bold text-secondary hover:text-primary transition-colors no-underline">Hubungi Kami</Link>
           </div>
           <div className="flex items-center gap-3">
-            <Link to="/login" className="text-sm font-semibold text-secondary hover:text-primary transition-colors no-underline hidden sm:block">
-              Sign In
-            </Link>
-            <Link to="/register" className="px-6 py-2.5 bg-foreground text-white rounded-xl font-bold text-sm hover:scale-105 transition-transform shadow-lg no-underline">
-              Get Started
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <span className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-white border border-border rounded-full text-sm font-semibold text-foreground">
+                  🤖 Halo, {userName}
+                </span>
+                <Link to={dashboardPath} className="px-6 py-2.5 bg-emerald-700 text-white rounded-xl font-bold text-sm hover:bg-emerald-800 transition-colors shadow-lg no-underline">
+                  Buka Dashboard
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="text-sm font-semibold text-secondary hover:text-primary transition-colors no-underline hidden sm:block">Sign In</Link>
+                <Link to="/register" className="px-6 py-2.5 bg-foreground text-white rounded-xl font-bold text-sm hover:scale-105 transition-transform shadow-lg no-underline">Get Started</Link>
+              </>
+            )}
           </div>
         </div>
       </nav>
@@ -384,33 +394,58 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="pt-16 pb-8 border-t border-border bg-white">
+      <footer className="pt-20 pb-10 border-t border-border bg-white">
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/30">
-                <Layers className="w-5 h-5 text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+            <div className="col-span-1 md:col-span-1">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/30">
+                  <Layers className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-2xl font-black tracking-tight text-foreground">AR<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-indigo-500">KON</span></span>
               </div>
-              <span className="text-2xl font-black tracking-tight text-foreground">AR<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-indigo-500">KON</span></span>
+              <p className="text-secondary text-sm font-medium mb-6">Platform Edukasi Arsitektur Komputer interaktif berbasis gamifikasi dan simulasi 3D.</p>
+              <div className="flex items-center gap-4">
+                <a href="mailto:arkon.team@gmail.com" className="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-secondary hover:text-primary hover:border-primary/30 transition-all"><Mail className="w-4 h-4" /></a>
+                <a href="https://github.com/arkon-edu/arkon" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-secondary hover:text-primary hover:border-primary/30 transition-all"><Github className="w-4 h-4" /></a>
+              </div>
             </div>
-            <div className="flex gap-6">
-              <a href="#features" onClick={(e) => handleNavClick(e, 'features')} className="text-sm font-bold text-secondary hover:text-primary transition-colors no-underline">Fitur</a>
-              <a href="#personas" onClick={(e) => handleNavClick(e, 'personas')} className="text-sm font-bold text-secondary hover:text-primary transition-colors no-underline">Untuk Siapa?</a>
-              <a href="#faq" onClick={(e) => handleNavClick(e, 'faq')} className="text-sm font-bold text-secondary hover:text-primary transition-colors no-underline">FAQ</a>
-              <button onClick={() => setAboutOpen(true)} className="text-sm font-bold text-emerald-600 hover:text-emerald-700 transition-colors cursor-pointer bg-transparent border-none">Tentang ARKON</button>
+            <div>
+              <h4 className="font-black text-sm text-foreground uppercase tracking-widest mb-6">Produk</h4>
+              <ul className="space-y-4">
+                <li><Link to="/cpu-simulator" className="text-sm text-secondary hover:text-primary font-medium transition-colors no-underline">CPU Simulator</Link></li>
+                <li><Link to="/ar-lab" className="text-sm text-secondary hover:text-primary font-medium transition-colors no-underline">AR Hardware Lab</Link></li>
+                <li><Link to="/#features" className="text-sm text-secondary hover:text-primary font-medium transition-colors no-underline">Semua Fitur</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-black text-sm text-foreground uppercase tracking-widest mb-6">Perusahaan</h4>
+              <ul className="space-y-4">
+                <li><Link to="/tentang" className="text-sm text-secondary hover:text-primary font-medium transition-colors no-underline">Tentang Kami</Link></li>
+                <li><Link to="/hubungi-kami" className="text-sm text-secondary hover:text-primary font-medium transition-colors no-underline">Hubungi Kami</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-black text-sm text-foreground uppercase tracking-widest mb-6">Informasi</h4>
+              <ul className="space-y-4">
+                <li className="text-sm text-secondary font-medium">Versi: <strong className="text-foreground">1.0.0-pilot</strong></li>
+                <li className="text-sm text-secondary font-medium">Kompetisi: <strong className="text-foreground">LIDM 2027</strong></li>
+                <li className="text-sm text-secondary font-medium">Tim: <strong className="text-foreground">Kelompok 10</strong></li>
+              </ul>
             </div>
           </div>
 
-          <div className="border-t border-border pt-8">
-            <p className="text-sm font-bold text-secondary text-center">
-              © {new Date().getFullYear()} ARKON — LIDM 2027 TENTH GROUP (KELOMPOK 10). All Rights Reserved.
+          <div className="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-sm font-bold text-secondary">
+              © {new Date().getFullYear()} ARKON. All Rights Reserved.
             </p>
+            <div className="flex gap-6">
+              <Link to="/privacy" className="text-xs font-bold text-secondary hover:text-primary transition-colors no-underline">Privasi</Link>
+              <Link to="/terms" className="text-xs font-bold text-secondary hover:text-primary transition-colors no-underline">Ketentuan</Link>
+            </div>
           </div>
         </div>
       </footer>
-
-      {/* About ARKON Modal */}
-      <AboutArkonModal isOpen={aboutOpen} onClose={() => setAboutOpen(false)} />
     </div>
   );
 }

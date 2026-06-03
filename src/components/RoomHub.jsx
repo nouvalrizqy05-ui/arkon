@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { useToast } from './Toast';
 import { Bell, Menu, User, Cpu, MemoryStick, MonitorPlay, HardDrive, Zap, Wind, ChevronDown, Radio, BookOpen, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 import RoomSidebar from './RoomSidebar';
 import RoomOverview from './RoomOverview';
@@ -62,6 +63,7 @@ const iconComponents = { Cpu, MemoryStick, MonitorPlay, HardDrive, Zap, Wind };
  * Menu and permissions change based on userRole (dosen/mahasiswa).
  */
 export default function RoomHub({ room, userRole, userId, userName, token, apiUrl, onBack }) {
+  const navigate = useNavigate();
   const toast = useToast();
   
   // Initialize activeTab from URL if present
@@ -737,6 +739,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
         roomName={room?.course_name || 'Room'}
         roomCode={room?.room_code || ''}
         isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         onBack={onBack}
       />
 
@@ -747,9 +750,9 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              className="p-2 text-secondary hover:bg-white shadow-sm border border-border rounded-lg transition-all"
+              className="md:hidden p-2 text-secondary hover:bg-slate-50 border border-slate-200 rounded-lg transition-all"
             >
-              <Menu size={18} />
+              <Menu size={16} />
             </button>
             <h2 className="font-bold text-sm text-secondary">{tabTitles[activeTab] || 'Room'}</h2>
           </div>
@@ -824,7 +827,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
             <div className="h-5 w-px bg-white shadow-sm border border-border" />
 
             {/* User avatar */}
-            <div className="flex items-center gap-2">
+            <div onClick={() => navigate('/settings')} className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-xl transition-colors">
               {userProfile ? (() => {
                 const av = PROFILE_AVATARS.find(a => a.id === userProfile.avatar_id) || PROFILE_AVATARS[0];
                 const AvatarIcon = iconComponents[av.icon] || User;
@@ -837,7 +840,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
                 <img src={`https://ui-avatars.com/api/?name=${userName}&background=6366f1&color=fff`} alt="" className="w-8 h-8 rounded-full shadow-sm" />
               )}
               <div className="hidden md:block text-left">
-                <p className="font-bold text-xs text-foreground leading-tight">{userProfile?.full_name || userName}</p>
+                <p className="font-bold text-xs text-foreground leading-tight group-hover:text-primary transition-colors">{userProfile?.full_name || userName}</p>
                 <p className="text-[9px] text-secondary font-medium capitalize">{userRole}</p>
               </div>
             </div>

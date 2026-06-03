@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '../components/Toast';
 import {
   Plus, Users, DoorOpen, ChevronRight, TrendingUp,
-  Search, Loader2, ClipboardList, BookOpen, Trophy, LogOut, Hash
+  Search, Loader2, ClipboardList, BookOpen, Trophy, LogOut, Hash, Settings
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -204,10 +204,14 @@ export default function ClassroomWorkspace() {
 
         {/* Nav */}
         <nav className="flex-1 p-3 space-y-1">
-          <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-primary-soft text-primary border border-primary/15">
+          <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-primary-soft text-primary border border-primary/15 cursor-pointer">
             <DoorOpen size={16} />
             <span className="font-semibold text-sm">Room Saya</span>
           </div>
+          <button onClick={() => navigate('/settings')} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-secondary hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all cursor-pointer">
+            <Settings size={16} />
+            <span className="font-semibold text-sm">Pengaturan</span>
+          </button>
         </nav>
 
         {/* Stats */}

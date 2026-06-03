@@ -21,7 +21,11 @@ const CpuVisual = lazy(() => import('./pages/CpuVisual')); // Komponen Visualisa
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
+const TentangPage = lazy(() => import('./pages/TentangPage'));
+const HubungiKamiPage = lazy(() => import('./pages/HubungiKamiPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 import NotFound from './pages/NotFound';
+import AccessibilityWidget from './components/AccessibilityWidget';
 
 // --- LOADING FALLBACK (Professional Skeleton) ---
 function PageLoader() {
@@ -62,7 +66,7 @@ const ProtectedRoute = ({ children, roleRequired }) => {
 function Layout() {
   const location = useLocation();
   // Sembunyikan Navbar utama di dalam aplikasi
-  const hideNavbarRoutes = ['/', '/workspace', '/mahasiswa', '/cpu-simulator', '/cpu-visual', '/lecturer-dashboard', '/dosen', '/ar-lab', '/login', '/register'];
+  const hideNavbarRoutes = ['/', '/workspace', '/mahasiswa', '/cpu-simulator', '/cpu-visual', '/lecturer-dashboard', '/dosen', '/ar-lab', '/login', '/register', '/tentang', '/hubungi-kami', '/settings'];
   const showNavbar = !hideNavbarRoutes.some(route => 
     location.pathname === route || (route !== '/' && location.pathname.startsWith(`${route}/`))
   );
@@ -73,6 +77,7 @@ function Layout() {
       <a href="#main-content" className="skip-to-content">
         Lewati ke konten utama
       </a>
+      <AccessibilityWidget />
       {showNavbar && <Navbar />}
       <main id="main-content" className={showNavbar ? 'pt-[70px]' : ''} role="main">
         <Suspense fallback={<PageLoader />}>
@@ -83,6 +88,9 @@ function Layout() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/tentang" element={<TentangPage />} />
+            <Route path="/hubungi-kami" element={<HubungiKamiPage />} />
+            <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
 
             {/* Rute Mahasiswa */}
             <Route 
