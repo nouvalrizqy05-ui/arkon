@@ -52,7 +52,23 @@ const ProtectedRoute = ({ children, roleRequired }) => {
   const token = localStorage.getItem('auth_token');
   const userRole = localStorage.getItem('user_role');
 
-  if (!token) {
+  const isTokenValid = (t) => {
+    if (!t) return false;
+    try {
+      const payload = JSON.parse(atob(t.split('.')[1]));
+      return payload.exp * 1000 > Date.now();
+    } catch (e) {
+      return false;
+    }
+  };
+
+  if (!token || !isTokenValid(token)) {
+    if (token) {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_role');
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('user_name');
+    }
     return <Navigate to="/login" replace />;
   }
 

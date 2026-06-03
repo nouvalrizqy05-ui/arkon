@@ -10,7 +10,21 @@ import {
 const fadeUp = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true } };
 
 export default function TentangPage() {
-  const isLoggedIn = !!localStorage.getItem('auth_token');
+  const checkToken = () => {
+    const t = localStorage.getItem('auth_token');
+    if (!t) return false;
+    try {
+      const payload = JSON.parse(atob(t.split('.')[1]));
+      if (payload.exp * 1000 > Date.now()) return true;
+    } catch(e) {}
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('user_name');
+    return false;
+  };
+
+  const isLoggedIn = checkToken();
   const userName = localStorage.getItem('user_name');
   const userRole = localStorage.getItem('user_role');
   const dashboardPath = userRole === 'dosen' ? '/dosen' : '/mahasiswa';

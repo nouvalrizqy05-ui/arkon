@@ -20,7 +20,21 @@ const ROLE_OPTIONS = [
 export default function HubungiKamiPage() {
   const [form, setForm] = useState({ name: '', email: '', role: '', org: '', message: '' });
 
-  const isLoggedIn = !!localStorage.getItem('auth_token');
+  const checkToken = () => {
+    const t = localStorage.getItem('auth_token');
+    if (!t) return false;
+    try {
+      const payload = JSON.parse(atob(t.split('.')[1]));
+      if (payload.exp * 1000 > Date.now()) return true;
+    } catch(e) {}
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('user_name');
+    return false;
+  };
+
+  const isLoggedIn = checkToken();
   const userName = localStorage.getItem('user_name');
   const userRole = localStorage.getItem('user_role');
   const dashboardPath = userRole === 'dosen' ? '/dosen' : '/mahasiswa';
