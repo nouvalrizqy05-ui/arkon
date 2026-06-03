@@ -5,7 +5,7 @@ import {
   User, Shield, Bell, Palette, Link as LinkIcon, Eye,
   Save, AlertTriangle, Monitor, Moon, Sun, Smartphone,
   CheckCircle2, Globe, FileText, Database, ShieldAlert,
-  Loader2
+  Loader2, LogOut
 } from 'lucide-react';
 import { useToast } from '../components/Toast';
 
@@ -172,6 +172,13 @@ export default function SettingsPage() {
       toast.error('Terjadi kesalahan jaringan.');
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Apakah Anda yakin ingin keluar dari akun Anda?')) {
+      localStorage.clear();
+      window.location.href = '/login';
     }
   };
 
@@ -411,6 +418,15 @@ export default function SettingsPage() {
                           <option value="Asia/Jayapura">WIT (Asia/Jayapura)</option>
                         </select>
                       </div>
+                    </div>
+
+                    <hr className="border-slate-100" />
+                    
+                    <div>
+                      <h3 className="text-xs font-bold text-red-600 uppercase tracking-widest mb-4">Sesi Akun</h3>
+                      <button onClick={handleLogout} className="flex items-center justify-center gap-2 w-full md:w-auto px-6 py-3 border border-red-200 bg-red-50 hover:bg-red-100 rounded-xl text-red-700 font-bold text-sm transition-colors">
+                        <LogOut className="w-4 h-4" /> Keluar dari Akun (Logout)
+                      </button>
                     </div>
                   </>
                 )}

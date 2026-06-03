@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Gamepad2, ShoppingBag, Trophy,
   Users, Swords, MessageSquare, ClipboardList, Eye, BarChart2,
   Radio, Settings, ChevronDown, ChevronRight, Flame, Shield,
-  ArrowLeft, BookOpen, Layers, Menu
+  ArrowLeft, BookOpen, Layers, Menu, LogOut
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -80,6 +80,13 @@ export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName
     if (KOMUNITAS_IDS.includes(activeTab)) return 'komunitas-group';
     return null;
   });
+
+  const handleLogout = () => {
+    if (window.confirm('Apakah Anda yakin ingin keluar?')) {
+      localStorage.clear();
+      window.location.href = '/login';
+    }
+  };
 
   const menuItems = userRole === 'dosen' ? DOSEN_MENU : STUDENT_MENU;
 
@@ -228,6 +235,12 @@ export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName
           className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-medium text-secondary hover:text-primary hover:bg-primary-soft transition-all">
           <Settings size={14} className="shrink-0" />
           {!isCollapsed && <span>Pengaturan Akun</span>}
+        </button>
+        <button onClick={handleLogout}
+          title={isCollapsed ? 'Keluar' : ''}
+          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-red-600 hover:text-red-700 hover:bg-red-50 transition-all mt-1">
+          <LogOut size={14} className="shrink-0" />
+          {!isCollapsed && <span>Keluar</span>}
         </button>
       </div>
     </aside>
