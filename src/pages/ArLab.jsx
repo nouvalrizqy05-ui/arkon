@@ -525,8 +525,7 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
                               id={`model-iframe-${selected.id}`}
                               title={`3D Model interaktif: ${selected.name}`}
                               src={iframeSrc}
-                              allowFullScreen
-                              allow="autoplay; fullscreen; xr-spatial-tracking"
+                              allow="autoplay, fullscreen, xr-spatial-tracking"
                               onLoad={() => setIsModelLoading(false)}
                               className="absolute inset-0 w-full h-full outline-none"
                               style={{ width: '100%', height: '100%', border: 'none' }}
