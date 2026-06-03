@@ -44,6 +44,7 @@ arch-ai-backend/uploads/
 
 # Large media files
 *.mp4
+!public/Anatomi_Komputer.mp4
 *.avi
 *.mov
 
