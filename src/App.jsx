@@ -55,7 +55,11 @@ const ProtectedRoute = ({ children, roleRequired }) => {
   const isTokenValid = (t) => {
     if (!t) return false;
     try {
-      const payload = JSON.parse(atob(t.split('.')[1]));
+      const base64Url = t.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const pad = base64.length % 4;
+      const padded = pad ? base64 + '='.repeat(4 - pad) : base64;
+      const payload = JSON.parse(atob(padded));
       return payload.exp * 1000 > Date.now();
     } catch (e) {
       return false;

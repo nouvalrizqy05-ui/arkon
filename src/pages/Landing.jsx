@@ -16,7 +16,11 @@ export default function Landing() {
     const t = localStorage.getItem('auth_token');
     if (!t) return false;
     try {
-      const payload = JSON.parse(atob(t.split('.')[1]));
+      const base64Url = t.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const pad = base64.length % 4;
+      const padded = pad ? base64 + '='.repeat(4 - pad) : base64;
+      const payload = JSON.parse(atob(padded));
       if (payload.exp * 1000 > Date.now()) return true;
     } catch(e) {}
     localStorage.removeItem('auth_token');
