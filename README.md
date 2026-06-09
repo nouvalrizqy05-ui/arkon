@@ -1,174 +1,245 @@
-<div align="center">
-  <img src="https://res.cloudinary.com/drt6v4pbc/image/upload/v1715610000/arkon-banner-premium.png" alt="ARKON Banner" width="100%" />
-  
-  # 🌌 ARKON v3.0: AI-Integrated Computer Architecture Lab
-  
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-  [![Gemini AI](https://img.shields.io/badge/Gemini%20AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://deepmind.google/technologies/gemini/)
-  [![LIDM 2027](https://img.shields.io/badge/LIDM%202027-Qualified-blue?style=for-the-badge&logo=target)](https://lidm.kemdikbud.go.id/)
+# ARKON v3.0
 
-  **ARKON** adalah ekosistem pendidikan cerdas yang mentransformasi pembelajaran Arsitektur Komputer melalui sinergi **3D Simulation**, **Generative AI**, dan **Psychometric Analytics**.
+ARKON adalah platform edukasi arsitektur komputer berbasis web yang menggabungkan room-based learning, simulasi CPU/3D, AI tutoring, analytics IRT Rasch, dan gamifikasi untuk mendukung pengalaman belajar yang interaktif di kelas maupun mandiri.
 
-  [Demo Video](#) • [Slide Presentasi](#) • [Laporan Teknis](./docs/TECHNICAL_REPORT.md)
-</div>
+This repository contains:
+- Frontend React + Vite for the student/lecturer web app
+- Backend Node.js + Express + Socket.IO for APIs, auth, real-time collaboration, analytics, and AI features
+- A separate Svelte/Rollup visual simulator package for CPU visualization
 
 ---
 
-## 🚀 Scientific Foundation: IRT Rasch Model (1PL)
-ARKON bukan sekadar platform kuis biasa. Kami mengimplementasikan **Item Response Theory (IRT)** menggunakan **Rasch Model (1PL)** untuk memberikan estimasi kemampuan mahasiswa yang akurat secara matematis.
+## Ringkasan Proyek
 
-- **Adaptive Testing**: Tingkat kesulitan soal menyesuaikan dengan probabilitas keberhasilan mahasiswa ($\theta$).
-- **Newton-Raphson MLE**: Estimasi kemampuan ($\theta$) dihitung secara real-time di backend menggunakan metode *Maximum Likelihood*.
-- **Pedagogical Insight**: Memberikan data objektif bagi dosen mengenai distribusi tingkat kesulitan soal dan penguasaan materi per individu.
+ARKON dirancang untuk membantu mahasiswa mempelajari arsitektur komputer melalui:
+- room-based classroom workflow
+- simulasi CPU dan perakitan PC 3D
+- AI-assisted learning and question support
+- lecturer analytics with IRT Rasch Model (1PL) and N-Gain
+- gamification, progress tracking, achievements, and study groups
 
----
-
-## 🏗️ Technical Architecture
-
-```mermaid
-graph TD
-    subgraph Client_Side [Frontend: React + Vite]
-        UI[User Interface]
-        Three[Three.js / Model Viewer]
-        SocketClient[Socket.io Client]
-    end
-
-    subgraph AI_Engine [Intelligence]
-        Gemini[Gemini 1.5 Flash]
-        IRT[IRT Service - Rasch Model]
-    end
-
-    subgraph Backend_Cloud [Backend: Node.js + Express]
-        API[REST API Endpoints]
-        SocketServer[Socket.io Server]
-        Auth[JWT & RBAC Security]
-    end
-
-    subgraph Persistence [Database]
-        Postgres[(PostgreSQL)]
-        Cloudinary[(Cloudinary Storage)]
-    end
-
-    UI --> API
-    UI --> Three
-    SocketClient <--> SocketServer
-    API --> Auth
-    Auth --> Postgres
-    API --> Gemini
-    API --> IRT
-    IRT --> Postgres
-    API --> Cloudinary
-```
-
-## 🛡️ Security & Architecture Hardening
-Project ini telah melalui tahap penguatan keamanan dan refaktor modular untuk stabilitas tingkat kompetisi:
-
-- **Modular Architecture**: Ekstraksi logika ke dalam `services/` (AI, IRT), `config/` (Database), dan `middleware/` (Auth).
-- **Strict Authorization**: Penegakan kepemilikan data (Ownership-based Access) menggunakan `req.user.id` dari JWT token untuk mencegah *cross-account data manipulation*.
-- **AI Resilience**: Implementasi *model rotation* dan *retry logic* pada Gemini API untuk menangani limit kuota dan kegagalan handshake secara otomatis.
-- **Robust PDF Parsing**: Integrasi `pdf-parse` yang fleksibel untuk menangani berbagai struktur dokumen akademik.
+Project ini bukan hanya landing page atau demo; ini adalah aplikasi full-stack yang sudah memiliki:
+- rute frontend terproteksi untuk role mahasiswa dan dosen
+- API backend dengan auth, room, analytics, AI, live quiz, dan gamification
+- real-time websocket untuk kolaborasi kelas
+- dokumentasi API dan deployment setup
 
 ---
 
-## 🌿 Kontribusi terhadap SDGs
-ARKON berkomitmen mendukung **Agenda 2030 PBB** untuk Pembangunan Berkelanjutan, khususnya:
+## Fitur Utama
 
-- **SDG 4: Quality Education**: Menghilangkan hambatan finansial untuk mengakses laboratorium hardware komputer yang mahal melalui simulasi 3D & AR yang presisi.
-- **SDG 9: Industry, Innovation, and Infrastructure**: Memajukan inovasi digital dalam pendidikan vokasi untuk menyiapkan tenaga kerja yang kompeten di era industri 4.0.
+### 1. Room-Based Learning
+- membuat dan bergabung ke room belajar
+- room code untuk kelas dan sesi mandiri
+- tugas, aktivitas, dan progress dalam satu ruang belajar
 
----
+### 2. CPU Simulator & Visualisasi
+- simulasi CPU interaktif
+- visualisasi ALU, RAM, PC, control unit, dan pipeline
+- assembly instruction flow untuk memahami eksekusi program
 
-## 📸 Dashboard Preview
-| AI Learning Workspace | 3D Assembly Simulator |
-| :---: | :---: |
-| ![Workspace](https://placehold.co/600x400/080C1A/FFF?text=ARKON+Classroom+Workspace) | ![Simulator](https://placehold.co/600x400/080C1A/FFF?text=3D+Assembly+Simulator) |
+### 3. 3D Assembly / PC Quest
+- pengalaman merakit PC secara interaktif
+- kuis interaktif berbasis peta/level motherboard
+- gamifikasi coins, achievements, dan challenge progression
 
----
+### 4. AI & Tutor Support
+- AI routes untuk dukungan jawaban, materi, dan analisis pembelajaran
+- integrasi Gemini AI di backend
+- kemampuan adaptif untuk mendukung pembelajaran yang lebih personal
 
-## 🛠️ Tech Stack & Implementation
-- **Frontend**: React 18, TailwindCSS, Framer Motion, Lucide Icons, Recharts, Three.js
-- **3D/AR**: Three.js, Google Model Viewer (WebXR), AR Lab
-- **Backend**: Node.js, Express 5, PostgreSQL (node-postgres), Socket.io
-- **AI Integration**: Google Generative AI SDK (Gemini 2.0 Flash)
-- **Analytics**: Custom IRT Math Engine (Rasch Model 1PL, Newton-Raphson MLE)
-- **DevOps**: Docker, docker-compose (dev + prod), Health Check Endpoints
+### 5. Analytics & IRT
+- estimasi kemampuan mahasiswa menggunakan Rasch Model (1PL)
+- tracking performa, N-Gain, dan insight pembelajaran dosen
+- dashboard untuk memantau progress dan topik yang sulit
 
----
+### 6. AR Lab / 3D Visualization
+- visualisasi komponen hardware berbasis web
+- opsi AR/3D untuk eksplorasi komponen komputer
 
-## 🔒 Security Measures
-ARKON mengimplementasikan keamanan berlapis:
-
-| Layer | Implementation | File |
-|-------|---------------|------|
-| **Rate Limiting** | 5 req/menit pada endpoint kritis (coins, AI) | `ai.routes.js`, `gamification.routes.js` |
-| **Input Sanitization** | Server-side validation, type checking, length limits | `middleware/sanitize.js` |
-| **JWT Auth** | Access token + Refresh token, bcrypt password hashing | `middleware/auth.js` |
-| **RBAC** | Role-based access (mahasiswa/dosen), ownership validation | `middleware/auth.js` |
-| **Helmet** | CSP headers, XSS protection, CORS configuration | `server.js` |
-| **SQL Injection Prevention** | Parameterized queries ($1, $2), no string concatenation | All routes |
+### 7. Real-Time Collaboration
+- Socket.IO untuk live quiz, classroom activity, dan update real-time
+- support untuk study groups, tournaments, notes, dan progress sharing
 
 ---
 
-## 🗺️ LIDM 2027 Development Roadmap
-Pengembangan ARKON berorientasi pada kompetisi ITDP LIDM 2027 dengan 4 fase kritis:
-1. **Phase 1: Production Hardening** — Security audit (Token revocation, file upload), Performance (Redis, DB Indexes), Core gaps.
-2. **Phase 2: Pilot & Konten** — Ekosistem Multi-tenant, Ekspansi bank soal (200+ soal IRT), Uji coba ke PT Pilot.
-3. **Phase 3: LIDM Differentiators** — Adaptive Learning Path via AI, LMS Integration (Moodle), PWA offline-first.
-4. **Phase 4: Polish & LIDM Submit** — Load Testing, Dokumentasi empiris N-Gain $\ge 0.30$, Finalisasi proposal.
+## Arsitektur Aplikasi
+
+### Frontend
+- React 18
+- Vite
+- React Router
+- Tailwind CSS
+- Framer Motion
+- Recharts
+- Lucide icons
+- PWA support via Vite PWA
+
+### Backend
+- Node.js + Express
+- PostgreSQL
+- Socket.IO
+- Redis (optional / fallback mode)
+- JWT auth
+- Helmet, CORS, rate limiting, Sentry, Swagger docs
+
+### Visual Simulator Package
+- Svelte + Rollup
+- TypeScript support
+- dedicated CPU visual simulator bundle
 
 ---
 
-## 🧪 Testing
-```bash
-cd arch-ai-backend && npm test
-```
+## Struktur Repo
 
-| Test Suite | Coverage | Description |
-|-----------|----------|-------------|
-| `irt.service.test.js` | Rasch probability, Newton-Raphson convergence, item information, adaptive selection | Core IRT engine |
-| `ngain.service.test.js` | N-Gain calculation, Hake classification, batch class analysis, effectiveness | Analytics service |
-| `auth.test.js` | Register, login, forgot password integration | Authentication flow |
+`	ext
+.
+├── src/                          # React frontend
+│   ├── components/               # reusable UI, navbar, error boundaries, widget
+│   ├── pages/                    # landing, login, dashboard, simulator, AR lab, settings
+│   ├── contexts/                 # theme and app-level state
+│   └── hooks/                    # custom hooks
+├── arch-ai-backend/              # Express + Socket.IO backend
+│   ├── routes/                   # AI, analytics, auth, rooms, live quiz, study groups, etc.
+│   ├── services/                 # IRT, socket, simulator, analytics logic
+│   ├── config/                   # db, redis, sentry, swagger, upload
+│   └── migrations/               # database schema migration files
+├── cpu-visual-simulator/         # Svelte/rollup visual simulator subproject
+├── docs/                         # documentation and reports
+├── scripts/                      # deployment and maintenance helpers
+└── docker-compose*.yml           # local and production deployment setup
+`
 
 ---
 
-## 🐳 Deployment
+## Teknologi yang Digunakan
 
-### Development
-```bash
+### Frontend
+- React 18
+- Vite 5
+- Tailwind CSS
+- Framer Motion
+- React Router DOM
+- Recharts
+- Three.js / model-viewer
+
+### Backend
+- Express 5
+- Socket.IO
+- PostgreSQL with pg
+- Redis + ioredis
+- JWT + bcryptjs
+- Cloudinary
+- Swagger UI
+- Sentry
+
+### Quality & Ops
+- ESLint
+- Playwright (E2E)
+- Jest (backend tests)
+- Docker / docker-compose
+- Vercel deployment support
+
+---
+
+## Menjalankan Aplikasi Secara Lokal
+
+### 1. Frontend
+`ash
+npm install
+npm run dev
+`
+
+### 2. Backend
+`ash
+cd arch-ai-backend
+npm install
+npm run dev
+`
+
+### 3. Visual Simulator
+`ash
+npm install --prefix cpu-visual-simulator
+npm run build --prefix cpu-visual-simulator
+`
+
+### 4. Docker (opsional)
+`ash
 docker compose up -d --build
-```
-
-### Production
-```bash
-docker compose -f docker-compose.prod.yml up -d --build
-```
-
-**Production differences**: No volume mounts, `NODE_ENV=production`, restart policies, resource limits (CPU/RAM), healthchecks on all services.
-
-### Health Check
-```
-GET /api/health
-```
-Returns: database status, Gemini API status, app version, uptime, memory usage.
+`
 
 ---
 
-## 🏁 Quick Start
-1. **Clone**: `git clone https://github.com/arkon-edu/arkon.git`
-2. **Backend**: 
-   - `cd arch-ai-backend && npm install`
-   - Configure `.env` (JWT_SECRET, REFRESH_SECRET, DB credentials, GEMINI_API_KEY)
-   - `npm run dev`
-3. **Frontend**:
-   - `npm install && npm run dev`
-4. **Docker** (recommended):
-   - `docker compose up -d --build`
+## Variabel Lingkungan
+
+Backend memerlukan environment variables seperti:
+- DATABASE_URL
+- JWT_SECRET
+- REFRESH_SECRET
+- GEMINI_API_KEY
+- REDIS_URL (opsional)
+- CLOUDINARY_*
+- SENTRY_DSN (opsional)
+
+Untuk deployment production, cek dokumen deployment yang ada di repo:
+- DEPLOYMENT.md
+- DOCKER-README.md
+- MONITORING.md
 
 ---
 
-<div align="center">
-  <p><b>ARKON Team</b> — Inovasi untuk Pendidikan Indonesia 🇮🇩</p>
-  [![LIDM 2027](https://img.shields.io/badge/LIDM-2027-blue?style=for-the-badge)](https://lidm.kemdikbud.go.id/)
-</div>
+## Testing
 
+### Backend
+`ash
+cd arch-ai-backend
+npm test
+`
+
+### E2E
+`ash
+npx playwright test
+`
+
+---
+
+## Deployment
+
+Project ini sudah disiapkan untuk:
+- Vercel (frontend)
+- Docker / docker-compose (backend + frontend)
+- Azure / hosting cloud dengan PostgreSQL + Redis support
+
+Untuk detail deployment yang lebih lengkap, lihat:
+- DEPLOYMENT.md
+- render.yaml
+- vercel.json
+- railway.json
+- docker-compose.yml
+- docker-compose.prod.yml
+
+---
+
+## Dokumentasi Tambahan
+
+Dokumen yang sudah ada di repo dapat membantu memahami arah pengembangan project:
+- docs/TECHNICAL_REPORT.md
+- docs/API_DOCUMENTATION.md
+- docs/USER_MANUAL.md
+- PHASE-2-COMPLETION.md
+- AZURE_SETUP.md
+
+---
+
+## Catatan Penting
+
+- Repo ini menggabungkan beberapa subproject dalam satu workspace.
+- Aplikasi frontend dan backend dapat berjalan secara terpisah.
+- Beberapa fitur memerlukan konfigurasi environment dan layanan pendukung (PostgreSQL, Redis, Gemini API).
+- Untuk deployment yang stabil, disarankan menguji build lokal sebelum push ke hosting.
+
+---
+
+## Kesimpulan
+
+ARKON adalah web app edukasi komputer architecture yang lengkap: classroom room, simulator CPU, AI tutor, analytics IRT, AR/3D visualization, dan gamification. README ini disusun agar lebih akurat mencerminkan kondisi proyek saat ini dibanding versi yang lebih umum dan kurang spesifik.
