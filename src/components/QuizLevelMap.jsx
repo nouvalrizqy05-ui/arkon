@@ -55,11 +55,11 @@ export default function QuizLevelMap({ completedLevels, onSelectLevel, studentTh
   const recommendedLevels = getRecommendedLevels(studentTheta, completedLevels);
 
   return (
-    <div className="relative flex-1 w-full min-h-[420px] h-[calc(100vh-180px)] overflow-hidden rounded-3xl border border-border bg-slate-50 shadow-2xl transition-all duration-500">
+    <div className="relative flex-1 w-full h-full overflow-hidden bg-slate-50 transition-all duration-500">
       {/* Background Image */}
       <img
         src="/models/map/thumbnail.jpg"
-        className="absolute inset-0 w-full h-full object-contain bg-slate-100"
+        className="absolute inset-0 w-full h-full object-cover bg-slate-100"
         alt="Motherboard Map"
       />
 

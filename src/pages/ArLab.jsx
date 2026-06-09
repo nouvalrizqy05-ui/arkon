@@ -526,7 +526,12 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
                               title={`3D Model interaktif: ${selected.name}`}
                               src={iframeSrc}
                               allow="autoplay, fullscreen, xr-spatial-tracking"
+                              sandbox="allow-same-origin allow-scripts"
                               onLoad={() => setIsModelLoading(false)}
+                              onError={() => {
+                                console.error(`Failed to load model iframe for ${selected.id}`);
+                                setIsModelLoading(false);
+                              }}
                               className="absolute inset-0 w-full h-full outline-none"
                               style={{ width: '100%', height: '100%', border: 'none' }}
                               aria-hidden="true"

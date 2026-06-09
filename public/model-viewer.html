@@ -121,6 +121,9 @@ model-viewer{width:100%;height:100%;display:block}
   }
 
   if (src) {
+    console.info('[model-viewer] Loading from src:', src);
+    console.info('[model-viewer] Full URL would be:', new URL(src, window.location.href).href);
+    
     viewer.setAttribute('src', src);
     startTimeout();
 
@@ -142,12 +145,14 @@ model-viewer{width:100%;height:100%;display:block}
     }
 
     viewer.addEventListener('load', () => {
+      console.info('[model-viewer] Model loaded successfully');
       clearTimeout(loadTimeout);
       loader.classList.add('hidden');
       applyVisibility(window.currentAssembledList);
     });
 
-    viewer.addEventListener('error', () => {
+    viewer.addEventListener('error', (e) => {
+      console.error('[model-viewer] Error loading model:', e);
       clearTimeout(loadTimeout);
       showError();
     });
