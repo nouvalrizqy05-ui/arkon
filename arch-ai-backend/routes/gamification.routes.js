@@ -433,6 +433,39 @@ router.delete('/showroom/comment/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// Grade a build (Dosen only)
+router.put('/showroom/builds/:id/grade', authenticateToken, async (req, res) => {
+  if (req.user.role !== 'dosen') {
+    return res.status(403).json({ error: 'Hanya dosen yang bisa memberi nilai' });
+  }
+  const { dosen_score } = req.body;
+  if (dosen_score === undefined || dosen_score < 0 || dosen_score > 100) {
+    return res.status(400).json({ error: 'Nilai harus antara 0-100' });
+  }
+  try {
+    // Ensure columns exist (idempotent migration)
+    await pool.query(`
+      DO $$ BEGIN
+        ALTER TABLE pc_builds ADD COLUMN IF NOT EXISTS dosen_score INT;
+        ALTER TABLE pc_builds ADD COLUMN IF NOT EXISTS graded_by UUID;
+        ALTER TABLE pc_builds ADD COLUMN IF NOT EXISTS graded_at TIMESTAMPTZ;
+      EXCEPTION WHEN OTHERS THEN NULL;
+      END $$;
+    `);
+
+    const result = await pool.query(
+      'UPDATE pc_builds SET dosen_score = $1, graded_by = $2, graded_at = NOW() WHERE id = $3 RETURNING *',
+      [dosen_score, req.user.id, req.params.id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Build tidak ditemukan' });
+    console.log(`🏆 [Showroom] Build ${req.params.id} graded ${dosen_score}/100 by dosen ${req.user.id}`);
+    res.json({ message: 'Nilai berhasil disimpan', build: result.rows[0] });
+  } catch (err) {
+    console.error('🔥 SHOWROOM GRADE ERROR:', err);
+    res.status(500).json({ error: 'Gagal menyimpan nilai' });
+  }
+});
+
 // ==========================================
 // COMPONENT DETECTIVE API
 // ==========================================

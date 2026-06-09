@@ -184,10 +184,10 @@ export default function ClassroomWorkspace() {
 
   /* ─── DASHBOARD VIEW ────────────────────── */
   return (
-    <div className="fixed inset-0 flex overflow-hidden" style={{ background: '#f8fafc' }}>
+    <div className="fixed inset-0 flex overflow-hidden bg-slate-50 dark:bg-slate-950">
 
       {/* ── Sidebar ───────────────────────────── */}
-      <aside className="hidden lg:flex flex-col w-[240px] h-full bg-white border-r border-slate-200 shrink-0">
+      <aside className="hidden lg:flex flex-col w-[240px] h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 shrink-0">
         {/* Logo */}
         <div className="flex items-center gap-2.5 h-16 px-5 border-b border-slate-100">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-emerald-sm"
@@ -216,7 +216,7 @@ export default function ClassroomWorkspace() {
 
         {/* Stats */}
         <div className="p-3 border-t border-slate-100">
-          <div className="rounded-xl p-3 space-y-2" style={{ background: '#f8fafc' }}>
+          <div className="rounded-xl p-3 space-y-2 bg-slate-50 dark:bg-slate-800/50">
             <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">Statistik</p>
             {[
               { icon: DoorOpen,       label: 'Room Aktif',     val: joinedRooms.length,       color: 'text-primary' },
@@ -290,11 +290,11 @@ export default function ClassroomWorkspace() {
               </button>
             </form>
             {joinedRooms.length > 3 && (
-              <div className="relative">
+              <div className="relative mb-6 w-full sm:w-52">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
                 <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
                   placeholder="Cari room..."
-                  className="input-field pl-10 w-full sm:w-52" />
+                  className="input-field pl-10 w-full" />
               </div>
             )}
           </div>
@@ -303,7 +303,7 @@ export default function ClassroomWorkspace() {
           <AnimatePresence mode="wait">
             {filteredRooms.length === 0 ? (
               <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+                className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
                 <div className="w-16 h-16 rounded-2xl bg-primary-soft border border-primary/15 flex items-center justify-center mb-5">
                   <DoorOpen size={28} className="text-primary" />
                 </div>

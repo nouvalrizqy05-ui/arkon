@@ -192,6 +192,7 @@ export default function LecturerDashboard() {
             userName={dosenName}
             token={token}
             apiUrl={API_URL}
+            onRoomUpdated={setActiveRoom}
             onBack={async () => {
               // Hapus active room dari database
               try {
@@ -215,15 +216,15 @@ export default function LecturerDashboard() {
   // STATE: DASHBOARD — Room grid + Profile
   // ═══════════════════════════════════
   return (
-    <div className="fixed inset-0 flex overflow-hidden font-sans text-foreground" style={{background:"#f8fafc"}}>
+    <div className="fixed inset-0 flex overflow-hidden font-sans text-foreground bg-slate-50 dark:bg-slate-950">
       {/* ─── SIDEBAR ─── */}
-      <aside className="hidden lg:flex flex-col w-[260px] h-full bg-white border-r border-gray-200 shrink-0 z-40">
+      <aside className="hidden lg:flex flex-col w-[260px] h-full bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 shrink-0 z-40">
         <div className="flex items-center gap-3 h-[70px] px-6 border-b border-gray-100 shrink-0">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-emerald-sm" style={{background:"linear-gradient(135deg,#059669,#047857)"}}>
             <Layers className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-lg leading-none text-gray-900">ARKON</h1>
+            <h1 className="font-bold text-lg leading-none text-foreground">ARKON</h1>
             <p className="text-[10px] text-[#2467ce] font-bold tracking-wide">LECTURER PANEL</p>
           </div>
         </div>
@@ -235,7 +236,7 @@ export default function LecturerDashboard() {
             className={`flex items-center rounded-xl p-3 gap-3 transition-all ${
               !isProfile && !isRoomView
                 ? 'bg-primary-soft border-l-4 border-primary text-primary font-semibold'
-                : 'bg-white text-gray-500 hover:bg-gray-50'
+                : 'bg-white dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
             <Layers className="w-5 h-5" />
@@ -246,7 +247,7 @@ export default function LecturerDashboard() {
             className={`flex items-center rounded-xl p-3 gap-3 transition-all ${
               location.pathname.includes('bank-soal')
                 ? 'bg-primary-soft border-l-4 border-primary text-primary font-semibold'
-                : 'bg-white text-gray-500 hover:bg-gray-50'
+                : 'bg-white dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
             <AlertTriangle className="w-5 h-5" />
@@ -257,7 +258,7 @@ export default function LecturerDashboard() {
             className={`flex items-center rounded-xl p-3 gap-3 transition-all ${
               isProfile
                 ? 'bg-primary-soft border-l-4 border-primary text-primary font-semibold'
-                : 'bg-white text-gray-500 hover:bg-gray-50'
+                : 'bg-white dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
             <User className="w-5 h-5" />
@@ -265,7 +266,7 @@ export default function LecturerDashboard() {
           </button>
           <button
             onClick={() => navigate('/settings')}
-            className="flex items-center rounded-xl p-3 gap-3 transition-all bg-white text-gray-500 hover:bg-gray-50 mt-auto"
+            className="flex items-center rounded-xl p-3 gap-3 transition-all bg-white dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800 mt-auto"
           >
             <Settings className="w-5 h-5" />
             <span className="font-bold text-sm">Pengaturan</span>
@@ -274,9 +275,9 @@ export default function LecturerDashboard() {
       </aside>
 
       {/* ─── MAIN CONTENT ─── */}
-      <main className="flex-1 flex flex-col h-full min-w-0 min-h-0 relative" style={{background:"#f8fafc"}}>
+      <main className="flex-1 flex flex-col h-full min-w-0 min-h-0 relative bg-slate-50 dark:bg-slate-950">
         {/* Header */}
-        <header className="flex items-center justify-between w-full h-[70px] px-6 bg-white shadow-sm border border-border backdrop-blur-xl border-b border-border shrink-0 z-30">
+        <header className="flex items-center justify-between w-full h-[70px] px-6 bg-white dark:bg-slate-900 shadow-sm border-b border-border shrink-0 z-30">
           <h2 className="font-bold text-lg text-foreground">Dashboard Dosen</h2>
           <div className="flex items-center gap-3">
             {userProfile ? (() => {
@@ -298,7 +299,7 @@ export default function LecturerDashboard() {
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto min-h-0 custom-scrollbar" style={{background:"#f8fafc"}}>
+        <div className="flex-1 overflow-y-auto min-h-0 custom-scrollbar bg-slate-50 dark:bg-slate-950">
           <Routes>
             <Route path="bank-soal" element={
               <div className="p-8 max-w-6xl mx-auto">

@@ -126,6 +126,13 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
     }
   };
 
+  // Initialize options when level changes
+  useEffect(() => {
+    if (level && level.options) {
+      setLevelOptions(shuffleArray(level.options));
+    }
+  }, [level]);
+
   const handleRevealClue = () => {
     if (openedClues < 3) setOpenedClues(openedClues + 1);
   };
@@ -314,12 +321,7 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
     );
   }
 
-  // Initialize options when level changes
-  useEffect(() => {
-    if (level && level.options) {
-      setLevelOptions(shuffleArray(level.options));
-    }
-  }, [level]);
+
 
   if (!level) return null;
 

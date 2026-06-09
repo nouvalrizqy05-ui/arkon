@@ -110,39 +110,39 @@ function Layout() {
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/tentang" element={<TentangPage />} />
             <Route path="/hubungi-kami" element={<HubungiKamiPage />} />
-            <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><ErrorBoundary name="Settings"><SettingsPage /></ErrorBoundary></ProtectedRoute>} />
 
             {/* Rute Mahasiswa */}
             <Route 
               path="/workspace/*" 
-              element={<ProtectedRoute roleRequired="mahasiswa"><ClassroomWorkspace /></ProtectedRoute>} 
+              element={<ProtectedRoute roleRequired="mahasiswa"><ErrorBoundary name="Workspace"><ClassroomWorkspace /></ErrorBoundary></ProtectedRoute>} 
             />
             <Route 
               path="/mahasiswa/*" 
-              element={<ProtectedRoute roleRequired="mahasiswa"><ClassroomWorkspace /></ProtectedRoute>} 
+              element={<ProtectedRoute roleRequired="mahasiswa"><ErrorBoundary name="Workspace"><ClassroomWorkspace /></ErrorBoundary></ProtectedRoute>} 
             />
             <Route 
               path="/cpu-simulator" 
-              element={<ProtectedRoute roleRequired="mahasiswa"><CpuSimulator /></ProtectedRoute>} 
+              element={<ProtectedRoute roleRequired="mahasiswa"><ErrorBoundary name="CPU Simulator"><CpuSimulator /></ErrorBoundary></ProtectedRoute>} 
             />
             <Route 
               path="/ar-lab" 
-              element={<ProtectedRoute roleRequired="mahasiswa"><ArLab /></ProtectedRoute>} 
+              element={<ProtectedRoute roleRequired="mahasiswa"><ErrorBoundary name="AR Lab"><ArLab /></ErrorBoundary></ProtectedRoute>} 
             />
             <Route 
               path="/cpu-visual" 
-              element={<ProtectedRoute roleRequired="mahasiswa"><CpuVisual /></ProtectedRoute>} 
+              element={<ProtectedRoute roleRequired="mahasiswa"><ErrorBoundary name="CPU Visual"><CpuVisual /></ErrorBoundary></ProtectedRoute>} 
             />
             {/* /showroom dihapus — hanya tersedia sebagai tab di RoomHub */}
 
             {/* Rute Dosen */}
             <Route 
               path="/lecturer-dashboard/*" 
-              element={<ProtectedRoute roleRequired="dosen"><LecturerDashboard /></ProtectedRoute>} 
+              element={<ProtectedRoute roleRequired="dosen"><ErrorBoundary name="Dashboard Dosen"><LecturerDashboard /></ErrorBoundary></ProtectedRoute>} 
             />
             <Route 
               path="/dosen/*" 
-              element={<ProtectedRoute roleRequired="dosen"><LecturerDashboard /></ProtectedRoute>} 
+              element={<ProtectedRoute roleRequired="dosen"><ErrorBoundary name="Dashboard Dosen"><LecturerDashboard /></ErrorBoundary></ProtectedRoute>} 
             />
 
             {/* Redirect fallback */}

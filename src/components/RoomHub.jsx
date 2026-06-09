@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { useToast } from './Toast';
-import { Bell, Menu, User, Cpu, MemoryStick, MonitorPlay, HardDrive, Zap, Wind, ChevronDown, Radio, BookOpen, X } from 'lucide-react';
+import { Bell, Menu, User, Cpu, MemoryStick, MonitorPlay, HardDrive, Zap, Wind, ChevronDown, Radio, BookOpen, X, ArrowLeft } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -62,7 +62,7 @@ const iconComponents = { Cpu, MemoryStick, MonitorPlay, HardDrive, Zap, Wind };
  * All features (Assembly, Quiz, Shop, etc.) are rendered inside this hub.
  * Menu and permissions change based on userRole (dosen/mahasiswa).
  */
-export default function RoomHub({ room, userRole, userId, userName, token, apiUrl, onBack }) {
+export default function RoomHub({ room, userRole, userId, userName, token, apiUrl, onBack, onRoomUpdated }) {
   const navigate = useNavigate();
   const toast = useToast();
   
@@ -77,6 +77,11 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
   const [activeTab, setActiveTab] = useState(getInitialTab());
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [userProfile, setUserProfile] = useState(null);
+
+  // Fix #16: Reset to overview when entering/re-entering a room
+  useEffect(() => {
+    setActiveTab('overview');
+  }, [room?.id]);
 
   // Gamification
   const [coins, setCoins] = useState(0);
@@ -512,6 +517,13 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
           </ErrorBoundary>
         ) : null;
 
+      case 'achievements':
+        return (
+          <ErrorBoundary inline name="Achievements">
+            <AchievementWall />
+          </ErrorBoundary>
+        );
+
       case 'heatmap':
         return userRole === 'dosen' ? (
           <ErrorBoundary inline name="Heat Map">
@@ -540,7 +552,10 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
               room={room}
               token={token}
               apiUrl={apiUrl}
-              onRoomUpdated={(updated) => toast.success('Pengaturan disimpan!')}
+              onRoomUpdated={(updated) => {
+                toast.success('Pengaturan disimpan!');
+                if (onRoomUpdated) onRoomUpdated(updated);
+              }}
               onDeleteRoom={async (id) => {
                 if (!confirm('PERINGATAN: Semua data di room ini akan terhapus permanen. Yakin?')) return;
                 try {
@@ -744,17 +759,25 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
       />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col h-full min-h-0 min-w-0 overflow-hidden" style={{background:"#f8fafc"}}>
+      <div className="flex-1 flex flex-col h-full min-h-0 min-w-0 overflow-hidden bg-slate-50 dark:bg-slate-950">
         {/* Header */}
-        <header className="flex items-center justify-between w-full h-[56px] px-5 bg-white border-b border-border shrink-0 z-40">
-          <div className="flex items-center gap-3">
+        <header className="flex items-center justify-between w-full h-[56px] px-5 bg-white dark:bg-slate-900 border-b border-border dark:border-slate-800 shrink-0 z-40">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              onClick={onBack}
+              className="md:hidden p-2 text-secondary hover:text-primary hover:bg-slate-50 border border-slate-200 rounded-lg transition-all"
+              title="Kembali ke Dashboard"
+            >
+              <ArrowLeft size={16} />
+            </button>
             <button
               onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              className="md:hidden p-2 text-secondary hover:bg-slate-50 border border-slate-200 rounded-lg transition-all"
+              className="md:hidden p-2 text-secondary hover:text-primary hover:bg-slate-50 border border-slate-200 rounded-lg transition-all"
+              title="Toggle Menu Room"
             >
               <Menu size={16} />
             </button>
-            <h2 className="font-bold text-sm text-secondary">{tabTitles[activeTab] || 'Room'}</h2>
+            <h2 className="font-bold text-sm text-secondary ml-1 truncate max-w-[120px] sm:max-w-xs">{tabTitles[activeTab] || 'Room'}</h2>
           </div>
 
           <div className="flex items-center gap-3">
@@ -767,7 +790,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
                 disabled={isTogglingLive}
                 title={isLive ? 'Klik untuk mengakhiri sesi Live' : 'Klik untuk memulai sesi Live'}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black transition-all border ${isLive
-                    ? 'bg-rose-500 border-rose-400 text-foreground animate-pulse shadow-lg shadow-rose-500/30'
+                    ? 'bg-rose-500 border-rose-400 text-white animate-pulse shadow-lg shadow-rose-500/30'
                     : 'bg-white shadow-sm border border-border border-border text-secondary hover:border-rose-400/50 hover:text-rose-600'
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
@@ -784,7 +807,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
               >
                 <Bell size={18} />
                 {notifications.some(n => n.unread) && (
-                  <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-rose-500 text-foreground text-[8px] font-black rounded-full flex items-center justify-center animate-pulse">
+                  <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-rose-500 text-white text-[8px] font-black rounded-full flex items-center justify-center animate-pulse">
                     {notifications.filter(n => n.unread).length}
                   </span>
                 )}

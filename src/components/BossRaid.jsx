@@ -110,7 +110,7 @@ export default function BossRaid({ isOpen, studentId, token, apiUrl, onComplete,
 
   if (isMinimized) {
     return (
-      <div className="fixed bottom-6 right-6 z-[99999] bg-red-600 text-foreground p-4 rounded-2xl shadow-2xl flex items-center gap-4 cursor-pointer hover:scale-105 transition-all animate-bounce" onClick={() => setIsMinimized(false)}>
+      <div className="fixed bottom-6 right-6 z-[99999] bg-red-600 text-white p-4 rounded-2xl shadow-2xl flex items-center gap-4 cursor-pointer hover:scale-105 transition-all animate-bounce" onClick={() => setIsMinimized(false)}>
         <Zap className="w-5 h-5" />
         <div>
            <p className="text-[10px] font-black uppercase opacity-60">Raid Active</p>
@@ -146,7 +146,7 @@ export default function BossRaid({ isOpen, studentId, token, apiUrl, onComplete,
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg ${
                 status === 'success' ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-red-500 shadow-red-500/30'
               }`}>
-                {status === 'success' ? <Trophy size={24} className="text-foreground" /> : <ShieldCheck size={24} className="text-foreground" />}
+                {status === 'success' ? <Trophy size={24} className="text-white" /> : <ShieldCheck size={24} className="text-white" />}
               </div>
               <div>
                 <h2 className="text-2xl font-black text-foreground leading-tight">BOSS RAID</h2>
@@ -191,7 +191,7 @@ export default function BossRaid({ isOpen, studentId, token, apiUrl, onComplete,
                     <span className="text-indigo-600 font-black">🛡️ BOSS SLAYER</span>
                   </div>
                </div>
-               <button onClick={closeRaid} className="w-full py-4 bg-emerald-500 text-foreground font-black rounded-2xl hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/30">
+               <button onClick={closeRaid} className="w-full py-4 bg-emerald-500 text-white font-black rounded-2xl hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/30">
                  KLAIM HADIAH & SELESAI
                </button>
             </div>
@@ -204,7 +204,7 @@ export default function BossRaid({ isOpen, studentId, token, apiUrl, onComplete,
                 <button onClick={() => setStatus('active')} className="flex-1 py-4 bg-white shadow-sm border border-border border border-border text-foreground font-bold rounded-2xl hover:bg-white shadow-sm border border-border transition">
                   COBA LAGI
                 </button>
-                <button onClick={closeRaid} className="flex-1 py-4 bg-red-500 text-foreground font-black rounded-2xl hover:bg-red-400 transition shadow-lg shadow-red-500/20">
+                <button onClick={closeRaid} className="flex-1 py-4 bg-red-500 text-white font-black rounded-2xl hover:bg-red-400 transition shadow-lg shadow-red-500/20">
                   MENYERAH
                 </button>
               </div>
@@ -233,7 +233,7 @@ export default function BossRaid({ isOpen, studentId, token, apiUrl, onComplete,
                 </button>
                 <button 
                   onClick={() => validateCode(document.getElementById('bossRaidCode')?.value)}
-                  className="flex-[2] py-4 bg-red-600 text-foreground font-black rounded-2xl hover:bg-red-500 transition-all shadow-lg shadow-red-600/30 flex items-center justify-center gap-2"
+                  className="flex-[2] py-4 bg-red-600 text-white font-black rounded-2xl hover:bg-red-500 transition-all shadow-lg shadow-red-600/30 flex items-center justify-center gap-2"
                 >
                   <Zap size={18} /> VALIDATE & SUBMIT
                 </button>

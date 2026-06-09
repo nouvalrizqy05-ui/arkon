@@ -145,7 +145,7 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
             </h3>
             <button
               onClick={() => onNavigate('my-activities')}
-              className="w-full py-3 bg-amber-500 text-foreground rounded-xl font-bold hover:bg-amber-600 transition-all shadow-md shadow-amber-500/20"
+              className="w-full py-3 bg-amber-500 text-white rounded-xl font-bold hover:bg-amber-600 transition-all shadow-md shadow-amber-500/20"
             >
               Lihat Semua Tugas
             </button>

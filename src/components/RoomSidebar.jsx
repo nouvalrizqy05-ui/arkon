@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  LayoutDashboard, Gamepad2, ShoppingBag, Trophy,
+  LayoutDashboard, Gamepad2, ShoppingBag, Trophy, Award,
   Users, Swords, MessageSquare, ClipboardList, Eye, BarChart2,
   Radio, Settings, ChevronDown, ChevronRight, Flame, Shield,
   ArrowLeft, BookOpen, Layers, Menu, LogOut
@@ -30,6 +30,7 @@ const STUDENT_MENU = [
   },
   { id: 'my-activities', label: 'Tugas',       icon: ClipboardList, color: 'text-amber-600', bgActive: 'bg-amber-50' },
   { id: 'leaderboard',   label: 'Leaderboard', icon: Trophy,         color: 'text-yellow-600',bgActive: 'bg-yellow-50' },
+  { id: 'achievements',  label: 'Achievements',icon: Award,          color: 'text-emerald-600',bgActive: 'bg-emerald-50' },
   { id: 'tournament',    label: 'Tournament',  icon: Swords,          color: 'text-orange-600',bgActive: 'bg-orange-50' },
   { id: 'study-group',   label: 'Group Chat',  icon: MessageSquare,  color: 'text-sky-600',  bgActive: 'bg-sky-50' },
 ];
@@ -58,6 +59,7 @@ const DOSEN_MENU = [
   { id: 'manage-activities', label: 'Kelola Tugas',    icon: ClipboardList, color: 'text-amber-600',  bgActive: 'bg-amber-50' },
   { id: 'student-work',      label: 'Karya Mahasiswa', icon: Eye,            color: 'text-primary',    bgActive: 'bg-primary-soft' },
   { id: 'leaderboard',       label: 'Leaderboard',     icon: Trophy,          color: 'text-yellow-600',bgActive: 'bg-yellow-50' },
+  { id: 'achievements',      label: 'Achievements',    icon: Award,           color: 'text-emerald-600',bgActive: 'bg-emerald-50' },
   { id: 'tournament',        label: 'Tournament',      icon: Swords,           color: 'text-orange-600',bgActive: 'bg-orange-50' },
   { id: 'study-group',       label: 'Group Chat',      icon: MessageSquare,   color: 'text-sky-600',   bgActive: 'bg-sky-50' },
 ];

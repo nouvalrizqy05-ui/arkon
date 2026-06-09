@@ -94,7 +94,7 @@ function ChatBubble({ msg, isMe }) {
         {!isMe && (
           <span className="text-[11px] font-semibold text-secondary px-1">{senderName}</span>
         )}
-        <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
+        <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm break-words whitespace-pre-wrap ${
           isMe
             ? 'bg-primary text-white rounded-br-sm'
             : 'bg-white border border-border text-foreground rounded-bl-sm'
@@ -361,6 +361,29 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
     return () => clearInterval(interval);
   }, [activeGroup, token, apiUrl]);
 
+  // Fetch existing messages and notes on group load
+  useEffect(() => {
+    if (!activeGroup || !token || !apiUrl) return;
+    const fetchGroupData = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/api/study-groups/${activeGroup.id}/messages`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const serverMessages = await res.json();
+          setMessages(serverMessages);
+          const latestNote = serverMessages.filter(m => m.message_type === 'note').pop();
+          if (latestNote) {
+            setNoteContent(latestNote.content);
+          } else {
+            setNoteContent('');
+          }
+        }
+      } catch (err) { console.error('Failed to load group data:', err); }
+    };
+    fetchGroupData();
+  }, [activeGroup, token, apiUrl]);
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -401,7 +424,13 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
       const res = await fetch(`${apiUrl}/api/study-groups/${group.id}/messages`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      if (res.ok) setMessages(await res.json());
+      if (res.ok) {
+        const msgs = await res.json();
+        setMessages(msgs);
+        // Load the latest note content into the Catatan textarea
+        const lastNote = [...msgs].reverse().find(m => m.message_type === 'note');
+        if (lastNote) setNoteContent(lastNote.content);
+      }
 
       // Fetch persisted Kanban tasks from database
       const taskRes = await fetch(`${apiUrl}/api/study-groups/${group.id}/tasks`, {

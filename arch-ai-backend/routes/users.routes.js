@@ -97,41 +97,49 @@ router.put('/settings', authenticateToken, async (req, res) => {
   } = req.body;
 
   try {
-    // Try to update all columns (some may not exist yet, will gracefully fail)
-    try {
-      await pool.query(
-        `UPDATE users SET
-          full_name = COALESCE($1, full_name),
-          email = COALESCE($2, email),
-          whatsapp = $3,
-          language = $4,
-          timezone = $5,
-          notif_email_announcements = $6,
-          notif_email_activities = $7,
-          notif_browser_push = $8,
-          notif_sound = $9,
-          appearance_theme = $10,
-          appearance_density = $11,
-          accessibility_reduced_motion = $12,
-          accessibility_screen_reader = $13
-        WHERE id = $14`,
-        [
-          full_name, email, whatsapp || null, language || 'id', timezone || 'Asia/Jakarta',
-          notif_email_announcements ?? true, notif_email_activities ?? true,
-          notif_browser_push ?? false, notif_sound ?? true,
-          appearance_theme || 'system', appearance_density || 'comfortable',
-          accessibility_reduced_motion ?? false, accessibility_screen_reader ?? true,
-          req.user.id
-        ]
-      );
-    } catch (colErr) {
-      // Fallback: only update columns that definitely exist
-      console.warn('⚠️ Some settings columns may not exist yet, falling back:', colErr.message);
-      await pool.query(
-        'UPDATE users SET full_name = COALESCE($1, full_name), email = COALESCE($2, email) WHERE id = $3',
-        [full_name, email, req.user.id]
-      );
+    // Auto-migrate: ensure all settings columns exist before attempting update
+    const migrationCols = [
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS whatsapp TEXT",
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS language TEXT DEFAULT 'id'",
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS timezone TEXT DEFAULT 'Asia/Jakarta'",
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS notif_email_announcements BOOLEAN DEFAULT TRUE",
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS notif_email_activities BOOLEAN DEFAULT TRUE",
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS notif_browser_push BOOLEAN DEFAULT FALSE",
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS notif_sound BOOLEAN DEFAULT TRUE",
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS appearance_theme TEXT DEFAULT 'system'",
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS appearance_density TEXT DEFAULT 'comfortable'",
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS accessibility_reduced_motion BOOLEAN DEFAULT FALSE",
+      "ALTER TABLE users ADD COLUMN IF NOT EXISTS accessibility_screen_reader BOOLEAN DEFAULT TRUE",
+    ];
+    for (const sql of migrationCols) {
+      await pool.query(sql).catch(() => {}); // Silently skip if already exists
     }
+
+    await pool.query(
+      `UPDATE users SET
+        full_name = COALESCE($1, full_name),
+        email = COALESCE($2, email),
+        whatsapp = $3,
+        language = $4,
+        timezone = $5,
+        notif_email_announcements = $6,
+        notif_email_activities = $7,
+        notif_browser_push = $8,
+        notif_sound = $9,
+        appearance_theme = $10,
+        appearance_density = $11,
+        accessibility_reduced_motion = $12,
+        accessibility_screen_reader = $13
+      WHERE id = $14`,
+      [
+        full_name, email, whatsapp || null, language || 'id', timezone || 'Asia/Jakarta',
+        notif_email_announcements ?? true, notif_email_activities ?? true,
+        notif_browser_push ?? false, notif_sound ?? true,
+        appearance_theme || 'system', appearance_density || 'comfortable',
+        accessibility_reduced_motion ?? false, accessibility_screen_reader ?? true,
+        req.user.id
+      ]
+    );
 
     res.json({ message: 'Pengaturan berhasil disimpan!', updated_name: full_name });
   } catch (err) {

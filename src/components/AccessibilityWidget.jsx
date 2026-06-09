@@ -61,7 +61,7 @@ export default function AccessibilityWidget() {
       {/* Floating Button — Bottom Left */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 left-6 z-[9999] w-12 h-12 bg-emerald-700 hover:bg-emerald-800 text-white rounded-full shadow-xl shadow-emerald-700/30 flex items-center justify-center transition-all hover:scale-110 cursor-pointer border-2 border-emerald-600"
+        className="fixed bottom-6 right-6 z-[9999] w-12 h-12 bg-emerald-700 hover:bg-emerald-800 text-white rounded-full shadow-xl shadow-emerald-700/30 flex items-center justify-center transition-all hover:scale-110 cursor-pointer border-2 border-emerald-600"
         aria-label="Aksesibilitas"
         title="Pengaturan Aksesibilitas"
       >
@@ -83,7 +83,7 @@ export default function AccessibilityWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-20 left-6 z-[9999] w-72 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
+            className="fixed bottom-20 right-6 z-[9999] w-72 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">

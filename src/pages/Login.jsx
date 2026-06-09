@@ -61,7 +61,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
       {/* ── Left panel — branding ───────────────── */}
       <div className="hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between p-10 relative overflow-hidden"
         style={{ background: 'linear-gradient(145deg,#ecfdf5 0%,#d1fae5 40%,#a7f3d0 100%)' }}>
@@ -113,7 +113,7 @@ export default function Login() {
       </div>
 
       {/* ── Right panel — form ──────────────────── */}
-      <div className="flex-1 flex items-center justify-center p-6 md:p-10 bg-white">
+      <div className="flex-1 flex items-center justify-center p-6 md:p-10 bg-white dark:bg-slate-900">
         <div className="w-full max-w-md animate-fade-up">
 
           {/* Back link */}
@@ -127,7 +127,7 @@ export default function Login() {
           <p className="text-secondary text-sm mb-7">Masuk ke ARKON Workspace kamu</p>
 
           {/* Role toggle */}
-          <div className="flex p-1 rounded-xl mb-7 border border-slate-200 bg-slate-50"
+          <div className="flex p-1 rounded-xl mb-7 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800"
             role="radiogroup" aria-label="Pilih peran">
             {[
               { id: 'mahasiswa', label: 'Mahasiswa', Icon: GraduationCap },
@@ -137,7 +137,7 @@ export default function Login() {
                 onClick={() => setRole(id)}
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-lg transition-all ${
                   role === id
-                    ? 'bg-white text-primary shadow-sm border border-slate-200'
+                    ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-slate-200 dark:border-slate-600'
                     : 'text-secondary hover:text-foreground'
                 }`}>
                 <Icon size={16} aria-hidden="true" /> {label}

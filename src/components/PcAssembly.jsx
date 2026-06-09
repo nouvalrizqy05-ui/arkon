@@ -32,7 +32,7 @@ function PcAssemblyAdmin() {
           <p className="text-3xl font-black text-emerald-600 my-2">124 <span className="text-sm font-medium text-gray-500">Mahasiswa</span></p>
         </div>
         <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-          <h3 className="font-bold text-gray-900 mb-1 flex items-center gap-2"><AlertTriangle size={16} className="text-red-500"/> Botteneck Rata-rata</h3>
+          <h3 className="font-bold text-gray-900 mb-1 flex items-center gap-2"><AlertTriangle size={16} className="text-red-500"/> Bottleneck Rata-rata</h3>
           <p className="text-3xl font-black text-red-500 my-2">15% <span className="text-sm font-medium text-gray-500">Kasus</span></p>
         </div>
       </div>
@@ -337,13 +337,13 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
             <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-xl border border-border mr-2">
                <button 
                 onClick={() => { setIsLearningMode(false); setEquippedComponents({}); }}
-                className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${!isLearningMode ? 'bg-primary text-foreground shadow-md' : 'text-secondary hover:text-foreground'}`}
+                className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${!isLearningMode ? 'bg-primary text-white shadow-md' : 'text-secondary hover:text-foreground'}`}
               >
                 Gudang Saya
               </button>
               <button 
                 onClick={() => { setIsLearningMode(true); setEquippedComponents({}); }}
-                className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${isLearningMode ? 'bg-emerald-500 text-foreground shadow-md' : 'text-secondary hover:text-foreground'}`}
+                className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${isLearningMode ? 'bg-emerald-500 text-white shadow-md' : 'text-secondary hover:text-foreground'}`}
               >
                 Belajar Merakit
               </button>
@@ -433,7 +433,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                       <p className="text-[9px] text-secondary uppercase font-black tracking-widest">{CATEGORY_LABELS[item.category]}</p>
                       {isEquipped && (
                         <div className="absolute top-2 right-2 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center">
-                          <CheckCircle2 size={10} className="text-foreground" />
+                          <CheckCircle2 size={10} className="text-white" />
                         </div>
                       )}
                     </button>
@@ -447,8 +447,8 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
       {/* Assembly Error Toast */}
       {toastMessage && (
         <div className="absolute top-24 left-1/2 -translate-x-1/2 z-50 bg-red-500/90 backdrop-blur-md border border-red-500/50 p-3 rounded-xl shadow-2xl shadow-red-500/30 animate-in slide-in-from-top-4 fade-in duration-300 flex items-center gap-2">
-          <AlertCircle size={16} className="text-foreground" />
-          <span className="text-xs font-bold text-foreground">{toastMessage}</span>
+          <AlertCircle size={16} className="text-white" />
+          <span className="text-xs font-bold text-white">{toastMessage}</span>
         </div>
       )}
 
@@ -552,7 +552,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
             {compatibility.isCompatible && (
               <button
                 onClick={() => setShowShareModal(true)}
-                className="w-full py-2.5 bg-gradient-to-r from-primary to-purple-600 text-foreground font-bold rounded-xl text-xs hover:from-indigo-400 hover:to-purple-500 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
+                className="w-full py-2.5 bg-gradient-to-r from-primary to-purple-600 text-white font-bold rounded-xl text-xs hover:from-indigo-400 hover:to-purple-500 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
               >
                 <Share2 size={14} /> Share ke Showroom 🚀
               </button>
@@ -620,9 +620,9 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
           <div className="absolute bottom-4 right-4 z-20 bg-white shadow-sm border border-border backdrop-blur-md border border-emerald-200 p-4 rounded-2xl shadow-xl animate-in slide-in-from-right-4 fade-in duration-500 max-w-[240px]">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center shadow-md shadow-emerald-500/30">
-                <CheckCircle2 size={18} className="text-foreground" />
+                <CheckCircle2 size={18} className="text-white" />
               </div>
-              <h2 className="text-sm font-black text-foreground">PC Nyala! 🎉</h2>
+              <h2 className="text-sm font-black text-gray-900">PC Nyala! 🎉</h2>
             </div>
             <p className="text-[10px] text-emerald-600 font-bold leading-tight">
               Semua komponen kompatibel dan terpasang sempurna.
@@ -639,9 +639,9 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
           <div className="absolute bottom-4 right-4 z-20 bg-slate-50/80 backdrop-blur-md border border-red-500/30 p-4 rounded-2xl shadow-2xl shadow-red-500/20 animate-in slide-in-from-right-4 fade-in duration-500 max-w-[240px]">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center shadow-lg shadow-red-500/30">
-                <AlertCircle size={18} className="text-foreground" />
+                <AlertCircle size={18} className="text-white" />
               </div>
-              <h2 className="text-sm font-black text-foreground">Error! 💥</h2>
+              <h2 className="text-sm font-black text-gray-900">Error! 💥</h2>
             </div>
             <p className="text-[10px] text-red-400 font-bold leading-tight">
               {compatibility.errors.length} masalah kompatibilitas. PC tidak bisa booting.
@@ -724,13 +724,13 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                 <div className="w-16 h-16 bg-primary-light text-primary rounded-2xl flex items-center justify-center mb-6 shadow-inner mx-auto">
                   <Wrench size={32} />
                 </div>
-                <h3 className="text-2xl font-black text-center mb-3">Selamat Datang di Assembly Lab!</h3>
+                <h3 className="text-2xl font-black text-center mb-3 text-gray-900">Selamat Datang di Assembly Lab!</h3>
                 <p className="text-center text-gray-600 mb-8 leading-relaxed">
                   Di sini kamu bisa merakit PC dari komponen yang kamu dapatkan atau beli di Shop.
                 </p>
                 <div className="flex justify-between items-center">
                   <button onClick={completeTour} className="text-sm font-bold text-secondary hover:text-gray-600 transition">Lewati</button>
-                  <button onClick={() => setTourStep(2)} className="px-6 py-3 bg-primary hover:bg-primary-hover text-foreground font-bold rounded-xl shadow-lg shadow-indigo-600/20 transition">Lanjut</button>
+                  <button onClick={() => setTourStep(2)} className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl shadow-lg shadow-indigo-600/20 transition">Lanjut</button>
                 </div>
               </>
             )}
@@ -740,13 +740,13 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                 <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner mx-auto">
                   <Monitor size={32} />
                 </div>
-                <h3 className="text-2xl font-black text-center mb-3">Perhatikan Urutan!</h3>
+                <h3 className="text-2xl font-black text-center mb-3 text-gray-900">Perhatikan Urutan!</h3>
                 <p className="text-center text-gray-600 mb-8 leading-relaxed">
                   Kamu harus memasang komponen secara berurutan: <br/> <b>Motherboard → CPU → GPU → RAM → Storage → PSU → Cooler → Case</b>.
                 </p>
                 <div className="flex justify-between items-center">
                   <button onClick={() => setTourStep(1)} className="text-sm font-bold text-secondary hover:text-gray-600 transition">Kembali</button>
-                  <button onClick={() => setTourStep(3)} className="px-6 py-3 bg-primary hover:bg-primary-hover text-foreground font-bold rounded-xl shadow-lg shadow-indigo-600/20 transition">Lanjut</button>
+                  <button onClick={() => setTourStep(3)} className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl shadow-lg shadow-indigo-600/20 transition">Lanjut</button>
                 </div>
               </>
             )}
@@ -756,13 +756,13 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                 <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner mx-auto">
                   <Shield size={32} />
                 </div>
-                <h3 className="text-2xl font-black text-center mb-3">Kecocokan & Benchmark</h3>
+                <h3 className="text-2xl font-black text-center mb-3 text-gray-900">Kecocokan & Benchmark</h3>
                 <p className="text-center text-gray-600 mb-8 leading-relaxed">
                   Pastikan indikator <b>Compatibility</b> menunjukkan hijau (cocok). Saat semua 8 komponen terpasang, kamu bisa melihat skor Benchmark PC-mu!
                 </p>
                 <div className="flex justify-between items-center">
                   <button onClick={() => setTourStep(2)} className="text-sm font-bold text-secondary hover:text-gray-600 transition">Kembali</button>
-                  <button onClick={completeTour} className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-foreground font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition">Mulai Merakit!</button>
+                  <button onClick={completeTour} className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition">Mulai Merakit!</button>
                 </div>
               </>
             )}

@@ -78,9 +78,20 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
 
   const handleScoreSubmit = async () => {
     if (!dosenScore) return;
-    setIsScored(true);
-    // Real implementation would send to backend
-    // fetch(...)
+    try {
+      const res = await fetch(`${apiUrl}/api/showroom/builds/${build.id}/grade`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ dosen_score: parseInt(dosenScore) })
+      });
+      if (res.ok) {
+        setIsScored(true);
+      } else {
+        console.error('Gagal menyimpan nilai showroom');
+      }
+    } catch (err) {
+      console.error('Showroom grade error:', err);
+    }
   };
 
   return (
@@ -98,7 +109,7 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
       {/* Components */}
       <div className="px-4 py-3 flex flex-wrap gap-1.5">
         {Object.entries(components).map(([cat, comp]) => (
-          <span key={cat} className="px-2 py-1 bg-white shadow-sm border border-border border border-border rounded-lg text-[10px] font-bold text-secondary">
+          <span key={cat} className="px-2 py-1 bg-white dark:bg-slate-800 shadow-sm border border-border rounded-lg text-[10px] font-bold text-secondary">
             {CATEGORY_EMOJIS[cat]} {comp.name || cat}
           </span>
         ))}
@@ -115,13 +126,13 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
 
       {/* Actions */}
       <div className="px-4 py-3 border-t border-border flex items-center gap-2">
-        <button onClick={() => handleReact('like')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${myLike ? 'bg-blue-500/20 text-blue-600 border border-blue-500/30' : 'bg-white shadow-sm border border-border text-secondary border border-border hover:bg-blue-500/10 hover:text-blue-600'}`} aria-label="ThumbsUp">
+        <button onClick={() => handleReact('like')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${myLike ? 'bg-blue-500/20 text-blue-600 border border-blue-500/30' : 'bg-white dark:bg-slate-800 shadow-sm border border-border text-secondary hover:bg-blue-500/10 hover:text-blue-600'}`} aria-label="ThumbsUp">
           <ThumbsUp size={13} /> {build.like_count || 0}
         </button>
-        <button onClick={() => handleReact('fire')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${myFire ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30' : 'bg-white shadow-sm border border-border text-secondary border border-border hover:bg-orange-500/10 hover:text-orange-400'}`} aria-label="Flame">
+        <button onClick={() => handleReact('fire')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${myFire ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30' : 'bg-white dark:bg-slate-800 shadow-sm border border-border text-secondary hover:bg-orange-500/10 hover:text-orange-400'}`} aria-label="Flame">
           <Flame size={13} /> {build.fire_count || 0}
         </button>
-        <button onClick={() => setShowComments(!showComments)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-white shadow-sm border border-border text-secondary border border-border hover:bg-white shadow-sm border border-border transition-all ml-auto" aria-label="MessageCircle">
+        <button onClick={() => setShowComments(!showComments)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-800 shadow-sm border border-border text-secondary hover:bg-slate-50 transition-all ml-auto" aria-label="MessageCircle">
           <MessageCircle size={13} /> {build.comment_count || comments.length}
         </button>
       </div>
@@ -140,7 +151,7 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
               onChange={e => setDosenScore(e.target.value)} 
               disabled={isScored}
               placeholder="Skor 0-100" 
-              className="w-24 bg-white border border-indigo-200 rounded-lg px-3 py-1.5 text-xs text-gray-900 font-bold focus:outline-none focus:border-indigo-500" 
+              className="w-24 bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-500/30 rounded-lg px-3 py-1.5 text-xs text-foreground dark:text-white font-bold focus:outline-none focus:border-indigo-500" 
             />
             <button 
               onClick={handleScoreSubmit}
@@ -181,8 +192,8 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
             </div>
           ))}
           <div className="flex gap-2 mt-2">
-            <input type="text" value={commentText} onChange={e => setCommentText(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleComment()} placeholder="Tulis komentar..." maxLength={300} className="flex-1 bg-white shadow-sm border border-border border border-border rounded-xl px-3 py-2 text-xs text-foreground placeholder-white/20 focus:outline-none focus:border-indigo-500/50" />
-            <button onClick={handleComment} disabled={sending || !commentText.trim()} className="p-2 bg-indigo-500 text-foreground rounded-xl hover:bg-indigo-400 transition disabled:opacity-30"><Send size={14} /></button>
+            <input type="text" value={commentText} onChange={e => setCommentText(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleComment()} placeholder="Tulis komentar..." maxLength={300} className="flex-1 bg-white dark:bg-slate-800 shadow-sm border border-border rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-secondary focus:outline-none focus:border-indigo-500/50" />
+            <button onClick={handleComment} disabled={sending || !commentText.trim()} className="p-2 bg-indigo-500 text-white rounded-xl hover:bg-indigo-400 transition disabled:opacity-30"><Send size={14} /></button>
           </div>
         </div>
       )}
@@ -233,13 +244,13 @@ export default function PcShowroom({ embeddedMode = false, studentId: propStuden
   }, [page]);
 
   return (
-    <div className="min-h-screen bg-muted text-foreground">
+    <div className="min-h-screen bg-muted dark:bg-slate-950 text-foreground dark:text-white">
       {/* Header */}
-      <div className="sticky top-0 z-40 bg-muted/90 backdrop-blur-xl border-b border-border">
+      <div className="sticky top-0 z-30 bg-muted/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-border dark:border-slate-800">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {!embeddedMode && (
-              <button onClick={() => navigate(-1)} className="p-2 bg-white shadow-sm border border-border border border-border rounded-xl text-secondary hover:text-foreground hover:bg-white shadow-sm border border-border transition" aria-label="ArrowLeft">
+              <button onClick={() => navigate(-1)} className="p-2 bg-white dark:bg-slate-800 shadow-sm border border-border rounded-xl text-secondary hover:text-foreground transition" aria-label="ArrowLeft">
                 <ArrowLeft size={18} />
               </button>
             )}
@@ -250,7 +261,7 @@ export default function PcShowroom({ embeddedMode = false, studentId: propStuden
           </div>
           {/* Sort */}
           <div className="relative">
-            <button onClick={() => setShowSort(!showSort)} className="flex items-center gap-2 px-3 py-2 bg-white shadow-sm border border-border border border-border rounded-xl text-xs font-bold text-secondary hover:text-foreground transition" aria-label="Filter">
+            <button onClick={() => setShowSort(!showSort)} className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white dark:bg-slate-900 border border-border dark:border-slate-800 rounded-xl text-sm font-bold text-foreground dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition shadow-sm" aria-label="Filter">
               <Filter size={14} /> {SORT_OPTIONS.find(s => s.id === sortBy)?.label} <ChevronDown size={12} />
             </button>
             {showSort && (

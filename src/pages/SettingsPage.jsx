@@ -309,7 +309,7 @@ export default function SettingsPage() {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
           Kembali ke Dashboard
         </a>
-        <h1 className="text-3xl font-black text-foreground">Pengaturan Akun</h1>
+        <h1 className="text-3xl font-black text-foreground dark:text-white">Pengaturan Akun</h1>
         <p className="text-secondary mt-2">Kelola preferensi akun, tampilan, dan privasi Anda di ekosistem ARKON.</p>
       </div>
 
@@ -344,7 +344,7 @@ export default function SettingsPage() {
           {/* Header */}
           <div className="px-8 py-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
             <div>
-              <h2 className="text-xl font-black text-foreground">{tabs.find(t => t.id === activeTab)?.label}</h2>
+              <h2 className="text-xl font-black text-foreground dark:text-white">{tabs.find(t => t.id === activeTab)?.label}</h2>
               <p className="text-sm text-secondary font-medium">{tabs.find(t => t.id === activeTab)?.desc}</p>
             </div>
             
@@ -445,7 +445,7 @@ export default function SettingsPage() {
                     <div className="space-y-4">
                       <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors gap-4">
                         <div>
-                          <h4 className="text-sm font-bold text-foreground">Mode Dyslexia (OpenDyslexic)</h4>
+                          <h4 className="text-sm font-bold text-foreground dark:text-white">Mode Dyslexia (OpenDyslexic)</h4>
                           <p className="text-xs text-secondary font-medium">Mengganti font bawaan dengan font khusus yang lebih mudah dibaca.</p>
                         </div>
                         <div className="w-12 h-6 bg-slate-200 rounded-full relative cursor-not-allowed opacity-50 shrink-0" title="Gunakan widget aksesibilitas di kiri bawah">
@@ -454,7 +454,7 @@ export default function SettingsPage() {
                       </div>
                       <label className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors cursor-pointer gap-4">
                         <div>
-                          <h4 className="text-sm font-bold text-foreground">Kurangi Animasi (Reduced Motion)</h4>
+                          <h4 className="text-sm font-bold text-foreground dark:text-white">Kurangi Animasi (Reduced Motion)</h4>
                           <p className="text-xs text-secondary font-medium">Mematikan animasi mengambang, parallax, dan transisi berat di seluruh aplikasi.</p>
                         </div>
                         <div className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -464,7 +464,7 @@ export default function SettingsPage() {
                       </label>
                       <label className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors cursor-pointer gap-4">
                         <div>
-                          <h4 className="text-sm font-bold text-foreground">Dukungan Screen Reader Khusus</h4>
+                          <h4 className="text-sm font-bold text-foreground dark:text-white">Dukungan Screen Reader Khusus</h4>
                           <p className="text-xs text-secondary font-medium">Mengaktifkan aria-labels tambahan pada elemen grafis kompleks seperti CPU Simulator.</p>
                         </div>
                         <div className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -481,7 +481,7 @@ export default function SettingsPage() {
                   <>
                     <div className="space-y-6">
                       <form onSubmit={handleChangePassword}>
-                        <h3 className="text-sm font-black text-foreground mb-4">Ubah Kata Sandi</h3>
+                        <h3 className="text-sm font-black text-foreground dark:text-white mb-4">Ubah Kata Sandi</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <input type="password" required placeholder="Kata sandi saat ini" className="input-field" value={passwordForm.currentPassword} onChange={e => setPasswordForm({...passwordForm, currentPassword: e.target.value})} />
                           <div className="hidden md:block" />
@@ -492,23 +492,23 @@ export default function SettingsPage() {
                       </form>
                       <hr className="border-slate-100" />
                       <div>
-                        <h3 className="text-sm font-black text-foreground mb-4">Autentikasi Dua Langkah (2FA)</h3>
+                        <h3 className="text-sm font-black text-foreground dark:text-white mb-4">Autentikasi Dua Langkah (2FA)</h3>
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 bg-slate-50 border border-slate-200 rounded-2xl gap-4">
                           <div className="flex items-center gap-4">
                             <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center shrink-0"><Smartphone className="w-5 h-5 text-slate-500" /></div>
                             <div>
-                              <p className="font-bold text-sm text-foreground">Aplikasi Authenticator</p>
+                              <p className="font-bold text-sm text-foreground dark:text-white">Aplikasi Authenticator</p>
                               <p className="text-xs text-secondary font-medium">Belum diaktifkan. Fitur ini masih dalam tahap beta (LIDM mode).</p>
                             </div>
                           </div>
-                          <button onClick={() => toast.info('Fitur 2FA belum tersedia untuk versi demo.')} className="px-4 py-2 bg-white border border-slate-300 text-foreground font-bold text-xs rounded-xl shadow-sm hover:bg-slate-50 transition-colors shrink-0">Aktifkan</button>
+                          <button onClick={() => toast.info('Fitur 2FA belum tersedia untuk versi demo.')} className="px-4 py-2 bg-white border border-slate-300 text-foreground dark:text-white font-bold text-xs rounded-xl shadow-sm hover:bg-slate-50 transition-colors shrink-0">Aktifkan</button>
                         </div>
                       </div>
                       <hr className="border-slate-100" />
                       <div>
                         <h3 className="text-sm font-black text-red-600 mb-4 flex items-center gap-2"><ShieldAlert className="w-4 h-4" /> Zona Berbahaya</h3>
                         <div className="flex flex-col sm:flex-row gap-4">
-                          <button onClick={handleExportData} className="flex-1 flex items-center justify-center gap-2 p-4 border border-slate-200 hover:bg-slate-50 rounded-2xl text-foreground font-bold text-sm transition-colors">
+                          <button onClick={handleExportData} className="flex-1 flex items-center justify-center gap-2 p-4 border border-slate-200 hover:bg-slate-50 rounded-2xl text-foreground dark:text-white font-bold text-sm transition-colors">
                             <Database className="w-4 h-4" /> Ekspor Data Pribadi
                           </button>
                           <button onClick={handleDeleteAccount} className="flex-1 flex items-center justify-center gap-2 p-4 border border-red-200 bg-red-50 hover:bg-red-100 rounded-2xl text-red-700 font-bold text-sm transition-colors">
@@ -526,7 +526,7 @@ export default function SettingsPage() {
                     <div className="p-5 border border-slate-200 rounded-2xl">
                       <label className="flex items-center justify-between mb-4 cursor-pointer">
                         <div>
-                          <h4 className="font-bold text-sm text-foreground">Suara dalam Aplikasi</h4>
+                          <h4 className="font-bold text-sm text-foreground dark:text-white">Suara dalam Aplikasi</h4>
                           <p className="text-xs text-secondary font-medium">Bunyikan efek suara saat kuis selesai, badge didapat, atau chat masuk.</p>
                         </div>
                         <div className="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
@@ -537,7 +537,7 @@ export default function SettingsPage() {
                       <hr className="border-slate-100 my-4" />
                       <label className="flex items-center justify-between cursor-pointer">
                         <div>
-                          <h4 className="font-bold text-sm text-foreground">Browser Push Notifications</h4>
+                          <h4 className="font-bold text-sm text-foreground dark:text-white">Browser Push Notifications</h4>
                           <p className="text-xs text-secondary font-medium">Terima notifikasi di desktop Anda meskipun ARKON tidak sedang dibuka.</p>
                         </div>
                         <div className="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
@@ -548,19 +548,19 @@ export default function SettingsPage() {
                     </div>
 
                     <div>
-                      <h3 className="text-sm font-black text-foreground mb-4">Preferensi Email</h3>
+                      <h3 className="text-sm font-black text-foreground dark:text-white mb-4">Preferensi Email</h3>
                       <div className="space-y-3">
                         <label className="flex items-start gap-3 p-3 hover:bg-slate-50 rounded-xl cursor-pointer transition-colors">
                           <input type="checkbox" className="mt-1 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked={notificationForm.emailAnnouncements} onChange={e => setNotificationForm({...notificationForm, emailAnnouncements: e.target.checked})} />
                           <div>
-                            <p className="font-bold text-sm text-foreground">Pengumuman Sistem & Update</p>
+                            <p className="font-bold text-sm text-foreground dark:text-white">Pengumuman Sistem & Update</p>
                             <p className="text-xs text-secondary">Berita tentang fitur baru ARKON dan pengumuman LIDM.</p>
                           </div>
                         </label>
                         <label className="flex items-start gap-3 p-3 hover:bg-slate-50 rounded-xl cursor-pointer transition-colors">
                           <input type="checkbox" className="mt-1 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" checked={notificationForm.emailActivities} onChange={e => setNotificationForm({...notificationForm, emailActivities: e.target.checked})} />
                           <div>
-                            <p className="font-bold text-sm text-foreground">Aktivitas Kelas</p>
+                            <p className="font-bold text-sm text-foreground dark:text-white">Aktivitas Kelas</p>
                             <p className="text-xs text-secondary">Tugas baru dari dosen, penilaian, dan pesan penting di Room.</p>
                           </div>
                         </label>
@@ -601,14 +601,14 @@ export default function SettingsPage() {
                           onClick={() => setAppearanceForm({...appearanceForm, density: 'comfortable'})}
                           className={`p-4 rounded-2xl border-2 text-left transition-all ${appearanceForm.density === 'comfortable' ? 'border-emerald-500 bg-emerald-50/50' : 'border-slate-200 hover:border-slate-300'}`}
                         >
-                          <span className="font-bold text-sm block mb-1">Nyaman (Comfortable)</span>
+                          <span className="font-bold text-sm block mb-1 text-gray-900">Nyaman (Comfortable)</span>
                           <span className="text-xs text-secondary block">Lebih banyak ruang putih, elemen lebih besar. Cocok untuk layar sentuh.</span>
                         </button>
                         <button
                           onClick={() => setAppearanceForm({...appearanceForm, density: 'compact'})}
                           className={`p-4 rounded-2xl border-2 text-left transition-all ${appearanceForm.density === 'compact' ? 'border-emerald-500 bg-emerald-50/50' : 'border-slate-200 hover:border-slate-300'}`}
                         >
-                          <span className="font-bold text-sm block mb-1">Padat (Compact)</span>
+                          <span className="font-bold text-sm block mb-1 text-gray-900">Padat (Compact)</span>
                           <span className="text-xs text-secondary block">Spasi lebih rapat, informasi lebih padat. Cocok untuk layar kecil/desktop.</span>
                         </button>
                       </div>
@@ -623,33 +623,33 @@ export default function SettingsPage() {
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-blue-500 text-white rounded-xl flex items-center justify-center font-bold text-xl shrink-0">G</div>
                         <div>
-                          <h4 className="font-bold text-sm text-foreground">Google Calendar</h4>
+                          <h4 className="font-bold text-sm text-foreground dark:text-white">Google Calendar</h4>
                           <p className="text-xs text-secondary font-medium">Sinkronisasi deadline tugas dan jadwal Live Quiz ke kalender Anda.</p>
                         </div>
                       </div>
-                      <button onClick={() => toast.info('Fitur Integrasi segera hadir!')} className="px-4 py-2 border border-slate-300 text-foreground font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors shrink-0">Hubungkan</button>
+                      <button onClick={() => toast.info('Fitur Integrasi segera hadir!')} className="px-4 py-2 border border-slate-300 text-foreground dark:text-white font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors shrink-0">Hubungkan</button>
                     </div>
                     
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 border border-slate-200 rounded-2xl hover:border-slate-300 transition-colors gap-4">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-sky-500 text-white rounded-xl flex items-center justify-center font-bold text-xl shrink-0"><Globe className="w-6 h-6" /></div>
                         <div>
-                          <h4 className="font-bold text-sm text-foreground">Cloud Storage (Drive/OneDrive)</h4>
+                          <h4 className="font-bold text-sm text-foreground dark:text-white">Cloud Storage (Drive/OneDrive)</h4>
                           <p className="text-xs text-secondary font-medium">Simpan dan lampirkan file tugas langsung dari cloud Anda.</p>
                         </div>
                       </div>
-                      <button onClick={() => toast.info('Fitur Integrasi segera hadir!')} className="px-4 py-2 border border-slate-300 text-foreground font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors shrink-0">Hubungkan</button>
+                      <button onClick={() => toast.info('Fitur Integrasi segera hadir!')} className="px-4 py-2 border border-slate-300 text-foreground dark:text-white font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors shrink-0">Hubungkan</button>
                     </div>
 
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 border border-slate-200 rounded-2xl hover:border-slate-300 transition-colors gap-4">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-xl shrink-0"><FileText className="w-6 h-6" /></div>
                         <div>
-                          <h4 className="font-bold text-sm text-foreground">Aplikasi Catatan (Notion/Evernote)</h4>
+                          <h4 className="font-bold text-sm text-foreground dark:text-white">Aplikasi Catatan (Notion/Evernote)</h4>
                           <p className="text-xs text-secondary font-medium">Ekspor transkrip RAG AI dan ringkasan kelas ke aplikasi catatan Anda.</p>
                         </div>
                       </div>
-                      <button onClick={() => toast.info('Fitur Integrasi segera hadir!')} className="px-4 py-2 border border-slate-300 text-foreground font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors shrink-0">Hubungkan</button>
+                      <button onClick={() => toast.info('Fitur Integrasi segera hadir!')} className="px-4 py-2 border border-slate-300 text-foreground dark:text-white font-bold text-xs rounded-xl hover:bg-slate-50 transition-colors shrink-0">Hubungkan</button>
                     </div>
                   </div>
                 )}

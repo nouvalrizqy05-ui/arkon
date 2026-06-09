@@ -55,7 +55,7 @@ export default function QuizLevelMap({ completedLevels, onSelectLevel, studentTh
   const recommendedLevels = getRecommendedLevels(studentTheta, completedLevels);
 
   return (
-    <div className="w-full h-auto min-h-[600px] aspect-[16/10] md:aspect-video relative bg-slate-50 rounded-3xl border border-border group shadow-2xl transition-all duration-500">
+    <div className="w-full h-auto min-h-[400px] max-h-[70vh] aspect-[16/10] md:aspect-video relative bg-slate-50 rounded-3xl border border-border group shadow-2xl transition-all duration-500">
       {/* Background Image */}
       <img
         src="/models/map/thumbnail.jpg"
