@@ -21,7 +21,7 @@ function initSentry() {
     Sentry.init({
       dsn,
       environment: process.env.NODE_ENV || 'development',
-      release: `arkon@${require('../package.json').version || '3.0.0'}`,
+      release: `arkon@${require('../package.json').version || '1.0.0'}`,
       tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0, // 10% in prod
       integrations: [
         Sentry.httpIntegration(),

@@ -1,5 +1,5 @@
 # Product Requirements Document (PRD)
-## ARKON v3.0 — AI-Integrated Computer Architecture Learning Ecosystem
+## ARKON v1.0 — AI-Integrated Computer Architecture Learning Ecosystem
 ### Target: LIDM Belmawa 2027 — Divisi ITDP (Inovasi Teknologi Digital Pendidikan)
 
 ---

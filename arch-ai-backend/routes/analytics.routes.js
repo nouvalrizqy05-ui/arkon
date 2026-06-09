@@ -431,7 +431,7 @@ router.get('/report/pdf/:room_id', authenticateToken, requireRole('dosen'), asyn
     for (let i = 0; i < pageCount; i++) {
       doc.switchToPage(i);
       doc.fontSize(7).fillColor('#999').font('Helvetica')
-        .text(`Halaman ${i + 1} dari ${pageCount}  ·  ARKON Analytics Engine v3.0  ·  ${dateStr}`,
+        .text(`Halaman ${i + 1} dari ${pageCount}  ·  ARKON Analytics Engine v1.0  ·  ${dateStr}`,
           60, 820, { align: 'center', width: 475 });
     }
 

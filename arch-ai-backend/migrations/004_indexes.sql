@@ -1,7 +1,7 @@
 -- ============================================================
 -- Migration 004: Production Performance Indexes
 -- ============================================================
--- ARKON v3.0 — TASK-PERF-003
+-- ARKON v1.0 — TASK-PERF-003
 -- Additional indexes for production query performance
 -- Based on SSD §5.2 recommendations
 -- ============================================================

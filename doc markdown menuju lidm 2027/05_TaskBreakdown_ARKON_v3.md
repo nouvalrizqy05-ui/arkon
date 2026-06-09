@@ -1,5 +1,5 @@
 # Task Breakdown
-## ARKON v3.0 — Development Roadmap & Sprint Plan
+## ARKON v1.0 — Development Roadmap & Sprint Plan
 ### Target: LIDM Belmawa 2027
 
 ---

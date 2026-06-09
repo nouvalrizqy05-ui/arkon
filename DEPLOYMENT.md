@@ -1,4 +1,4 @@
-# ARKON v3.0 — Production Deployment Guide
+# ARKON v1.0 — Production Deployment Guide
 > Deploy ke Render.com (gratis untuk MVP pilot) — estimasi waktu: ~30 menit
 
 ---
@@ -17,7 +17,7 @@
 
 ```bash
 git add .
-git commit -m "feat: ARKON v3.0 production-ready"
+git commit -m "feat: ARKON v1.0 production-ready"
 git push origin main
 ```
 

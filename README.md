@@ -1,4 +1,4 @@
-# ARKON v3.0
+# ARKON v1.0
 
 ARKON adalah platform edukasi arsitektur komputer berbasis web yang menggabungkan room-based learning, simulasi CPU/3D, AI tutoring, analytics IRT Rasch, dan gamifikasi untuk mendukung pengalaman belajar yang interaktif di kelas maupun mandiri.
 

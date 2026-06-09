@@ -1,7 +1,7 @@
 -- ============================================================
 -- Migration 009: Institutions Admin Panel — TASK-TENANT-001/002
 -- ============================================================
--- ARKON v3.0 — F-010 Multi-Tenant Support (full implementation)
+-- ARKON v1.0 — F-010 Multi-Tenant Support (full implementation)
 -- Adds institution admin role + wizard onboarding support
 -- ============================================================
 

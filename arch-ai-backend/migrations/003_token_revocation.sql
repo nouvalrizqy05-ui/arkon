@@ -1,7 +1,7 @@
 -- ============================================================
 -- Migration 003: Refresh Token Revocation System
 -- ============================================================
--- ARKON v3.0 — TASK-SEC-001
+-- ARKON v1.0 — TASK-SEC-001
 -- Implements server-side refresh token storage for proper logout
 -- Satisfies: FR-AUTH-006, NFR-SEC-008
 -- ============================================================

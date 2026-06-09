@@ -136,7 +136,7 @@ Platform dilengkapi standar keamanan tinggi untuk lingkungan pendidikan:
 ---
 
 ### 8. LIDM 2027 Development Roadmap
-Pengembangan ARKON v3.0 difokuskan untuk mencapai skor 100/100 pada ITDP LIDM 2027 dengan jadwal eksekusi sebagai berikut:
+Pengembangan ARKON v1.0 difokuskan untuk mencapai skor 100/100 pada ITDP LIDM 2027 dengan jadwal eksekusi sebagai berikut:
 
 - **Phase 1: Production Hardening (Jun – Agt 2026)**
   Berfokus pada keamanan (Token Revocation, Socket Auth), peningkatan performa (Redis, DB Indexes), dan *core gaps* (PDF Report Export, Theta UI). Target: platform yang stabil untuk *deployment* produksi.

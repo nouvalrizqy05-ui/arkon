@@ -1,11 +1,11 @@
 # System Requirements Document
-## ARKON v3.0 — Functional & Non-Functional Requirements Specification
+## ARKON v1.0 — Functional & Non-Functional Requirements Specification
 
 ---
 
 ## 1. DOCUMENT SCOPE
 
-Dokumen ini mendefinisikan seluruh kebutuhan sistem ARKON v3.0 secara terstruktur, mencakup:
+Dokumen ini mendefinisikan seluruh kebutuhan sistem ARKON v1.0 secara terstruktur, mencakup:
 - Functional Requirements (FR): apa yang harus dilakukan sistem
 - Non-Functional Requirements (NFR): bagaimana sistem harus berperilaku
 - Constraints: batasan teknis dan bisnis yang tidak bisa dinegosiasi
@@ -448,4 +448,4 @@ Aplikasi harus responsif dan dapat digunakan pada layar minimum 360px lebar.
 
 ---
 
-*Dokumen ini valid untuk ARKON v3.0 development cycle, target submission LIDM 2027.*
+*Dokumen ini valid untuk ARKON v1.0 development cycle, target submission LIDM 2027.*

@@ -1,7 +1,7 @@
 -- ============================================================
 -- Migration 005: Room Archive & Multi-tenant Foundation
 -- ============================================================
--- ARKON v3.0 — TASK-FEAT-003 + TASK-TENANT-001 (foundation)
+-- ARKON v1.0 — TASK-FEAT-003 + TASK-TENANT-001 (foundation)
 -- Adds room archiving and prepares for multi-tenant support
 -- ============================================================
 

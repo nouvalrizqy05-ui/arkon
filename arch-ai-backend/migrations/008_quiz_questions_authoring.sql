@@ -1,7 +1,7 @@
 -- ============================================================
 -- Migration 008: Quiz Questions Authoring Table
 -- ============================================================
--- ARKON v3.0 — FR-IRT-007 (Content Authoring Tool)
+-- ARKON v1.0 — FR-IRT-007 (Content Authoring Tool)
 -- Enables dosen to create, edit, delete quiz questions via UI
 -- Also adds source tracking to analytics for N-Gain pipeline
 -- ============================================================

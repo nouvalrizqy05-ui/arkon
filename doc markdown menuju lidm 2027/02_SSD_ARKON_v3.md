@@ -1,5 +1,5 @@
 # System Design Document (SSD)
-## ARKON v3.0 — Technical Architecture & Engineering Decisions
+## ARKON v1.0 — Technical Architecture & Engineering Decisions
 
 ---
 
@@ -503,4 +503,4 @@ Missing:
 
 ---
 
-*Dokumen ini mencerminkan arsitektur aktual dari codebase ARKON v2.0 ditambah gap analysis dan rekomendasi untuk production-grade v3.0.*
+*Dokumen ini mencerminkan arsitektur aktual dari codebase ARKON v2.0 ditambah gap analysis dan rekomendasi untuk production-grade v1.0.*

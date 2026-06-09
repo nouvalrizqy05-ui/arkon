@@ -1,5 +1,5 @@
 # UI/UX Flow Document
-## ARKON v3.0 — User Experience Design & Interaction Flows
+## ARKON v1.0 — User Experience Design & Interaction Flows
 
 ---
 
@@ -447,4 +447,4 @@ AR Lab di mobile:
 
 ---
 
-*Dokumen ini mencerminkan state saat ini dan roadmap UX untuk ARKON v3.0 target LIDM 2027.*
+*Dokumen ini mencerminkan state saat ini dan roadmap UX untuk ARKON v1.0 target LIDM 2027.*
