@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARKON Flowchart</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { color-scheme: light; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%); color: #0f172a; min-height: 100vh; line-height: 1.55; }
+body ::selection { background: #c7d2fe; color: #0f172a; }
+
+/* Header */
+.header { background: #0f172a; color: #fff; padding: 24px 28px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; }
+.header h1 { font-size: clamp(1.4rem, 2.2vw, 2rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+.header p { margin-top: 8px; font-size: clamp(0.95rem, 1.05vw, 1.05rem); color: #cbd5e1; max-width: 68ch; }
+
+/* Tabs */
+.tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 18px 20px; background: rgba(255,255,255,.98); border-bottom: 1px solid #e2e8f0; }
+.tab-btn {
+  appearance: none; -webkit-appearance: none; border: none; background: #f8fafc; color: #475569;
+  padding: 12px 16px; min-width: 130px; border-radius: 16px; font-size: 0.95rem; font-weight: 600;
+  white-space: nowrap; cursor: pointer; transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+.tab-btn:hover { background: #eef2ff; color: #1e293b; transform: translateY(-1px); }
+.tab-btn.active { background: #2563eb; color: #fff; box-shadow: 0 16px 30px rgba(37, 99, 235, 0.2); }
+.tab-btn:focus-visible { outline: 3px solid rgba(37, 99, 235, 0.4); outline-offset: 4px; }
+
+/* Canvas area */
+.canvas-area { max-width: 1280px; margin: 0 auto 40px; padding: 0 20px; }
+.diagram { display: none; margin-bottom: 40px; padding: 24px 0 28px; border-radius: 28px; background: rgba(255,255,255,0.92); box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08); }
+.diagram.active { display: block; }
+.diagram-title { font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 18px; padding: 0 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.phase-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 82px; padding: 6px 14px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+
+svg { display: block; width: 100%; max-width: 100%; height: auto; overflow: visible; }
+svg text { font-family: inherit; text-rendering: geometricPrecision; }
+
+@media (max-width: 860px) {
+  .header { padding: 18px 16px; }
+  .header h1 { font-size: 1.5rem; }
+  .canvas-area { padding: 0 16px; }
+  .tab-btn { min-width: 110px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>ARKON v3.0 — Flowchart Lengkap</h1>
+    <p>Alur pengguna Mahasiswa ↔ Dosen · Gaya diagram klasik YES/NO decision</p>
+  </div>
+</div>
+
+<div class="tabs" role="tablist" aria-label="Flowchart phases">
+  <button type="button" class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab0" id="tab-btn-0" onclick="showTab(0,this)">0. Autentikasi</button>
+  <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab1" id="tab-btn-1" onclick="showTab(1,this)">1. Onboarding MHS</button>
+  <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab2" id="tab-btn-2" onclick="showTab(2,this)">2. Setup Dosen</button>
+  <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab3" id="tab-btn-3" onclick="showTab(3,this)">3. Quiz Adaptif IRT</button>
+  <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab4" id="tab-btn-4" onclick="showTab(4,this)">4. Live Quiz</button>
+  <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab5" id="tab-btn-5" onclick="showTab(5,this)">5. PC Quest</button>
+  <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab6" id="tab-btn-6" onclick="showTab(6,this)">6. Tools & AR</button>
+  <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab7" id="tab-btn-7" onclick="showTab(7,this)">7. Komunitas</button>
+  <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab8" id="tab-btn-8" onclick="showTab(8,this)">8. Analytics</button>
+  <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab9" id="tab-btn-9" onclick="showTab(9,this)">9. Gamifikasi</button>
+</div>
+
+<div class="canvas-area">
+
+<!-- ═══════════════════════════════════════════
+     FASE 0 — AUTENTIKASI
+═══════════════════════════════════════════ -->
+<div class="diagram active" id="tab0" role="tabpanel" aria-hidden="false">
+  <div class="diagram-title">
+    <span class="phase-badge" style="background:#dbeafe;color:#1d4ed8">Fase 0</span>
+    Landing &amp; Autentikasi
+  </div>
+<svg width="860" height="920" viewBox="0 0 860 920">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- START -->
+<rect x="330" y="20" width="140" height="44" rx="22" fill="#ef4444" stroke="#dc2626" stroke-width="1.5"/>
+<text x="400" y="47" text-anchor="middle" font-size="14" font-weight="600" fill="#fff">Start</text>
+<line x1="400" y1="64" x2="400" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- NODE: Buka ARKON -->
+<rect x="290" y="100" width="220" height="44" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+<text x="400" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#0369a1">Buka arkon-edu.vercel.app</text>
+<text x="400" y="136" text-anchor="middle" font-size="10" fill="#0369a1">Landing page · hero · fitur unggulan</text>
+<line x1="400" y1="144" x2="400" y2="180" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Sudah punya akun? -->
+<!-- diamond: cx=400 cy=210 w=180 h=60 -->
+<polygon points="400,178 510,210 400,242 290,210" fill="#22c55e" stroke="#16a34a" stroke-width="1.5"/>
+<text x="400" y="206" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Sudah punya</text>
+<text x="400" y="220" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">akun?</text>
+
+<!-- YES → kiri ke Login -->
+<line x1="290" y1="210" x2="160" y2="210" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="240" y="204" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+
+<!-- NO → kanan ke Daftar -->
+<line x1="510" y1="210" x2="650" y2="210" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="585" y="204" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+
+<!-- LOGIN BOX (kiri) -->
+<line x1="160" y1="210" x2="160" y2="280" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="70" y="280" width="180" height="56" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="160" y="302" text-anchor="middle" font-size="13" font-weight="600" fill="#1d4ed8">Login</text>
+<text x="160" y="316" text-anchor="middle" font-size="10" fill="#1d4ed8">Email + Password</text>
+<text x="160" y="328" text-anchor="middle" font-size="10" fill="#1d4ed8">Validasi JWT</text>
+
+<!-- DAFTAR BOX (kanan) -->
+<line x1="650" y1="210" x2="650" y2="280" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="560" y="280" width="180" height="56" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+<text x="650" y="302" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Daftar Akun Baru</text>
+<text x="650" y="316" text-anchor="middle" font-size="10" fill="#166534">Nama · NIM/NIDN · Email</text>
+<text x="650" y="328" text-anchor="middle" font-size="10" fill="#166534">Password · Role</text>
+
+<!-- DECISION: Lupa password? (dari Login) -->
+<line x1="160" y1="336" x2="160" y2="380" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<polygon points="160,378 250,410 160,442 70,410" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+<text x="160" y="406" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Lupa</text>
+<text x="160" y="420" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Password?</text>
+
+<!-- YES lupa PW -->
+<line x1="70" y1="410" x2="20" y2="410" stroke="#475569" stroke-width="1.5"/>
+<line x1="20" y1="410" x2="20" y2="510" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="45" y="404" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="20" y="510" width="160" height="56" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="100" y="532" text-anchor="middle" font-size="13" font-weight="600" fill="#854d0e">Reset Password</text>
+<text x="100" y="546" text-anchor="middle" font-size="10" fill="#854d0e">Email → link Resend</text>
+<text x="100" y="558" text-anchor="middle" font-size="10" fill="#854d0e">Isi password baru</text>
+
+<!-- NO lupa PW → lanjut login OK -->
+<line x1="250" y1="410" x2="400" y2="410" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="325" y="404" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="310" y="410" width="180" height="44" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="400" y="427" text-anchor="middle" font-size="13" font-weight="600" fill="#1d4ed8">Login Berhasil</text>
+<text x="400" y="441" text-anchor="middle" font-size="10" fill="#1d4ed8">JWT token diterbitkan</text>
+
+<!-- Daftar → decision verif email -->
+<line x1="650" y1="336" x2="650" y2="380" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<polygon points="650,378 760,410 650,442 540,410" fill="#22c55e" stroke="#16a34a" stroke-width="1.5"/>
+<text x="650" y="406" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Skip email</text>
+<text x="650" y="420" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">verif?</text>
+
+<!-- YES skip → langsung ke role check -->
+<line x1="760" y1="410" x2="820" y2="410" stroke="#475569" stroke-width="1.5"/>
+<line x1="820" y1="410" x2="820" y2="490" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="792" y="404" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+
+<!-- NO skip → verifikasi email -->
+<line x1="650" y1="442" x2="650" y2="490" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="660" y="468" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="560" y="490" width="180" height="56" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+<text x="650" y="512" text-anchor="middle" font-size="13" font-weight="600" fill="#9d174d">Verifikasi Email</text>
+<text x="650" y="526" text-anchor="middle" font-size="10" fill="#9d174d">Klik link di inbox</text>
+<text x="650" y="538" text-anchor="middle" font-size="10" fill="#9d174d">Atau kirim ulang verif</text>
+<line x1="650" y1="546" x2="650" y2="590" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- merge dari skip (820) ke 650,590 -->
+<line x1="820" y1="490" x2="820" y2="590" stroke="#475569" stroke-width="1.5"/>
+<line x1="820" y1="590" x2="650" y2="590" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- merge login berhasil ke role check -->
+<line x1="400" y1="454" x2="400" y2="590" stroke="#475569" stroke-width="1.5"/>
+<line x1="400" y1="590" x2="490" y2="590" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Role? -->
+<polygon points="560,588 670,620 560,652 450,620" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="560" y="616" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Role</text>
+<text x="560" y="630" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">User?</text>
+
+<!-- Mahasiswa -->
+<line x1="450" y1="620" x2="330" y2="620" stroke="#475569" stroke-width="1.5"/>
+<line x1="330" y1="620" x2="330" y2="720" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="390" y="614" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">MHS</text>
+<rect x="220" y="720" width="220" height="56" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+<text x="330" y="742" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Fase 1</text>
+<text x="330" y="756" text-anchor="middle" font-size="11" fill="#166534">Onboarding Mahasiswa</text>
+<text x="330" y="770" text-anchor="middle" font-size="10" fill="#166534">→ ClassroomWorkspace</text>
+
+<!-- Dosen -->
+<line x1="670" y1="620" x2="780" y2="620" stroke="#475569" stroke-width="1.5"/>
+<line x1="780" y1="620" x2="780" y2="720" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="730" y="614" text-anchor="middle" font-size="11" font-weight="600" fill="#f97316">DOSEN</text>
+<rect x="680" y="720" width="200" height="56" rx="8" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
+<text x="780" y="742" text-anchor="middle" font-size="13" font-weight="600" fill="#9a3412">Fase 2</text>
+<text x="780" y="756" text-anchor="middle" font-size="11" fill="#9a3412">Setup Dosen</text>
+<text x="780" y="770" text-anchor="middle" font-size="10" fill="#9a3412">→ LecturerDashboard</text>
+
+<!-- Reset PW merge back -->
+<line x1="100" y1="566" x2="100" y2="680" stroke="#475569" stroke-width="1.5"/>
+<line x1="100" y1="680" x2="310" y2="680" stroke="#475569" stroke-width="1.5"/>
+<line x1="310" y1="680" x2="310" y2="730" stroke="#475569" stroke-width="1.5" stroke-dasharray="5,4"/>
+<text x="200" y="674" text-anchor="middle" font-size="10" fill="#854d0e">→ kembali login</text>
+
+</svg>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 1 — ONBOARDING MAHASISWA
+═══════════════════════════════════════════ -->
+<div class="diagram" id="tab1" role="tabpanel" aria-hidden="true">
+  <div class="diagram-title">
+    <span class="phase-badge" style="background:#dcfce7;color:#166534">Fase 1</span>
+    Onboarding Mahasiswa
+  </div>
+<svg width="900" height="860" viewBox="0 0 900 860">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- START -->
+<rect x="330" y="20" width="180" height="44" rx="22" fill="#ef4444" stroke="#dc2626" stroke-width="1.5"/>
+<text x="420" y="47" text-anchor="middle" font-size="14" font-weight="600" fill="#fff">Mahasiswa Login</text>
+<line x1="420" y1="64" x2="420" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Daily Login -->
+<rect x="300" y="100" width="240" height="56" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="420" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#854d0e">Daily Login Modal</text>
+<text x="420" y="136" text-anchor="middle" font-size="10" fill="#854d0e">Animasi koin · Streak counter · Reward koin</text>
+<text x="420" y="148" text-anchor="middle" font-size="10" fill="#854d0e">Klik Klaim → modal tutup</text>
+<line x1="420" y1="156" x2="420" y2="192" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Akun baru? -->
+<polygon points="420,190 530,222 420,254 310,222" fill="#22c55e" stroke="#16a34a" stroke-width="1.5"/>
+<text x="420" y="218" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Akun</text>
+<text x="420" y="232" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">baru?</text>
+
+<!-- YES → Onboarding Tour -->
+<line x1="530" y1="222" x2="650" y2="222" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="595" y="216" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="650" y="198" width="210" height="56" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+<text x="755" y="220" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Onboarding Tour</text>
+<text x="755" y="234" text-anchor="middle" font-size="10" fill="#166534">4 step: Workspace · Classroom</text>
+<text x="755" y="246" text-anchor="middle" font-size="10" fill="#166534">PC Quest · Gamifikasi · Skip</text>
+
+<!-- NO → langsung ke workspace -->
+<line x1="420" y1="254" x2="420" y2="300" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="430" y="278" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+
+<!-- Merge from onboarding -->
+<line x1="755" y1="254" x2="755" y2="310" stroke="#475569" stroke-width="1.5"/>
+<line x1="755" y1="310" x2="580" y2="310" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- ClassroomWorkspace -->
+<rect x="280" y="300" width="300" height="56" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+<text x="430" y="322" text-anchor="middle" font-size="13" font-weight="600" fill="#0369a1">ClassroomWorkspace</text>
+<text x="430" y="336" text-anchor="middle" font-size="10" fill="#0369a1">Sidebar: Classroom · PC Quest · Leaderboard</text>
+<text x="430" y="348" text-anchor="middle" font-size="10" fill="#0369a1">Achievements · Profile · Quick Links</text>
+<line x1="430" y1="356" x2="430" y2="392" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Sudah ada room? -->
+<polygon points="430,390 540,422 430,454 320,422" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+<text x="430" y="418" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Sudah</text>
+<text x="430" y="432" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">di room?</text>
+
+<!-- NO → join room -->
+<line x1="540" y1="422" x2="670" y2="422" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="608" y="416" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="670" y="396" width="200" height="56" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="770" y="418" text-anchor="middle" font-size="13" font-weight="600" fill="#854d0e">Join Room</text>
+<text x="770" y="432" text-anchor="middle" font-size="10" fill="#854d0e">Input kode ITDP-XXXX</text>
+<text x="770" y="444" text-anchor="middle" font-size="10" fill="#854d0e">dari dosen · Validasi</text>
+
+<!-- YES → Room Overview -->
+<line x1="430" y1="454" x2="430" y2="510" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="440" y="484" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+
+<!-- Join → merge ke Room Overview -->
+<line x1="770" y1="452" x2="770" y2="520" stroke="#475569" stroke-width="1.5"/>
+<line x1="770" y1="520" x2="610" y2="520" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Room Overview -->
+<rect x="270" y="510" width="340" height="70" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="440" y="532" text-anchor="middle" font-size="13" font-weight="600" fill="#1d4ed8">Room Overview</text>
+<text x="440" y="546" text-anchor="middle" font-size="10" fill="#1d4ed8">Quick actions · Statistik theta &amp; koin</text>
+<text x="440" y="558" text-anchor="middle" font-size="10" fill="#1d4ed8">Notifikasi Live Quiz · Link ke semua fitur</text>
+<text x="440" y="572" text-anchor="middle" font-size="10" fill="#1d4ed8">⟷ Sinkron real-time dengan dosen</text>
+<line x1="440" y1="580" x2="440" y2="630" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Pilih fitur -->
+<rect x="270" y="630" width="340" height="56" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5"/>
+<text x="440" y="652" text-anchor="middle" font-size="13" font-weight="600" fill="#7e22ce">Pilih Fitur</text>
+<text x="440" y="666" text-anchor="middle" font-size="10" fill="#7e22ce">Quiz · AR Lab · CPU Sim · Study Group</text>
+<text x="440" y="678" text-anchor="middle" font-size="10" fill="#7e22ce">Leaderboard · Activities · Tournament</text>
+
+<line x1="440" y1="686" x2="440" y2="730" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Boxes fitur lanjutan -->
+<rect x="100" y="730" width="136" height="44" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+<text x="168" y="756" text-anchor="middle" font-size="11" font-weight="600" fill="#166534">→ Fase 3</text>
+<text x="168" y="768" text-anchor="middle" font-size="10" fill="#166534">Quiz Adaptif IRT</text>
+
+<rect x="260" y="730" width="136" height="44" rx="8" fill="#fff7ed" stroke="#f97316" stroke-width="1.5"/>
+<text x="328" y="756" text-anchor="middle" font-size="11" font-weight="600" fill="#9a3412">→ Fase 5</text>
+<text x="328" y="768" text-anchor="middle" font-size="10" fill="#9a3412">PC Quest</text>
+
+<rect x="420" y="730" width="136" height="44" rx="8" fill="#f0f9ff" stroke="#0284c7" stroke-width="1.5"/>
+<text x="488" y="756" text-anchor="middle" font-size="11" font-weight="600" fill="#0369a1">→ Fase 6</text>
+<text x="488" y="768" text-anchor="middle" font-size="10" fill="#0369a1">Tools &amp; AR</text>
+
+<rect x="580" y="730" width="136" height="44" rx="8" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.5"/>
+<text x="648" y="756" text-anchor="middle" font-size="11" font-weight="600" fill="#7e22ce">→ Fase 4</text>
+<text x="648" y="768" text-anchor="middle" font-size="10" fill="#7e22ce">Live Quiz</text>
+
+<!-- Arrows to fase boxes -->
+<line x1="310" y1="730" x2="220" y2="730" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="440" y1="730" x2="396" y2="730" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="440" y1="730" x2="556" y2="730" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="440" y1="730" x2="716" y2="730" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+
+</svg>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 2 — SETUP DOSEN
+═══════════════════════════════════════════ -->
+<div class="diagram" id="tab2" role="tabpanel" aria-hidden="true">
+  <div class="diagram-title">
+    <span class="phase-badge" style="background:#ffedd5;color:#9a3412">Fase 2</span>
+    Setup Dosen
+  </div>
+<svg width="920" height="900" viewBox="0 0 920 900">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<rect x="340" y="20" width="160" height="44" rx="22" fill="#ef4444" stroke="#dc2626" stroke-width="1.5"/>
+<text x="420" y="47" text-anchor="middle" font-size="14" font-weight="600" fill="#fff">Dosen Login</text>
+<line x1="420" y1="64" x2="420" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Dosen baru? -->
+<polygon points="420,98 530,130 420,162 310,130" fill="#f97316" stroke="#ea580c" stroke-width="1.5"/>
+<text x="420" y="126" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Dosen</text>
+<text x="420" y="140" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">baru?</text>
+
+<!-- YES → Onboarding Wizard -->
+<line x1="530" y1="130" x2="670" y2="130" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="605" y="124" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="670" y="106" width="210" height="56" rx="8" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
+<text x="775" y="128" text-anchor="middle" font-size="13" font-weight="600" fill="#9a3412">Onboarding Wizard</text>
+<text x="775" y="142" text-anchor="middle" font-size="10" fill="#9a3412">4 langkah: Dashboard · Buat room</text>
+<text x="775" y="154" text-anchor="middle" font-size="10" fill="#9a3412">Kelola MHS · Live Quiz</text>
+
+<!-- NO → LecturerDashboard langsung -->
+<line x1="420" y1="162" x2="420" y2="220" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="430" y="192" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+
+<!-- merge -->
+<line x1="775" y1="162" x2="775" y2="230" stroke="#475569" stroke-width="1.5"/>
+<line x1="775" y1="230" x2="620" y2="230" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- LecturerDashboard -->
+<rect x="270" y="220" width="350" height="56" rx="8" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
+<text x="445" y="242" text-anchor="middle" font-size="13" font-weight="600" fill="#9a3412">LecturerDashboard</text>
+<text x="445" y="256" text-anchor="middle" font-size="10" fill="#9a3412">Daftar room · Statistik ringkasan · Profile</text>
+<text x="445" y="268" text-anchor="middle" font-size="10" fill="#9a3412">Tombol Buat Room Baru</text>
+<line x1="445" y1="276" x2="445" y2="312" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Buat room baru? -->
+<polygon points="445,310 555,342 445,374 335,342" fill="#22c55e" stroke="#16a34a" stroke-width="1.5"/>
+<text x="445" y="338" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Buat room</text>
+<text x="445" y="352" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">baru?</text>
+
+<!-- YES -->
+<line x1="445" y1="374" x2="445" y2="420" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="455" y="398" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+
+<!-- NO → pilih room -->
+<line x1="335" y1="342" x2="180" y2="342" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="257" y="336" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="80" y="318" width="200" height="56" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="180" y="340" text-anchor="middle" font-size="13" font-weight="600" fill="#334155">Pilih Room Ada</text>
+<text x="180" y="354" text-anchor="middle" font-size="10" fill="#334155">Klik room dari daftar</text>
+<text x="180" y="366" text-anchor="middle" font-size="10" fill="#334155">→ masuk RoomHub</text>
+
+<!-- CreateRoomModal -->
+<rect x="295" y="420" width="300" height="70" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+<text x="445" y="442" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Buat Room Baru</text>
+<text x="445" y="456" text-anchor="middle" font-size="10" fill="#166534">Nama matakuliah · Tipe: Classroom/Personal</text>
+<text x="445" y="468" text-anchor="middle" font-size="10" fill="#166534">Deskripsi opsional</text>
+<text x="445" y="482" text-anchor="middle" font-size="10" fill="#166534">→ Generate kode ITDP-XXXX</text>
+<line x1="445" y1="490" x2="445" y2="526" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Bagikan kode -->
+<rect x="295" y="526" width="300" height="44" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+<text x="445" y="548" text-anchor="middle" font-size="13" font-weight="600" fill="#0369a1">Bagikan Kode ke Mahasiswa</text>
+<text x="445" y="560" text-anchor="middle" font-size="10" fill="#0369a1">WA · Telegram · LMS · Email</text>
+<line x1="445" y1="570" x2="445" y2="606" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- merge dari pilih room -->
+<line x1="180" y1="374" x2="180" y2="618" stroke="#475569" stroke-width="1.5"/>
+<line x1="180" y1="618" x2="295" y2="618" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- RoomHub Dosen -->
+<rect x="270" y="606" width="350" height="70" rx="8" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
+<text x="445" y="628" text-anchor="middle" font-size="13" font-weight="600" fill="#9a3412">RoomHub Dosen</text>
+<text x="445" y="642" text-anchor="middle" font-size="10" fill="#9a3412">Tab: Analytics · Heatmap · Live Quiz · GM Panel</text>
+<text x="445" y="654" text-anchor="middle" font-size="10" fill="#9a3412">Quiz Bank · Activities · Broadcast · Settings</text>
+<text x="445" y="668" text-anchor="middle" font-size="10" fill="#9a3412">Student Work · Tournament · Study Group</text>
+<line x1="445" y1="676" x2="445" y2="720" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Action boxes -->
+<rect x="60" y="720" width="150" height="56" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="135" y="742" text-anchor="middle" font-size="12" font-weight="600" fill="#854d0e">Quiz Bank</text>
+<text x="135" y="756" text-anchor="middle" font-size="10" fill="#854d0e">CRUD · CSV Import</text>
+<text x="135" y="768" text-anchor="middle" font-size="10" fill="#854d0e">Force sync soal</text>
+
+<rect x="230" y="720" width="150" height="56" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+<text x="305" y="742" text-anchor="middle" font-size="12" font-weight="600" fill="#9d174d">Activity Manager</text>
+<text x="305" y="756" text-anchor="middle" font-size="10" fill="#9d174d">Buat tugas 5 tipe</text>
+<text x="305" y="768" text-anchor="middle" font-size="10" fill="#9d174d">Due date · Constraint</text>
+
+<rect x="400" y="720" width="150" height="56" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="475" y="742" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">Live Quiz</text>
+<text x="475" y="756" text-anchor="middle" font-size="10" fill="#1d4ed8">→ Fase 4</text>
+<text x="475" y="768" text-anchor="middle" font-size="10" fill="#1d4ed8">Standard/Boss Raid</text>
+
+<rect x="570" y="720" width="150" height="56" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+<text x="645" y="742" text-anchor="middle" font-size="12" font-weight="600" fill="#166534">Analytics &amp; N-Gain</text>
+<text x="645" y="756" text-anchor="middle" font-size="10" fill="#166534">→ Fase 8</text>
+<text x="645" y="768" text-anchor="middle" font-size="10" fill="#166534">IRT · Heatmap · PDF</text>
+
+<rect x="740" y="720" width="150" height="56" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5"/>
+<text x="815" y="742" text-anchor="middle" font-size="12" font-weight="600" fill="#7e22ce">GM Panel</text>
+<text x="815" y="756" text-anchor="middle" font-size="10" fill="#7e22ce">Reward Koin</text>
+<text x="815" y="768" text-anchor="middle" font-size="10" fill="#7e22ce">Double Coins Event</text>
+
+<!-- arrows to action boxes -->
+<line x1="310" y1="720" x2="210" y2="720" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="380" y1="720" x2="380" y2="720" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="445" y1="720" x2="475" y2="720" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="580" y1="720" x2="620" y2="720" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="690" y1="720" x2="740" y2="720" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+
+</svg>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 3 — QUIZ ADAPTIF IRT
+═══════════════════════════════════════════ -->
+<div class="diagram" id="tab3" role="tabpanel" aria-hidden="true">
+  <div class="diagram-title">
+    <span class="phase-badge" style="background:#ede9fe;color:#5b21b6">Fase 3</span>
+    Pembelajaran Adaptif — Quiz IRT
+  </div>
+<svg width="900" height="1000" viewBox="0 0 900 1000">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- START -->
+<rect x="310" y="20" width="220" height="44" rx="22" fill="#ef4444" stroke="#dc2626" stroke-width="1.5"/>
+<text x="420" y="47" text-anchor="middle" font-size="14" font-weight="600" fill="#fff">PC Quest → Quiz Map</text>
+<line x1="420" y1="64" x2="420" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Quiz Level Map -->
+<rect x="270" y="100" width="300" height="70" rx="8" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+<text x="420" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#5b21b6">Quiz Level Map (10 Level)</text>
+<text x="420" y="136" text-anchor="middle" font-size="10" fill="#5b21b6">Status terkunci/terbuka · ThetaProgressCard</text>
+<text x="420" y="148" text-anchor="middle" font-size="10" fill="#5b21b6">Persentil kelas · Progress ring animasi</text>
+<text x="420" y="160" text-anchor="middle" font-size="10" fill="#5b21b6">Bank health warning (jika soal terbatas)</text>
+<line x1="420" y1="170" x2="420" y2="206" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Level tersedia? -->
+<polygon points="420,204 540,236 420,268 300,236" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+<text x="420" y="232" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Level</text>
+<text x="420" y="246" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">tersedia?</text>
+
+<!-- NO → level terkunci -->
+<line x1="300" y1="236" x2="150" y2="236" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="225" y="230" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="50" y="212" width="200" height="56" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="150" y="234" text-anchor="middle" font-size="12" font-weight="600" fill="#334155">Level Terkunci</text>
+<text x="150" y="248" text-anchor="middle" font-size="10" fill="#334155">Selesaikan level sebelumnya</text>
+<text x="150" y="260" text-anchor="middle" font-size="10" fill="#334155">untuk membuka kunci</text>
+
+<!-- YES → sistem fetch soal -->
+<line x1="420" y1="268" x2="420" y2="310" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="430" y="290" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="270" y="310" width="300" height="56" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+<text x="420" y="332" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Sistem Fetch Soal Adaptif</text>
+<text x="420" y="346" text-anchor="middle" font-size="10" fill="#166534">Soal dipilih berdasarkan theta saat ini</text>
+<text x="420" y="358" text-anchor="middle" font-size="10" fill="#166534">Algoritma IRT Rasch 1PL</text>
+<line x1="420" y1="366" x2="420" y2="402" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Tampil Soal -->
+<rect x="270" y="402" width="300" height="56" rx="8" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+<text x="420" y="424" text-anchor="middle" font-size="13" font-weight="600" fill="#5b21b6">Tampil Soal (A/B/C/D)</text>
+<text x="420" y="438" text-anchor="middle" font-size="10" fill="#5b21b6">Timer countdown per soal</text>
+<text x="420" y="450" text-anchor="middle" font-size="10" fill="#5b21b6">Mahasiswa pilih jawaban</text>
+<line x1="420" y1="458" x2="420" y2="494" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Jawaban? -->
+<polygon points="420,492 540,524 420,556 300,524" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="420" y="520" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Jawaban</text>
+<text x="420" y="534" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">benar?</text>
+
+<!-- YES benar -->
+<line x1="420" y1="556" x2="420" y2="610" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="430" y="584" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+
+<!-- NO salah → AI Tutor -->
+<line x1="540" y1="524" x2="680" y2="524" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="614" y="518" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="680" y="498" width="190" height="70" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+<text x="775" y="520" text-anchor="middle" font-size="13" font-weight="600" fill="#9d174d">Jawab Salah</text>
+<text x="775" y="534" text-anchor="middle" font-size="10" fill="#9d174d">Tombol "Minta Penjelasan AI"</text>
+<text x="775" y="546" text-anchor="middle" font-size="10" fill="#9d174d">→ AiTutorPanel (Gemini)</text>
+<text x="775" y="558" text-anchor="middle" font-size="10" fill="#9d174d">Hint tersedia 1x per soal</text>
+
+<!-- Update Theta -->
+<rect x="270" y="610" width="300" height="56" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="420" y="632" text-anchor="middle" font-size="13" font-weight="600" fill="#1d4ed8">Update Theta IRT</text>
+<text x="420" y="646" text-anchor="middle" font-size="10" fill="#1d4ed8">Newton-Raphson MLE realtime</text>
+<text x="420" y="658" text-anchor="middle" font-size="10" fill="#1d4ed8">ThetaProgressCard beranimasi</text>
+
+<!-- AI tutor merge back -->
+<line x1="775" y1="568" x2="775" y2="638" stroke="#475569" stroke-width="1.5"/>
+<line x1="775" y1="638" x2="570" y2="638" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<line x1="420" y1="666" x2="420" y2="702" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Soal habis? -->
+<polygon points="420,700 540,732 420,764 300,732" fill="#22c55e" stroke="#16a34a" stroke-width="1.5"/>
+<text x="420" y="728" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Semua soal</text>
+<text x="420" y="742" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">selesai?</text>
+
+<!-- NO → soal berikutnya -->
+<line x1="300" y1="732" x2="150" y2="732" stroke="#475569" stroke-width="1.5"/>
+<line x1="150" y1="732" x2="150" y2="430" stroke="#475569" stroke-width="1.5"/>
+<line x1="150" y1="430" x2="270" y2="430" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="125" y="580" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<text x="90" y="596" text-anchor="middle" font-size="10" fill="#64748b">Soal</text>
+<text x="90" y="608" text-anchor="middle" font-size="10" fill="#64748b">berikutnya</text>
+
+<!-- YES → results -->
+<line x1="420" y1="764" x2="420" y2="810" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="430" y="788" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="250" y="810" width="340" height="70" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+<text x="420" y="832" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Results Screen Level</text>
+<text x="420" y="846" text-anchor="middle" font-size="10" fill="#166534">Skor · Δθ · Koin diterima · Badge unlock</text>
+<text x="420" y="858" text-anchor="middle" font-size="10" fill="#166534">Tombol: Kembali ke Map / Learning Path</text>
+<text x="420" y="870" text-anchor="middle" font-size="10" fill="#166534">Student Insight: Radar · Weakness · Prediksi UAS</text>
+
+</svg>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 4 — LIVE QUIZ
+═══════════════════════════════════════════ -->
+<div class="diagram" id="tab4" role="tabpanel" aria-hidden="true">
+  <div class="diagram-title">
+    <span class="phase-badge" style="background:#fee2e2;color:#991b1b">Fase 4</span>
+    Live Quiz — Real-Time
+  </div>
+<svg width="920" height="920" viewBox="0 0 920 920">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- DOSEN side label -->
+<text x="170" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#ea580c">DOSEN</text>
+<line x1="40" y1="50" x2="300" y2="50" stroke="#fed7aa" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+<!-- MHS side label -->
+<text x="720" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">MAHASISWA</text>
+<line x1="600" y1="50" x2="880" y2="50" stroke="#bfdbfe" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+<!-- DOSEN: Setup Live Quiz -->
+<rect x="40" y="60" width="260" height="70" rx="8" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
+<text x="170" y="82" text-anchor="middle" font-size="13" font-weight="600" fill="#9a3412">Setup Live Quiz</text>
+<text x="170" y="96" text-anchor="middle" font-size="10" fill="#9a3412">Pilih soal dari bank</text>
+<text x="170" y="108" text-anchor="middle" font-size="10" fill="#9a3412">Set waktu per soal</text>
+<text x="170" y="120" text-anchor="middle" font-size="10" fill="#9a3412">Pilih mode: Standard / Boss Raid</text>
+<line x1="170" y1="130" x2="170" y2="166" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Mode? -->
+<polygon points="170,164 280,196 170,228 60,196" fill="#f97316" stroke="#ea580c" stroke-width="1.5"/>
+<text x="170" y="192" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Mode?</text>
+<text x="170" y="206" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Standard/Raid</text>
+
+<!-- Standard → kiri atas -->
+<line x1="60" y1="196" x2="20" y2="196" stroke="#475569" stroke-width="1.5"/>
+<line x1="20" y1="196" x2="20" y2="280" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="40" y="190" font-size="11" font-weight="600" fill="#16a34a">STD</text>
+
+<!-- Boss Raid → bawah -->
+<line x1="170" y1="228" x2="170" y2="280" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="184" y="258" font-size="11" font-weight="600" fill="#dc2626">RAID</text>
+
+<!-- Standard path -->
+<rect x="20" y="280" width="130" height="56" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+<text x="85" y="302" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b">Mode Standard</text>
+<text x="85" y="316" text-anchor="middle" font-size="10" fill="#991b1b">Leaderboard koin</text>
+<text x="85" y="328" text-anchor="middle" font-size="10" fill="#991b1b">Skor per soal</text>
+
+<!-- Boss Raid path -->
+<rect x="110" y="280" width="180" height="70" rx="8" fill="#fde68a" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="200" y="302" text-anchor="middle" font-size="12" font-weight="600" fill="#78350f">Mode Boss Raid</text>
+<text x="200" y="316" text-anchor="middle" font-size="10" fill="#78350f">HP Bar Boss · Damage</text>
+<text x="200" y="328" text-anchor="middle" font-size="10" fill="#78350f">tim vs boss</text>
+<text x="200" y="340" text-anchor="middle" font-size="10" fill="#78350f">Reward koin kalau menang</text>
+
+<!-- merge → Launch -->
+<line x1="85" y1="336" x2="85" y2="380" stroke="#475569" stroke-width="1.5"/>
+<line x1="200" y1="350" x2="200" y2="380" stroke="#475569" stroke-width="1.5"/>
+<line x1="85" y1="380" x2="200" y2="380" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Launch -->
+<rect x="40" y="390" width="260" height="56" rx="8" fill="#fca5a5" stroke="#ef4444" stroke-width="1.5"/>
+<text x="170" y="412" text-anchor="middle" font-size="13" font-weight="600" fill="#7f1d1d">Launch Quiz</text>
+<text x="170" y="426" text-anchor="middle" font-size="10" fill="#7f1d1d">Broadcast Socket.io → semua mahasiswa</text>
+<text x="170" y="438" text-anchor="middle" font-size="10" fill="#7f1d1d">Notifikasi muncul real-time di room MHS</text>
+
+<!-- Sync arrow ke MHS -->
+<line x1="300" y1="418" x2="580" y2="418" stroke="#475569" stroke-width="2" stroke-dasharray="8,4" marker-end="url(#arr)"/>
+<text x="440" y="412" text-anchor="middle" font-size="11" font-weight="600" fill="#7c3aed">Socket.io Broadcast</text>
+
+<!-- MHS: Notifikasi -->
+<rect x="580" y="390" width="300" height="56" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="730" y="412" text-anchor="middle" font-size="13" font-weight="600" fill="#1d4ed8">Terima Notifikasi Live Quiz</text>
+<text x="730" y="426" text-anchor="middle" font-size="10" fill="#1d4ed8">Popup di Room Overview</text>
+<text x="730" y="438" text-anchor="middle" font-size="10" fill="#1d4ed8">Tombol "Gabung Sekarang"</text>
+<line x1="730" y1="446" x2="730" y2="482" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- MHS: Ikut Live Quiz -->
+<rect x="580" y="482" width="300" height="56" rx="8" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.5"/>
+<text x="730" y="504" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a8a">Ikut Live Quiz</text>
+<text x="730" y="518" text-anchor="middle" font-size="10" fill="#1e3a8a">Jawab soal · Timer countdown</text>
+<text x="730" y="530" text-anchor="middle" font-size="10" fill="#1e3a8a">Leaderboard mini live bergerak</text>
+
+<!-- Sesi berlangsung (BOTH) -->
+<line x1="170" y1="446" x2="170" y2="580" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="730" y1="538" x2="730" y2="580" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<rect x="40" y="580" width="260" height="70" rx="8" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
+<text x="170" y="602" text-anchor="middle" font-size="13" font-weight="600" fill="#9a3412">Dosen: Dashboard Live</text>
+<text x="170" y="616" text-anchor="middle" font-size="10" fill="#9a3412">Distribusi A/B/C/D realtime</text>
+<text x="170" y="628" text-anchor="middle" font-size="10" fill="#9a3412">Jumlah peserta join</text>
+<text x="170" y="640" text-anchor="middle" font-size="10" fill="#9a3412">Kontrol: Next · Pause · Stop</text>
+
+<rect x="580" y="580" width="300" height="56" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+<text x="730" y="602" text-anchor="middle" font-size="13" font-weight="600" fill="#0369a1">MHS: Skor &amp; Posisi Live</text>
+<text x="730" y="616" text-anchor="middle" font-size="10" fill="#0369a1">Skor bertambah tiap jawaban benar</text>
+<text x="730" y="628" text-anchor="middle" font-size="10" fill="#0369a1">Posisi leaderboard bergerak realtime</text>
+
+<!-- Sync hasil -->
+<line x1="300" y1="615" x2="580" y2="615" stroke="#475569" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+<line x1="580" y1="615" x2="300" y2="615" stroke="#475569" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+<!-- Selesai semua soal -->
+<line x1="170" y1="650" x2="170" y2="720" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="730" y1="636" x2="730" y2="720" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<rect x="40" y="720" width="260" height="56" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="170" y="742" text-anchor="middle" font-size="13" font-weight="600" fill="#334155">Hasil Akhir (Dosen)</text>
+<text x="170" y="756" text-anchor="middle" font-size="10" fill="#334155">Leaderboard final</text>
+<text x="170" y="768" text-anchor="middle" font-size="10" fill="#334155">Download hasil · Simpan log</text>
+
+<rect x="580" y="720" width="300" height="56" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+<text x="730" y="742" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Hasil Akhir (MHS)</text>
+<text x="730" y="756" text-anchor="middle" font-size="10" fill="#166534">Posisi final · Koin didapat</text>
+<text x="730" y="768" text-anchor="middle" font-size="10" fill="#166534">Badge unlock (jika ada)</text>
+
+<!-- Broadcast Panel -->
+<line x1="170" y1="776" x2="170" y2="830" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="40" y="830" width="260" height="56" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+<text x="170" y="852" text-anchor="middle" font-size="13" font-weight="600" fill="#9d174d">Broadcast &amp; Poll</text>
+<text x="170" y="866" text-anchor="middle" font-size="10" fill="#9d174d">Quick actions · Buat poll</text>
+<text x="170" y="878" text-anchor="middle" font-size="10" fill="#9d174d">MHS jawab → hasil distribusi</text>
+
+</svg>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 5 — PC QUEST
+═══════════════════════════════════════════ -->
+<div class="diagram" id="tab5" role="tabpanel" aria-hidden="true">
+  <div class="diagram-title">
+    <span class="phase-badge" style="background:#f0fdf4;color:#166534">Fase 5</span>
+    PC Quest — Gamifikasi
+  </div>
+<svg width="900" height="960" viewBox="0 0 900 960">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<rect x="310" y="20" width="220" height="44" rx="22" fill="#ef4444" stroke="#dc2626" stroke-width="1.5"/>
+<text x="420" y="47" text-anchor="middle" font-size="14" font-weight="600" fill="#fff">PC Quest Menu</text>
+<line x1="420" y1="64" x2="420" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Pilih fitur PC Quest -->
+<polygon points="420,98 540,130 420,162 300,130" fill="#16a34a" stroke="#15803d" stroke-width="1.5"/>
+<text x="420" y="126" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Pilih</text>
+<text x="420" y="140" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Fitur?</text>
+
+<!-- Hardware Shop -->
+<line x1="300" y1="130" x2="150" y2="130" stroke="#475569" stroke-width="1.5"/>
+<line x1="150" y1="130" x2="150" y2="220" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="218" y="124" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">SHOP</text>
+
+<!-- Assembly Lab -->
+<line x1="420" y1="162" x2="420" y2="220" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="432" y="192" font-size="11" font-weight="600" fill="#16a34a">ASSEMBLY</text>
+
+<!-- Showroom -->
+<line x1="540" y1="130" x2="680" y2="130" stroke="#475569" stroke-width="1.5"/>
+<line x1="680" y1="130" x2="680" y2="220" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="614" y="124" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">SHOWROOM</text>
+
+<!-- Detective -->
+<line x1="540" y1="130" x2="810" y2="130" stroke="#475569" stroke-width="1.5"/>
+<line x1="810" y1="130" x2="810" y2="220" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="680" y="124" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">DETECTIVE</text>
+
+<!-- Hardware Shop box -->
+<rect x="40" y="220" width="220" height="70" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+<text x="150" y="242" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Hardware Shop</text>
+<text x="150" y="256" text-anchor="middle" font-size="10" fill="#166534">Filter kategori CPU/GPU/RAM/dll</text>
+<text x="150" y="268" text-anchor="middle" font-size="10" fill="#166534">Harga koin · Minimum level</text>
+<text x="150" y="280" text-anchor="middle" font-size="10" fill="#166534">Beli → komponen ke inventori</text>
+<line x1="150" y1="290" x2="150" y2="340" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Koin cukup? -->
+<polygon points="150,338 250,370 150,402 50,370" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+<text x="150" y="366" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">Koin</text>
+<text x="150" y="380" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">cukup?</text>
+
+<!-- YES beli -->
+<line x1="150" y1="402" x2="150" y2="450" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="162" y="428" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="60" y="450" width="180" height="44" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+<text x="150" y="472" text-anchor="middle" font-size="12" font-weight="600" fill="#166534">Komponen Dibeli</text>
+<text x="150" y="484" text-anchor="middle" font-size="10" fill="#166534">Masuk inventori</text>
+
+<!-- NO kurang koin -->
+<line x1="50" y1="370" x2="20" y2="370" stroke="#475569" stroke-width="1.5"/>
+<line x1="20" y1="370" x2="20" y2="470" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="32" y="364" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="20" y="470" width="100" height="44" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+<text x="70" y="492" text-anchor="middle" font-size="11" font-weight="600" fill="#991b1b">Koin kurang</text>
+<text x="70" y="504" text-anchor="middle" font-size="10" fill="#991b1b">Cari koin dulu</text>
+
+<!-- Assembly Lab -->
+<rect x="300" y="220" width="240" height="70" rx="8" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+<text x="420" y="242" text-anchor="middle" font-size="13" font-weight="600" fill="#5b21b6">Assembly Lab 3D</text>
+<text x="420" y="256" text-anchor="middle" font-size="10" fill="#5b21b6">Drag komponen dari inventori</text>
+<text x="420" y="268" text-anchor="middle" font-size="10" fill="#5b21b6">Cek kompatibilitas realtime</text>
+<text x="420" y="280" text-anchor="middle" font-size="10" fill="#5b21b6">Konflik = highlight merah</text>
+<line x1="420" y1="290" x2="420" y2="340" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Semua slot terisi? -->
+<polygon points="420,338 530,370 420,402 310,370" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="420" y="366" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Semua slot</text>
+<text x="420" y="380" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">terisi?</text>
+
+<!-- NO → tambah komponen -->
+<line x1="530" y1="370" x2="620" y2="370" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="580" y="364" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="620" y="346" width="160" height="44" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="700" y="368" text-anchor="middle" font-size="12" font-weight="600" fill="#334155">Tambah Komponen</text>
+<text x="700" y="380" text-anchor="middle" font-size="10" fill="#334155">Beli di shop dulu</text>
+<line x1="700" y1="390" x2="700" y2="420" stroke="#475569" stroke-width="1.5"/>
+<line x1="700" y1="420" x2="530" y2="420" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- YES → Benchmark -->
+<line x1="420" y1="402" x2="420" y2="450" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="432" y="428" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="290" y="450" width="260" height="70" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="420" y="472" text-anchor="middle" font-size="13" font-weight="600" fill="#1d4ed8">Run Benchmark</text>
+<text x="420" y="486" text-anchor="middle" font-size="10" fill="#1d4ed8">Gaming · Productivity · Overall</text>
+<text x="420" y="498" text-anchor="middle" font-size="10" fill="#1d4ed8">Simpan build → Publish Showroom</text>
+<text x="420" y="510" text-anchor="middle" font-size="10" fill="#1d4ed8">Koin reward dari benchmark</text>
+
+<!-- Showroom -->
+<rect x="540" y="220" width="220" height="70" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+<text x="650" y="242" text-anchor="middle" font-size="13" font-weight="600" fill="#9d174d">PC Showroom</text>
+<text x="650" y="256" text-anchor="middle" font-size="10" fill="#9d174d">Card build · Badge Compatible</text>
+<text x="650" y="268" text-anchor="middle" font-size="10" fill="#9d174d">Like · Komentar build orang lain</text>
+<text x="650" y="280" text-anchor="middle" font-size="10" fill="#9d174d">Lihat nilai dari dosen</text>
+<line x1="650" y1="290" x2="650" y2="340" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DOSEN nilai showroom -->
+<polygon points="650,338 760,370 650,402 540,370" fill="#f97316" stroke="#ea580c" stroke-width="1.5"/>
+<text x="650" y="366" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Dosen</text>
+<text x="650" y="380" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">menilai?</text>
+
+<!-- YES nilai -->
+<line x1="650" y1="402" x2="650" y2="460" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="662" y="432" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="560" y="460" width="180" height="56" rx="8" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
+<text x="650" y="482" text-anchor="middle" font-size="12" font-weight="600" fill="#9a3412">Dosen Input Nilai</text>
+<text x="650" y="496" text-anchor="middle" font-size="10" fill="#9a3412">0–100 per mahasiswa</text>
+<text x="650" y="508" text-anchor="middle" font-size="10" fill="#9a3412">Nilai muncul di build MHS</text>
+
+<!-- Component Detective -->
+<rect x="700" y="220" width="180" height="70" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="790" y="242" text-anchor="middle" font-size="13" font-weight="600" fill="#854d0e">Comp. Detective</text>
+<text x="790" y="256" text-anchor="middle" font-size="10" fill="#854d0e">Kasus Normal/Advanced</text>
+<text x="790" y="268" text-anchor="middle" font-size="10" fill="#854d0e">Baca clue · Tebak komponen</text>
+<text x="790" y="280" text-anchor="middle" font-size="10" fill="#854d0e">Skor ke leaderboard</text>
+<line x1="790" y1="290" x2="790" y2="340" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<polygon points="790,338 870,370 790,402 710,370" fill="#ca8a04" stroke="#a16207" stroke-width="1.5"/>
+<text x="790" y="366" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Tebak</text>
+<text x="790" y="380" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">benar?</text>
+
+<line x1="790" y1="402" x2="790" y2="450" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="802" y="428" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="720" y="450" width="140" height="44" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="790" y="472" text-anchor="middle" font-size="12" font-weight="600" fill="#854d0e">+Koin Reward</text>
+<text x="790" y="484" text-anchor="middle" font-size="10" fill="#854d0e">Makin sedikit clue = makin besar</text>
+
+<line x1="710" y1="370" x2="660" y2="370" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="688" y="364" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="580" y="346" width="80" height="44" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+<text x="620" y="368" text-anchor="middle" font-size="11" font-weight="600" fill="#991b1b">Salah</text>
+<text x="620" y="380" text-anchor="middle" font-size="10" fill="#991b1b">-skor</text>
+
+</svg>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 6 — TOOLS & AR
+═══════════════════════════════════════════ -->
+<div class="diagram" id="tab6" role="tabpanel" aria-hidden="true">
+  <div class="diagram-title">
+    <span class="phase-badge" style="background:#e0f2fe;color:#0369a1">Fase 6</span>
+    Tools Pembelajaran Lanjutan
+  </div>
+<svg width="900" height="760" viewBox="0 0 900 760">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<rect x="300" y="20" width="240" height="44" rx="22" fill="#ef4444" stroke="#dc2626" stroke-width="1.5"/>
+<text x="420" y="47" text-anchor="middle" font-size="14" font-weight="600" fill="#fff">Pilih Tools Pembelajaran</text>
+<line x1="200" y1="64" x2="200" y2="100" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="420" y1="64" x2="420" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="680" y1="64" x2="680" y2="100" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="300" y1="42" x2="200" y2="42" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="540" y1="42" x2="680" y2="42" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+
+<!-- AR Hardware Lab -->
+<rect x="60" y="100" width="280" height="56" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+<text x="200" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#0369a1">AR Hardware Lab</text>
+<text x="200" y="136" text-anchor="middle" font-size="10" fill="#0369a1">8 model 3D: MB · CPU · GPU · RAM</text>
+<text x="200" y="148" text-anchor="middle" font-size="10" fill="#0369a1">Storage · PSU · Cooling · Case</text>
+<line x1="200" y1="156" x2="200" y2="192" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- DECISION: Mode? -->
+<polygon points="200,190 300,222 200,254 100,222" fill="#0284c7" stroke="#0369a1" stroke-width="1.5"/>
+<text x="200" y="218" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Mode</text>
+<text x="200" y="232" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">akses?</text>
+
+<!-- Desktop -->
+<line x1="100" y1="222" x2="40" y2="222" stroke="#475569" stroke-width="1.5"/>
+<line x1="40" y1="222" x2="40" y2="320" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="68" y="216" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">PC</text>
+<rect x="40" y="320" width="160" height="70" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="120" y="342" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">Mode 3D Desktop</text>
+<text x="120" y="356" text-anchor="middle" font-size="10" fill="#1d4ed8">iframe model-viewer</text>
+<text x="120" y="368" text-anchor="middle" font-size="10" fill="#1d4ed8">Rotate · Zoom mouse</text>
+<text x="120" y="380" text-anchor="middle" font-size="10" fill="#1d4ed8">Info spesifikasi samping</text>
+
+<!-- Mobile AR -->
+<line x1="300" y1="222" x2="380" y2="222" stroke="#475569" stroke-width="1.5"/>
+<line x1="380" y1="222" x2="380" y2="320" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="342" y="216" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">HP</text>
+<rect x="290" y="320" width="180" height="70" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+<text x="380" y="342" text-anchor="middle" font-size="12" font-weight="600" fill="#0369a1">Mode AR Mobile</text>
+<text x="380" y="356" text-anchor="middle" font-size="10" fill="#0369a1">Scan QR / deep link</text>
+<text x="380" y="368" text-anchor="middle" font-size="10" fill="#0369a1">Model 3D di lingkungan nyata</text>
+<text x="380" y="380" text-anchor="middle" font-size="10" fill="#0369a1">Rotate · scale · reposisi</text>
+
+<!-- merge → badge -->
+<line x1="120" y1="390" x2="120" y2="450" stroke="#475569" stroke-width="1.5"/>
+<line x1="380" y1="390" x2="380" y2="450" stroke="#475569" stroke-width="1.5"/>
+<line x1="120" y1="450" x2="380" y2="450" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="160" y="450" width="200" height="44" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+<text x="260" y="472" text-anchor="middle" font-size="12" font-weight="600" fill="#166534">Unlock Badge AR Explorer</text>
+<text x="260" y="484" text-anchor="middle" font-size="10" fill="#166534">+200 XP · notifikasi achievement</text>
+
+<!-- CPU Simulator -->
+<rect x="310" y="100" width="220" height="56" rx="8" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+<text x="420" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#5b21b6">CPU Simulator</text>
+<text x="420" y="136" text-anchor="middle" font-size="10" fill="#5b21b6">Tulis/pilih instruksi assembly</text>
+<text x="420" y="148" text-anchor="middle" font-size="10" fill="#5b21b6">Embedded Svelte app iframe</text>
+<line x1="420" y1="156" x2="420" y2="220" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<rect x="310" y="220" width="220" height="70" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5"/>
+<text x="420" y="242" text-anchor="middle" font-size="13" font-weight="600" fill="#7e22ce">Execute Instruksi</text>
+<text x="420" y="256" text-anchor="middle" font-size="10" fill="#7e22ce">Visualisasi pipeline</text>
+<text x="420" y="268" text-anchor="middle" font-size="10" fill="#7e22ce">Fetch→Decode→Execute→WB</text>
+<text x="420" y="280" text-anchor="middle" font-size="10" fill="#7e22ce">Register &amp; memory realtime</text>
+<line x1="420" y1="290" x2="420" y2="336" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<polygon points="420,334 520,366 420,398 320,366" fill="#a855f7" stroke="#9333ea" stroke-width="1.5"/>
+<text x="420" y="362" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Eksekusi ke</text>
+<text x="420" y="376" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">&lt; 5x sesi?</text>
+
+<line x1="420" y1="398" x2="420" y2="450" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="432" y="426" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="310" y="450" width="220" height="56" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+<text x="420" y="472" text-anchor="middle" font-size="12" font-weight="600" fill="#166534">Reward Koin</text>
+<text x="420" y="486" text-anchor="middle" font-size="10" fill="#166534">Toast "+X Koin!" · Total koin update</text>
+<text x="420" y="498" text-anchor="middle" font-size="10" fill="#166534">Log eksekusi ke database</text>
+
+<line x1="320" y1="366" x2="240" y2="366" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="280" y="360" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="160" y="344" width="80" height="44" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+<text x="200" y="366" text-anchor="middle" font-size="11" font-weight="600" fill="#991b1b">Limit</text>
+<text x="200" y="378" text-anchor="middle" font-size="10" fill="#991b1b">No reward</text>
+
+<!-- CPU Visual -->
+<rect x="560" y="100" width="280" height="56" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="700" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#1d4ed8">CPU Visual Diagram</text>
+<text x="700" y="136" text-anchor="middle" font-size="10" fill="#1d4ed8">Halaman /cpu-visual</text>
+<text x="700" y="148" text-anchor="middle" font-size="10" fill="#1d4ed8">Diagram arsitektur CPU interaktif</text>
+<line x1="700" y1="156" x2="700" y2="220" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<rect x="560" y="220" width="280" height="56" rx="8" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.5"/>
+<text x="700" y="242" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a8a">Klik Komponen</text>
+<text x="700" y="256" text-anchor="middle" font-size="10" fill="#1e3a8a">Penjelasan detail muncul</text>
+<text x="700" y="268" text-anchor="middle" font-size="10" fill="#1e3a8a">Animasi aliran data antar komponen</text>
+<line x1="700" y1="276" x2="700" y2="340" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<rect x="560" y="340" width="280" height="44" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+<text x="700" y="362" text-anchor="middle" font-size="12" font-weight="600" fill="#0369a1">Navigasi antar komponen</text>
+<text x="700" y="374" text-anchor="middle" font-size="10" fill="#0369a1">CU · ALU · Register · Cache · BUS</text>
+
+</svg>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 7 — KOMUNITAS
+═══════════════════════════════════════════ -->
+<div class="diagram" id="tab7" role="tabpanel" aria-hidden="true">
+  <div class="diagram-title">
+    <span class="phase-badge" style="background:#f3e8ff;color:#7e22ce">Fase 7</span>
+    Komunitas &amp; Kolaborasi
+  </div>
+<svg width="900" height="840" viewBox="0 0 900 840">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<rect x="300" y="20" width="240" height="44" rx="22" fill="#ef4444" stroke="#dc2626" stroke-width="1.5"/>
+<text x="420" y="47" text-anchor="middle" font-size="14" font-weight="600" fill="#fff">Pilih Komunitas</text>
+
+<!-- Branch lines -->
+<line x1="420" y1="64" x2="140" y2="64" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="420" y1="64" x2="420" y2="64" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="420" y1="64" x2="700" y2="64" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="140" y1="64" x2="140" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="420" y1="64" x2="420" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="700" y1="64" x2="700" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Study Group -->
+<rect x="20" y="100" width="240" height="56" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5"/>
+<text x="140" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#7e22ce">Study Group</text>
+<text x="140" y="136" text-anchor="middle" font-size="10" fill="#7e22ce">Lobby: daftar group</text>
+<text x="140" y="148" text-anchor="middle" font-size="10" fill="#7e22ce">Chat realtime · Notes bersama</text>
+<line x1="140" y1="156" x2="140" y2="192" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<polygon points="140,190 240,222 140,254 40,222" fill="#a855f7" stroke="#9333ea" stroke-width="1.5"/>
+<text x="140" y="218" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Sudah</text>
+<text x="140" y="232" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">ada group?</text>
+
+<line x1="40" y1="222" x2="20" y2="222" stroke="#475569" stroke-width="1.5"/>
+<line x1="20" y1="222" x2="20" y2="310" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="28" y="216" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="20" y="310" width="140" height="44" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5"/>
+<text x="90" y="332" text-anchor="middle" font-size="11" font-weight="600" fill="#7e22ce">Buat Group Baru</text>
+<text x="90" y="344" text-anchor="middle" font-size="10" fill="#7e22ce">Nama · deskripsi</text>
+
+<line x1="240" y1="222" x2="310" y2="222" stroke="#475569" stroke-width="1.5"/>
+<line x1="310" y1="222" x2="310" y2="310" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="278" y="216" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="220" y="310" width="180" height="44" rx="8" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+<text x="310" y="332" text-anchor="middle" font-size="11" font-weight="600" fill="#5b21b6">Join Group</text>
+<text x="310" y="344" text-anchor="middle" font-size="10" fill="#5b21b6">Input kode join</text>
+
+<!-- merge → Chat -->
+<line x1="90" y1="354" x2="90" y2="404" stroke="#475569" stroke-width="1.5"/>
+<line x1="310" y1="354" x2="310" y2="404" stroke="#475569" stroke-width="1.5"/>
+<line x1="90" y1="404" x2="310" y2="404" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="100" y="404" width="200" height="56" rx="8" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="200" y="426" text-anchor="middle" font-size="12" font-weight="600" fill="#4c1d95">Chat Realtime</text>
+<text x="200" y="440" text-anchor="middle" font-size="10" fill="#4c1d95">Socket.io · Anggota aktif</text>
+<text x="200" y="452" text-anchor="middle" font-size="10" fill="#4c1d95">Notes bersama · Edit bareng</text>
+
+<!-- Activities & Notes -->
+<rect x="310" y="100" width="220" height="56" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+<text x="420" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#0369a1">My Activities</text>
+<text x="420" y="136" text-anchor="middle" font-size="10" fill="#0369a1">Daftar tugas dari dosen</text>
+<text x="420" y="148" text-anchor="middle" font-size="10" fill="#0369a1">Status · Due date countdown</text>
+<line x1="420" y1="156" x2="420" y2="220" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<polygon points="420,218 530,250 420,282 310,250" fill="#0284c7" stroke="#0369a1" stroke-width="1.5"/>
+<text x="420" y="246" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Tipe</text>
+<text x="420" y="260" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">aktivitas?</text>
+
+<!-- Branches -->
+<line x1="310" y1="250" x2="310" y2="320" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="298" y="286" font-size="10" font-weight="600" fill="#0369a1">QUIZ</text>
+<rect x="220" y="320" width="180" height="44" rx="8" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+<text x="310" y="342" text-anchor="middle" font-size="11" font-weight="600" fill="#5b21b6">Quiz Challenge</text>
+<text x="310" y="354" text-anchor="middle" font-size="10" fill="#5b21b6">→ QuizGame terbuka</text>
+
+<line x1="530" y1="250" x2="530" y2="320" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="536" y="286" font-size="10" font-weight="600" fill="#0369a1">BUILD</text>
+<rect x="440" y="320" width="180" height="44" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+<text x="530" y="342" text-anchor="middle" font-size="11" font-weight="600" fill="#166534">Build Activity</text>
+<text x="530" y="354" text-anchor="middle" font-size="10" fill="#166534">Assembly + constraint</text>
+
+<!-- merge → submit -->
+<line x1="310" y1="364" x2="310" y2="430" stroke="#475569" stroke-width="1.5"/>
+<line x1="530" y1="364" x2="530" y2="430" stroke="#475569" stroke-width="1.5"/>
+<line x1="310" y1="430" x2="530" y2="430" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="340" y="430" width="180" height="44" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="430" y="452" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">Submit Hasil</text>
+<text x="430" y="464" text-anchor="middle" font-size="10" fill="#1d4ed8">Muncul di StudentWork dosen</text>
+
+<!-- Project Notes -->
+<rect x="580" y="100" width="280" height="56" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+<text x="720" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#9d174d">Project Notes</text>
+<text x="720" y="136" text-anchor="middle" font-size="10" fill="#9d174d">Catatan personal per room</text>
+<text x="720" y="148" text-anchor="middle" font-size="10" fill="#9d174d">Format markdown · Edit · Hapus</text>
+<line x1="720" y1="156" x2="720" y2="220" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<rect x="580" y="220" width="280" height="44" rx="8" fill="#fdf2f8" stroke="#db2777" stroke-width="1.5"/>
+<text x="720" y="242" text-anchor="middle" font-size="12" font-weight="600" fill="#9d174d">Buat Catatan Baru</text>
+<text x="720" y="254" text-anchor="middle" font-size="10" fill="#9d174d">Judul + isi markdown</text>
+<line x1="720" y1="264" x2="720" y2="310" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<rect x="580" y="310" width="280" height="44" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+<text x="720" y="332" text-anchor="middle" font-size="12" font-weight="600" fill="#9d174d">Simpan / Edit / Hapus</text>
+<text x="720" y="344" text-anchor="middle" font-size="10" fill="#9d174d">Tersimpan per room</text>
+
+<!-- Tournament -->
+<rect x="200" y="560" width="500" height="70" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="450" y="582" text-anchor="middle" font-size="13" font-weight="600" fill="#854d0e">Tournament</text>
+<text x="450" y="596" text-anchor="middle" font-size="10" fill="#854d0e">Dosen buat bracket · Mahasiswa join</text>
+<text x="450" y="608" text-anchor="middle" font-size="10" fill="#854d0e">Duel realtime: soal bergantian · Skor kecepatan+ketepatan</text>
+<text x="450" y="620" text-anchor="middle" font-size="10" fill="#854d0e">Bracket update otomatis · Pemenang lanjut</text>
+
+<!-- Student Work Viewer (dosen) -->
+<rect x="200" y="680" width="500" height="56" rx="8" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
+<text x="450" y="702" text-anchor="middle" font-size="13" font-weight="600" fill="#9a3412">Student Work Viewer (Dosen)</text>
+<text x="450" y="716" text-anchor="middle" font-size="10" fill="#9a3412">Lihat semua submission · Filter per aktivitas/mahasiswa · Beri nilai &amp; feedback</text>
+<text x="450" y="728" text-anchor="middle" font-size="10" fill="#9a3412">Muncul setelah mahasiswa submit aktivitas</text>
+
+</svg>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 8 — ANALYTICS
+═══════════════════════════════════════════ -->
+<div class="diagram" id="tab8" role="tabpanel" aria-hidden="true">
+  <div class="diagram-title">
+    <span class="phase-badge" style="background:#fefce8;color:#713f12">Fase 8</span>
+    Analytics &amp; Monitoring
+  </div>
+<svg width="920" height="860" viewBox="0 0 920 860">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<rect x="310" y="20" width="240" height="44" rx="22" fill="#ef4444" stroke="#dc2626" stroke-width="1.5"/>
+<text x="430" y="47" text-anchor="middle" font-size="14" font-weight="600" fill="#fff">RoomHub → Analytics Tab</text>
+<line x1="430" y1="64" x2="430" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Analytics Dashboard -->
+<rect x="270" y="100" width="320" height="70" rx="8" fill="#fefce8" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="430" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#713f12">Analytics Dashboard</text>
+<text x="430" y="136" text-anchor="middle" font-size="10" fill="#713f12">IRT Summary: tabel theta semua mahasiswa</text>
+<text x="430" y="148" text-anchor="middle" font-size="10" fill="#713f12">Bar chart distribusi kemampuan kelas</text>
+<text x="430" y="162" text-anchor="middle" font-size="10" fill="#713f12">Highlight mahasiswa "at risk" (θ &lt; -1)</text>
+<line x1="430" y1="170" x2="430" y2="206" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Sub-menu analytics -->
+<polygon points="430,204 540,236 430,268 320,236" fill="#ca8a04" stroke="#a16207" stroke-width="1.5"/>
+<text x="430" y="230" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Pilih</text>
+<text x="430" y="244" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">sub-fitur?</text>
+
+<!-- N-Gain -->
+<line x1="430" y1="268" x2="430" y2="320" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="444" y="296" font-size="11" font-weight="600" fill="#16a34a">N-GAIN</text>
+
+<!-- Heatmap -->
+<line x1="320" y1="236" x2="180" y2="236" stroke="#475569" stroke-width="1.5"/>
+<line x1="180" y1="236" x2="180" y2="320" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="248" y="230" text-anchor="middle" font-size="11" font-weight="600" fill="#2563eb">HEATMAP</text>
+
+<!-- GM Panel -->
+<line x1="540" y1="236" x2="680" y2="236" stroke="#475569" stroke-width="1.5"/>
+<line x1="680" y1="236" x2="680" y2="320" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="614" y="230" text-anchor="middle" font-size="11" font-weight="600" fill="#a855f7">GM PANEL</text>
+
+<!-- AI Summary -->
+<line x1="540" y1="236" x2="820" y2="236" stroke="#475569" stroke-width="1.5"/>
+<line x1="820" y1="236" x2="820" y2="320" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="686" y="230" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">AI SUMMARY</text>
+
+<!-- N-Gain box -->
+<rect x="280" y="320" width="300" height="100" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="430" y="344" text-anchor="middle" font-size="13" font-weight="600" fill="#713f12">N-Gain Analysis</text>
+<text x="430" y="360" text-anchor="middle" font-size="10" fill="#713f12">Tabel per MHS: pre/post score · gain · kategori</text>
+<text x="430" y="374" text-anchor="middle" font-size="10" fill="#713f12">Kategori: Tinggi ≥0.70 · Sedang 0.30–0.69</text>
+<text x="430" y="388" text-anchor="middle" font-size="10" fill="#713f12">Rata-rata N-Gain kelas · Distribusi pie chart</text>
+<text x="430" y="402" text-anchor="middle" font-size="10" fill="#713f12">Efektivitas pembelajaran ARKON</text>
+<line x1="430" y1="420" x2="430" y2="456" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Export PDF -->
+<polygon points="430,454 540,486 430,518 320,486" fill="#22c55e" stroke="#16a34a" stroke-width="1.5"/>
+<text x="430" y="482" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Export</text>
+<text x="430" y="496" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">PDF?</text>
+
+<line x1="430" y1="518" x2="430" y2="570" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="444" y="546" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="280" y="570" width="300" height="70" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+<text x="430" y="592" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Generate PDF Report</text>
+<text x="430" y="606" text-anchor="middle" font-size="10" fill="#166534">Cover page · Tabel N-Gain lengkap</text>
+<text x="430" y="618" text-anchor="middle" font-size="10" fill="#166534">Grafik distribusi · Statistik kelas</text>
+<text x="430" y="630" text-anchor="middle" font-size="10" fill="#166534">Siap dilampirkan ke laporan LIDM</text>
+
+<!-- Heatmap box -->
+<rect x="40" y="320" width="240" height="100" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="160" y="344" text-anchor="middle" font-size="13" font-weight="600" fill="#1d4ed8">Heat Map Aktivitas</text>
+<text x="160" y="360" text-anchor="middle" font-size="10" fill="#1d4ed8">GitHub-style heatmap</text>
+<text x="160" y="374" text-anchor="middle" font-size="10" fill="#1d4ed8">Pola aktivitas hari/minggu</text>
+<text x="160" y="388" text-anchor="middle" font-size="10" fill="#1d4ed8">Identifikasi waktu MHS paling aktif</text>
+<text x="160" y="402" text-anchor="middle" font-size="10" fill="#1d4ed8">Tentukan jadwal Live Quiz optimal</text>
+
+<!-- GM Panel box -->
+<rect x="580" y="320" width="220" height="100" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5"/>
+<text x="690" y="344" text-anchor="middle" font-size="13" font-weight="600" fill="#7e22ce">GM Panel</text>
+<text x="690" y="360" text-anchor="middle" font-size="10" fill="#7e22ce">Saldo koin semua mahasiswa</text>
+<text x="690" y="374" text-anchor="middle" font-size="10" fill="#7e22ce">Beri bonus koin manual + alasan</text>
+<text x="690" y="388" text-anchor="middle" font-size="10" fill="#7e22ce">Double Coins Event toggle</text>
+<text x="690" y="402" text-anchor="middle" font-size="10" fill="#7e22ce">2x reward saat event aktif</text>
+
+<!-- AI Summary box -->
+<rect x="720" y="320" width="180" height="100" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+<text x="810" y="344" text-anchor="middle" font-size="12" font-weight="600" fill="#166534">AI Analytics</text>
+<text x="810" y="358" text-anchor="middle" font-size="10" fill="#166534">Summary Gemini</text>
+<text x="810" y="372" text-anchor="middle" font-size="10" fill="#166534">Rekomendasi</text>
+<text x="810" y="386" text-anchor="middle" font-size="10" fill="#166534">intervensi MHS</text>
+<text x="810" y="400" text-anchor="middle" font-size="10" fill="#166534">struggling</text>
+
+</svg>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 9 — GAMIFIKASI
+═══════════════════════════════════════════ -->
+<div class="diagram" id="tab9" role="tabpanel" aria-hidden="true">
+  <div class="diagram-title">
+    <span class="phase-badge" style="background:#fdf4ff;color:#7e22ce">Fase 9</span>
+    Gamifikasi &amp; Profil
+  </div>
+<svg width="900" height="820" viewBox="0 0 900 820">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<rect x="300" y="20" width="240" height="44" rx="22" fill="#ef4444" stroke="#dc2626" stroke-width="1.5"/>
+<text x="420" y="47" text-anchor="middle" font-size="14" font-weight="600" fill="#fff">Gamifikasi Menu</text>
+
+<line x1="420" y1="64" x2="130" y2="64" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="420" y1="64" x2="420" y2="64" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="420" y1="64" x2="700" y2="64" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="130" y1="64" x2="130" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="420" y1="64" x2="420" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="700" y1="64" x2="700" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Leaderboard -->
+<rect x="20" y="100" width="220" height="56" rx="8" fill="#fdf4ff" stroke="#c026d3" stroke-width="1.5"/>
+<text x="130" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#86198f">Leaderboard</text>
+<text x="130" y="136" text-anchor="middle" font-size="10" fill="#86198f">Top Koin · Top XP</text>
+<text x="130" y="148" text-anchor="middle" font-size="10" fill="#86198f">Filter: All Time / Minggu / Bulan</text>
+<line x1="130" y1="156" x2="130" y2="210" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<rect x="20" y="210" width="220" height="56" rx="8" fill="#fae8ff" stroke="#c026d3" stroke-width="1.5"/>
+<text x="130" y="232" text-anchor="middle" font-size="12" font-weight="600" fill="#86198f">Posisi Diri Highlight</text>
+<text x="130" y="246" text-anchor="middle" font-size="10" fill="#86198f">Avatar + nama + koin/XP</text>
+<text x="130" y="258" text-anchor="middle" font-size="10" fill="#86198f">Animated entry untuk top 3</text>
+
+<!-- Achievement System -->
+<rect x="300" y="100" width="240" height="56" rx="8" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+<text x="420" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#5b21b6">Achievement &amp; Badge</text>
+<text x="420" y="136" text-anchor="middle" font-size="10" fill="#5b21b6">Gallery semua badge</text>
+<text x="420" y="148" text-anchor="middle" font-size="10" fill="#5b21b6">Terkunci (abu) / unlock (berwarna)</text>
+<line x1="420" y1="156" x2="420" y2="210" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<rect x="290" y="210" width="260" height="70" rx="8" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="420" y="232" text-anchor="middle" font-size="12" font-weight="600" fill="#4c1d95">Kondisi Unlock Badge</text>
+<text x="420" y="246" text-anchor="middle" font-size="10" fill="#4c1d95">Quiz Master · AR Explorer · Speed Builder</text>
+<text x="420" y="258" text-anchor="middle" font-size="10" fill="#4c1d95">Perfect Score · Streak 7 · Detective Pro</text>
+<text x="420" y="272" text-anchor="middle" font-size="10" fill="#4c1d95">Level XP: Beginner→Learner→Explorer→Expert→Master</text>
+
+<!-- Profile Customization -->
+<rect x="600" y="100" width="280" height="56" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+<text x="740" y="122" text-anchor="middle" font-size="13" font-weight="600" fill="#9d174d">Profile Customization</text>
+<text x="740" y="136" text-anchor="middle" font-size="10" fill="#9d174d">Nama · Email · NIM/NIDN</text>
+<text x="740" y="148" text-anchor="middle" font-size="10" fill="#9d174d">Koin · XP · Level</text>
+<line x1="740" y1="156" x2="740" y2="210" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<polygon points="740,208 840,240 740,272 640,240" fill="#db2777" stroke="#be185d" stroke-width="1.5"/>
+<text x="740" y="236" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">Ubah</text>
+<text x="740" y="250" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">profil?</text>
+
+<line x1="740" y1="272" x2="740" y2="320" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="752" y="298" font-size="11" font-weight="600" fill="#16a34a">YES</text>
+<rect x="600" y="320" width="280" height="70" rx="8" fill="#fdf2f8" stroke="#db2777" stroke-width="1.5"/>
+<text x="740" y="342" text-anchor="middle" font-size="12" font-weight="600" fill="#9d174d">Pilih Avatar &amp; Frame</text>
+<text x="740" y="356" text-anchor="middle" font-size="10" fill="#9d174d">Avatar di-unlock by badge/level/koin</text>
+<text x="740" y="368" text-anchor="middle" font-size="10" fill="#9d174d">Frame eksklusif dari achievement</text>
+<text x="740" y="380" text-anchor="middle" font-size="10" fill="#9d174d">Simpan → update di leaderboard</text>
+
+<line x1="640" y1="240" x2="580" y2="240" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="608" y="234" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">NO</text>
+<rect x="480" y="218" width="100" height="44" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="530" y="240" text-anchor="middle" font-size="11" font-weight="600" fill="#334155">Profil sama</text>
+<text x="530" y="252" text-anchor="middle" font-size="10" fill="#334155">tidak berubah</text>
+
+<!-- Daily Streak -->
+<rect x="100" y="480" width="680" height="100" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="440" y="502" text-anchor="middle" font-size="14" font-weight="600" fill="#713f12">Daily Streak Reward (Otomatis setiap hari)</text>
+<text x="440" y="520" text-anchor="middle" font-size="11" fill="#713f12">Hari 1: +50 koin  ·  Hari 2: +75  ·  Hari 3: +100  ·  Hari 4: +75  ·  Hari 5: +100  ·  Hari 6: +150  ·  Hari 7: +200</text>
+<text x="440" y="538" text-anchor="middle" font-size="10" fill="#713f12">Setelah hari ke-7 → reset ke hari 1</text>
+<text x="440" y="554" text-anchor="middle" font-size="10" fill="#713f12">Streak putus jika lewat 1 hari tidak login → mulai dari hari 1 lagi</text>
+<text x="440" y="568" text-anchor="middle" font-size="10" fill="#713f12">DailyLoginModal muncul otomatis saat pertama kali login di hari itu</text>
+
+<!-- END -->
+<rect x="300" y="640" width="240" height="44" rx="22" fill="#22c55e" stroke="#16a34a" stroke-width="1.5"/>
+<text x="420" y="667" text-anchor="middle" font-size="14" font-weight="600" fill="#fff">User Flow Selesai</text>
+<text x="420" y="730" text-anchor="middle" font-size="12" fill="#475569">Total: 32 fitur mahasiswa · 16 fitur dosen · 48 fitur keseluruhan</text>
+<rect x="180" y="750" width="480" height="36" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
+<text x="420" y="773" text-anchor="middle" font-size="11" fill="#475569">Semua fase berkesinambungan dan terhubung satu sama lain via Room &amp; Socket.io</text>
+
+</svg>
+</div>
+
+</div><!-- /canvas-area -->
+
+<script>
+function updateTabPanels() {
+  document.querySelectorAll('.diagram').forEach((panel, index) => {
+    const btn = document.getElementById(`tab-btn-${index}`);
+    panel.setAttribute('role', 'tabpanel');
+    if (btn) {
+      panel.setAttribute('aria-labelledby', btn.id);
+    }
+    panel.setAttribute('aria-hidden', panel.classList.contains('active') ? 'false' : 'true');
+  });
+}
+
+function showTab(idx, btn) {
+  document.querySelectorAll('.diagram').forEach(d => {
+    d.classList.remove('active');
+    d.setAttribute('aria-hidden', 'true');
+  });
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected', 'false');
+  });
+  const target = document.getElementById('tab' + idx);
+  if (target) {
+    target.classList.add('active');
+    target.setAttribute('aria-hidden', 'false');
+  }
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected', 'true');
+  btn.focus();
+}
+
+function activateNextTab(direction = 1) {
+  const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+  const activeIndex = tabs.findIndex(t => t.classList.contains('active'));
+  if (activeIndex === -1) return;
+  const nextIndex = (activeIndex + direction + tabs.length) % tabs.length;
+  tabs[nextIndex].click();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateTabPanels();
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('keydown', event => {
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        activateNextTab(1);
+      } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        activateNextTab(-1);
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
+

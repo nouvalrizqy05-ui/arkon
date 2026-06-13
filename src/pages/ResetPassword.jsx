@@ -53,7 +53,7 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-[#080C1A] transition-colors relative">
-      <div className="bg-white dark:bg-white p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-md border border-border dark:border-border relative overflow-hidden">
+      <div className="bg-white dark:bg-[#131b2f] p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-md border border-border dark:border-border relative overflow-hidden">
         <div className="flex flex-col items-center mb-8 mt-4 text-center">
           <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-5 text-primary">
             <Lock className="w-7 h-7" />
@@ -76,7 +76,7 @@ export default function ResetPassword() {
                   required 
                   minLength={6}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-border dark:border-border focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-slate-50 dark:bg-[#080C1A] text-sm font-medium dark:text-foreground" 
+                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-slate-50 dark:bg-slate-800/50 text-sm font-medium text-slate-900 dark:text-white" 
                   placeholder="••••••••" 
                 />
               </div>
@@ -91,7 +91,7 @@ export default function ResetPassword() {
                   type="password" 
                   required 
                   onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-border dark:border-border focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-slate-50 dark:bg-[#080C1A] text-sm font-medium dark:text-foreground" 
+                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-slate-50 dark:bg-slate-800/50 text-sm font-medium text-slate-900 dark:text-white" 
                   placeholder="••••••••" 
                 />
               </div>
@@ -100,14 +100,14 @@ export default function ResetPassword() {
             <button 
               type="submit" 
               disabled={isLoading}
-              className="w-full py-3.5 bg-primary text-foreground rounded-2xl font-bold hover:bg-primary-hover transition-all mt-8 cursor-pointer shadow-lg shadow-primary/30 disabled:opacity-50"
+              className="w-full py-3.5 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover transition-all mt-8 cursor-pointer shadow-lg shadow-primary/30 disabled:opacity-50"
             >
               {isLoading ? 'Memperbarui...' : 'Simpan Password Baru'}
             </button>
           </form>
         ) : (
           <div className="text-center p-8 bg-emerald-500/10 rounded-3xl border border-emerald-500/20">
-            <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 text-foreground shadow-lg shadow-emerald-500/30 animate-bounce">
+            <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white shadow-lg shadow-emerald-500/30 animate-bounce">
               <CheckCircle2 size={32} />
             </div>
             <h2 className="text-emerald-500 font-bold text-lg mb-2">Berhasil!</h2>

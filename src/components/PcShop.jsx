@@ -59,7 +59,7 @@ function SpecBadges({ item }) {
   return (
     <div className="flex flex-wrap gap-1 mt-1.5">
       {badges.filter(Boolean).map((b, i) => (
-        <span key={i} className="px-1.5 py-0.5 bg-white shadow-sm border border-border border border-border rounded text-[9px] font-bold text-secondary">
+        <span key={i} className="px-1.5 py-0.5 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 rounded text-[9px] font-bold text-secondary">
           {b}
         </span>
       ))}
@@ -75,15 +75,15 @@ function PcShopAdmin() {
   const colors = CATEGORY_COLORS[activeCategory];
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50">
+    <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50 dark:bg-slate-950">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
             <ShoppingCart size={24} className="text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-black text-gray-900">Manajemen Hardware (PC Shop)</h2>
-            <p className="text-sm text-gray-500">Kelola ketersediaan komponen, harga koin, dan syarat level untuk mahasiswa.</p>
+            <h2 className="text-2xl font-black text-foreground">Manajemen Hardware (PC Shop)</h2>
+            <p className="text-sm text-secondary">Kelola ketersediaan komponen, harga koin, dan syarat level untuk mahasiswa.</p>
           </div>
         </div>
         <button className="bg-primary text-white font-bold py-2.5 px-5 rounded-xl hover:bg-primary-hover shadow-md flex items-center gap-2">
@@ -101,8 +101,8 @@ function PcShopAdmin() {
               onClick={() => setActiveCategory(cat)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all border shrink-0 ${
                 isActive
-                  ? 'bg-indigo-50 border-indigo-200 text-indigo-700'
-                  : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
+                  ? 'bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200 dark:border-indigo-500/20 text-indigo-700 dark:text-indigo-400'
+                  : 'bg-[var(--bg-surface)] border-border dark:border-slate-800 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               <Icon size={16} /> {CATEGORY_LABELS[cat]}
@@ -111,28 +111,28 @@ function PcShopAdmin() {
         })}
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 shadow-sm overflow-hidden">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Item</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Spesifikasi</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Harga (Koin)</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Min Level</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase text-center">Aksi</th>
+            <tr className="bg-slate-50 dark:bg-slate-900 border-b border-border dark:border-slate-800">
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Item</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Spesifikasi</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Harga (Koin)</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Min Level</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase text-center">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {categoryItems.map(item => (
-              <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+              <tr key={item.id} className="border-b border-border dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                 <td className="p-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center text-xl border border-slate-200">
+                    <div className="w-10 h-10 bg-slate-100 dark:bg-slate-900 rounded-lg flex items-center justify-center text-xl border border-slate-200 dark:border-slate-700">
                       {item.emoji}
                     </div>
                     <div>
-                      <p className="font-bold text-gray-900">{item.name}</p>
-                      <p className="text-[10px] text-gray-500 truncate max-w-[200px]">{item.desc}</p>
+                      <p className="font-bold text-foreground">{item.name}</p>
+                      <p className="text-[10px] text-secondary truncate max-w-[200px]">{item.desc}</p>
                     </div>
                   </div>
                 </td>
@@ -141,14 +141,14 @@ function PcShopAdmin() {
                 </td>
                 <td className="p-4 font-bold text-amber-600">🪙 {item.price.toLocaleString('id-ID')}</td>
                 <td className="p-4">
-                  <span className="px-2 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-bold border border-indigo-100">
+                  <span className="px-2 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 rounded-md text-xs font-bold border border-indigo-100 dark:border-indigo-500/20">
                     Lv. {item.minLevel}
                   </span>
                 </td>
                 <td className="p-4 text-center">
                   <div className="flex justify-center gap-2">
-                    <button className="px-3 py-1.5 text-xs font-bold bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Edit</button>
-                    <button className="px-3 py-1.5 text-xs font-bold bg-red-50 border border-red-200 rounded-lg text-red-600 hover:bg-red-100">Hapus</button>
+                    <button className="px-3 py-1.5 text-xs font-bold bg-[var(--bg-surface)] border border-border dark:border-slate-700 rounded-lg text-secondary hover:bg-slate-50 dark:hover:bg-slate-800">Edit</button>
+                    <button className="px-3 py-1.5 text-xs font-bold bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 rounded-lg text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/20">Hapus</button>
                   </div>
                 </td>
               </tr>
@@ -156,7 +156,7 @@ function PcShopAdmin() {
           </tbody>
         </table>
         {categoryItems.length === 0 && (
-          <div className="p-8 text-center text-gray-500 text-sm">Tidak ada komponen dalam kategori ini.</div>
+          <div className="p-8 text-center text-secondary text-sm">Tidak ada komponen dalam kategori ini.</div>
         )}
       </div>
     </div>
@@ -279,7 +279,7 @@ export default function PcShop({ coins, studentId, token, apiUrl, inventory, onP
               className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all border shrink-0 ${
                 isActive
                   ? catColors.active
-                  : `bg-white/[0.02] border-border text-secondary ${catColors.hover}`
+                  : `bg-[var(--bg-surface)] shadow-sm border-border dark:border-slate-800 text-secondary ${catColors.hover}`
               }`}
             >
               <Icon size={14} />
@@ -344,7 +344,7 @@ export default function PcShop({ coins, studentId, token, apiUrl, inventory, onP
                   <button
                     onClick={() => handleSell(item)}
                     disabled={selling === item.id}
-                    className="w-full py-2 text-xs font-bold bg-white shadow-sm border border-border border border-border text-secondary rounded-lg hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-all flex items-center justify-center gap-1"
+                    className="w-full py-2 text-xs font-bold bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 text-secondary rounded-lg hover:bg-rose-500/10 hover:border-rose-500/30 hover:text-rose-400 transition-all flex items-center justify-center gap-1"
                   >
                     <ArrowLeftRight size={12} /> Jual (70% refund)
                   </button>
@@ -355,7 +355,7 @@ export default function PcShop({ coins, studentId, token, apiUrl, inventory, onP
                     className={`w-full py-2 text-xs font-bold rounded-lg transition-all ${
                       coins >= item.price
                         ? 'bg-indigo-500 text-foreground hover:bg-indigo-400 shadow-md shadow-indigo-500/20'
-                        : 'bg-white shadow-sm border border-border text-secondary cursor-not-allowed'
+                        : 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-secondary cursor-not-allowed'
                     }`}
                   >
                     {buying === item.id ? 'Membeli...' : coins >= item.price ? 'Beli' : 'Koin Kurang'}

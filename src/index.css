@@ -34,10 +34,14 @@
   --shadow-float: 0 20px 60px -10px rgba(5,150,105,.18);
 }
 
-/* Dark mode kept for existing components that use it */
-[data-theme="dark"] {
+/* Dark mode matching Tailwind's class strategy */
+.dark {
   --bg-primary: #080C1A;
+  --bg-surface: #131b2f;
+  --bg-overlay: rgba(8,12,26,.85);
   --text-primary: #f8fafc;
+  --text-soft: #94a3b8;
+  --shadow-card: 0 1px 4px rgba(0,0,0,.3), 0 0 0 1px rgba(255,255,255,.05);
 }
 
 body {
@@ -83,8 +87,8 @@ body {
 
   /* Layered card — main card style across app */
   .card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-surface);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-card);
     transition: box-shadow .2s ease, transform .2s ease;
@@ -93,11 +97,11 @@ body {
 
   /* Elevated card with subtle depth overlay */
   .card-elevated {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-surface);
     border-radius: var(--radius-xl);
     box-shadow: 0 2px 8px rgba(15,23,42,.08), 0 0 0 1px rgba(15,23,42,.04),
-                inset 0 1px 0 rgba(255,255,255,.9);
+                inset 0 1px 0 rgba(255,255,255,.1);
   }
 
   /* Surface — slightly grey bg for page backgrounds */
@@ -153,16 +157,16 @@ body {
 
   /* Input field */
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium outline-none transition-all;
-    background: #f8fafc;
-    color: #0f172a;
+    @apply w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium outline-none transition-all dark:border-slate-700;
+    background: var(--bg-surface);
+    color: var(--text-primary);
   }
   .input-field:focus {
-    background: #ffffff;
+    background: var(--bg-primary);
     border-color: #059669;
     box-shadow: 0 0 0 3px rgba(5,150,105,.1);
   }
-  .input-field::placeholder { color: #94a3b8; }
+  .input-field::placeholder { color: var(--text-soft); }
 
   /* Badge */
   .badge-em {
@@ -220,10 +224,12 @@ body {
     @apply card p-5 flex flex-col gap-1;
   }
   .stat-num {
-    @apply text-2xl font-bold text-foreground;
+    @apply text-2xl font-bold;
+    color: var(--text-primary);
   }
   .stat-label {
-    @apply text-xs font-medium text-secondary uppercase tracking-wide;
+    @apply text-xs font-medium uppercase tracking-wide;
+    color: var(--text-soft);
   }
 
   /* Text gradients */
@@ -293,9 +299,9 @@ body {
 /* ─── Editor prose ───────────────────────────── */
 .editor-content h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: .75rem; color: #059669; }
 .editor-content h2 { font-size: 1.2rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: .75rem; color: #059669; }
-.editor-content p  { font-size: .95rem; margin-bottom: 1rem; line-height: 1.7; color: #1e293b; }
-.editor-content ul { font-size: .95rem; list-style: disc; margin-left: 1.5rem; margin-bottom: 1rem; line-height: 1.7; }
-.editor-content b  { font-weight: 600; background: #fef08a; padding: 1px 4px; border-radius: 3px; }
+.editor-content p  { font-size: .95rem; margin-bottom: 1rem; line-height: 1.7; color: var(--text-primary); }
+.editor-content ul { font-size: .95rem; list-style: disc; margin-left: 1.5rem; margin-bottom: 1rem; line-height: 1.7; color: var(--text-primary); }
+.editor-content b  { font-weight: 600; background: #fef08a; padding: 1px 4px; border-radius: 3px; color: #1e293b; }
 
 /* ─── Room dark UI (kept intact) ────────────── */
 [class*="bg-[#0d1224]"] .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; }

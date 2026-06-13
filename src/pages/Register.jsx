@@ -57,10 +57,9 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-[var(--bg-primary)] flex">
       {/* ── Left decorative panel ───────────────── */}
-      <div className="hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between p-10 relative overflow-hidden"
-        style={{ background: 'linear-gradient(145deg,#ecfdf5 0%,#d1fae5 50%,#a7f3d0 100%)' }}>
+      <div className="hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between p-10 relative overflow-hidden bg-gradient-to-br from-emerald-50 via-emerald-100 to-emerald-200 dark:from-[#05111b] dark:via-[#081a28] dark:to-[#050f18]">
         <div className="absolute top-[-60px] right-[-60px] w-72 h-72 rounded-full"
           style={{ background: 'rgba(5,150,105,.07)' }} />
         <div className="absolute bottom-[-80px] left-[-40px] w-80 h-80 rounded-full"
@@ -68,18 +67,17 @@ export default function Register() {
 
         <div className="relative z-10">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-em"
-              style={{ background: 'linear-gradient(135deg,#059669,#047857)' }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-em bg-gradient-to-br from-emerald-600 to-emerald-800">
               <GraduationCap className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-black tracking-tight text-foreground">
+            <span className="text-xl font-black tracking-tight text-foreground dark:text-white">
               AR<span className="text-gradient-em">KON</span>
             </span>
           </Link>
         </div>
 
         <div className="relative z-10 space-y-4">
-          <h2 className="text-2xl font-bold text-foreground leading-tight">
+          <h2 className="text-2xl font-bold text-foreground dark:text-white leading-tight">
             Mulai perjalanan<br />
             belajar <span className="text-gradient-em">AOK</span> yang menyenangkan
           </h2>
@@ -96,7 +94,7 @@ export default function Register() {
             ].map(text => (
               <div key={text} className="flex items-start gap-2">
                 <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-foreground">{text}</span>
+                <span className="text-sm text-foreground dark:text-slate-300">{text}</span>
               </div>
             ))}
           </div>
@@ -106,7 +104,7 @@ export default function Register() {
       </div>
 
       {/* ── Right panel — form ──────────────────── */}
-      <div className="flex-1 flex items-center justify-center p-6 md:p-10 bg-white overflow-y-auto">
+      <div className="flex-1 flex items-center justify-center p-6 md:p-10 bg-[var(--bg-primary)] overflow-y-auto">
         <div className="w-full max-w-md animate-fade-up">
 
           <Link to="/"
@@ -119,7 +117,7 @@ export default function Register() {
           <p className="text-secondary text-sm mb-7">Bergabung dengan ekosistem ARKON</p>
 
           {/* Role toggle */}
-          <div className="flex p-1 rounded-xl mb-6 border border-slate-200 bg-slate-50"
+          <div className="flex p-1 rounded-xl mb-6 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800"
             role="radiogroup" aria-label="Pilih peran">
             {[
               { id: 'mahasiswa', label: 'Mahasiswa', Icon: GraduationCap },
@@ -128,7 +126,7 @@ export default function Register() {
               <button key={id} type="button" role="radio" aria-checked={role === id}
                 onClick={() => setRole(id)}
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-lg transition-all ${
-                  role === id ? 'bg-white text-primary shadow-sm border border-slate-200' : 'text-secondary hover:text-foreground'
+                  role === id ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-slate-200 dark:border-slate-600' : 'text-secondary hover:text-foreground dark:hover:text-white'
                 }`}>
                 <Icon size={16} aria-hidden="true" /> {label}
               </button>

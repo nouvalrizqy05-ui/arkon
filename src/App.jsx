@@ -30,7 +30,7 @@ import AccessibilityWidget from './components/AccessibilityWidget';
 // --- LOADING FALLBACK (Professional Skeleton) ---
 function PageLoader() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[var(--bg-primary)]">
       <div className="flex flex-col items-center gap-5">
         <div className="relative">
           <div className="w-14 h-14 rounded-2xl bg-primary-soft flex items-center justify-center border border-primary/20">

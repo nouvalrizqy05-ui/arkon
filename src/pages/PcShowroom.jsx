@@ -14,7 +14,7 @@ function ScoreBar({ icon, label, score, color }) {
   return (
     <div className="flex items-center gap-2">
       <span className="text-[10px] text-secondary w-6">{icon}</span>
-      <div className="flex-1 h-1.5 bg-white shadow-sm border border-border rounded-full overflow-hidden">
+      <div className="flex-1 h-1.5 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-full overflow-hidden">
         <div className={`h-full ${color} rounded-full`} style={{ width: `${score}%` }} />
       </div>
       <span className="text-[10px] font-bold text-secondary w-6 text-right">{score}</span>
@@ -95,9 +95,9 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
   };
 
   return (
-    <div className="bg-white/[0.03] border border-border rounded-2xl overflow-hidden hover:border-border transition-all">
+    <div className="bg-[var(--bg-surface)] dark:bg-white/[0.03] border border-border dark:border-slate-800 rounded-2xl overflow-hidden hover:border-border transition-all">
       {/* Header */}
-      <div className="p-4 flex items-center gap-3 border-b border-border">
+      <div className="p-4 flex items-center gap-3 border-b border-border dark:border-slate-800">
         <img src={`https://ui-avatars.com/api/?name=${build.builder_name}&background=6366f1&color=fff&size=36`} className="w-9 h-9 rounded-full" alt="" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-bold text-foreground truncate">{build.build_name}</p>
@@ -109,7 +109,7 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
       {/* Components */}
       <div className="px-4 py-3 flex flex-wrap gap-1.5">
         {Object.entries(components).map(([cat, comp]) => (
-          <span key={cat} className="px-2 py-1 bg-white dark:bg-slate-800 shadow-sm border border-border rounded-lg text-[10px] font-bold text-secondary">
+          <span key={cat} className="px-2 py-1 bg-slate-50 dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 rounded-lg text-[10px] font-bold text-secondary">
             {CATEGORY_EMOJIS[cat]} {comp.name || cat}
           </span>
         ))}
@@ -125,14 +125,14 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
       )}
 
       {/* Actions */}
-      <div className="px-4 py-3 border-t border-border flex items-center gap-2">
-        <button onClick={() => handleReact('like')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${myLike ? 'bg-blue-500/20 text-blue-600 border border-blue-500/30' : 'bg-white dark:bg-slate-800 shadow-sm border border-border text-secondary hover:bg-blue-500/10 hover:text-blue-600'}`} aria-label="ThumbsUp">
+      <div className="px-4 py-3 border-t border-border dark:border-slate-800 flex items-center gap-2">
+        <button onClick={() => handleReact('like')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${myLike ? 'bg-blue-500/20 text-blue-600 border border-blue-500/30' : 'bg-slate-50 dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:bg-blue-500/10 hover:text-blue-600'}`} aria-label="ThumbsUp">
           <ThumbsUp size={13} /> {build.like_count || 0}
         </button>
-        <button onClick={() => handleReact('fire')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${myFire ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30' : 'bg-white dark:bg-slate-800 shadow-sm border border-border text-secondary hover:bg-orange-500/10 hover:text-orange-400'}`} aria-label="Flame">
+        <button onClick={() => handleReact('fire')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${myFire ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30' : 'bg-slate-50 dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:bg-orange-500/10 hover:text-orange-400'}`} aria-label="Flame">
           <Flame size={13} /> {build.fire_count || 0}
         </button>
-        <button onClick={() => setShowComments(!showComments)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-800 shadow-sm border border-border text-secondary hover:bg-slate-50 transition-all ml-auto" aria-label="MessageCircle">
+        <button onClick={() => setShowComments(!showComments)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-50 dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:bg-slate-100 dark:hover:bg-slate-700 transition-all ml-auto" aria-label="MessageCircle">
           <MessageCircle size={13} /> {build.comment_count || comments.length}
         </button>
       </div>
@@ -174,12 +174,12 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
 
       {/* Comments */}
       {showComments && (
-        <div className="px-4 pb-4 border-t border-border pt-3 space-y-2 animate-in fade-in duration-200">
+        <div className="px-4 pb-4 border-t border-border dark:border-slate-800 pt-3 space-y-2 animate-in fade-in duration-200">
           {comments.length === 0 && <p className="text-[10px] text-secondary italic text-center py-2">Belum ada komentar</p>}
           {comments.map(c => (
             <div key={c.id} className="flex gap-2 group">
               <img src={`https://ui-avatars.com/api/?name=${c.commenter_name || 'U'}&background=374151&color=fff&size=24`} className="w-6 h-6 rounded-full shrink-0 mt-0.5" alt="" />
-              <div className="flex-1 bg-white/[0.03] border border-border rounded-xl px-3 py-2">
+              <div className="flex-1 bg-slate-50 dark:bg-white/[0.03] border border-border dark:border-slate-800 rounded-xl px-3 py-2">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] font-bold text-secondary">{c.commenter_name || 'User'}</span>
                   <span className="text-[10px] text-secondary">{c.created_at ? new Date(c.created_at).toLocaleDateString('id-ID') : ''}</span>
@@ -192,7 +192,7 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
             </div>
           ))}
           <div className="flex gap-2 mt-2">
-            <input type="text" value={commentText} onChange={e => setCommentText(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleComment()} placeholder="Tulis komentar..." maxLength={300} className="flex-1 bg-white dark:bg-slate-800 shadow-sm border border-border rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-secondary focus:outline-none focus:border-indigo-500/50" />
+            <input type="text" value={commentText} onChange={e => setCommentText(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleComment()} placeholder="Tulis komentar..." maxLength={300} className="flex-1 bg-slate-50 dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-secondary focus:outline-none focus:border-indigo-500/50" />
             <button onClick={handleComment} disabled={sending || !commentText.trim()} className="p-2 bg-indigo-500 text-white rounded-xl hover:bg-indigo-400 transition disabled:opacity-30"><Send size={14} /></button>
           </div>
         </div>
@@ -244,13 +244,13 @@ export default function PcShowroom({ embeddedMode = false, studentId: propStuden
   }, [page]);
 
   return (
-    <div className="min-h-screen bg-muted dark:bg-slate-950 text-foreground dark:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-foreground">
       {/* Header */}
-      <div className="sticky top-0 z-30 bg-muted/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-border dark:border-slate-800">
+      <div className="sticky top-0 z-30 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-border dark:border-slate-800">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {!embeddedMode && (
-              <button onClick={() => navigate(-1)} className="p-2 bg-white dark:bg-slate-800 shadow-sm border border-border rounded-xl text-secondary hover:text-foreground transition" aria-label="ArrowLeft">
+              <button onClick={() => navigate(-1)} className="p-2 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 rounded-xl text-secondary hover:text-foreground transition" aria-label="ArrowLeft">
                 <ArrowLeft size={18} />
               </button>
             )}
@@ -261,13 +261,13 @@ export default function PcShowroom({ embeddedMode = false, studentId: propStuden
           </div>
           {/* Sort */}
           <div className="relative">
-            <button onClick={() => setShowSort(!showSort)} className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white dark:bg-slate-900 border border-border dark:border-slate-800 rounded-xl text-sm font-bold text-foreground dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition shadow-sm" aria-label="Filter">
+            <button onClick={() => setShowSort(!showSort)} className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-[var(--bg-surface)] border border-border dark:border-slate-800 rounded-xl text-sm font-bold text-foreground hover:bg-slate-50 dark:hover:bg-slate-800 transition shadow-sm" aria-label="Filter">
               <Filter size={14} /> {SORT_OPTIONS.find(s => s.id === sortBy)?.label} <ChevronDown size={12} />
             </button>
             {showSort && (
-              <div className="absolute right-0 top-full mt-2 bg-[#1a1f35] border border-border rounded-xl shadow-2xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-150 min-w-[180px]">
+              <div className="absolute right-0 top-full mt-2 bg-[var(--bg-surface)] border border-border dark:border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-150 min-w-[180px]">
                 {SORT_OPTIONS.map(opt => (
-                  <button key={opt.id} onClick={() => { setSortBy(opt.id); setShowSort(false); }} className={`w-full text-left px-4 py-2.5 text-xs font-bold transition ${sortBy === opt.id ? 'bg-indigo-100 text-indigo-600' : 'text-secondary hover:bg-white shadow-sm border border-border hover:text-foreground'}`}>
+                  <button key={opt.id} onClick={() => { setSortBy(opt.id); setShowSort(false); }} className={`w-full text-left px-4 py-2.5 text-xs font-bold transition ${sortBy === opt.id ? 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400' : 'text-secondary hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-foreground'}`}>
                     {opt.label}
                   </button>
                 ))}
@@ -285,7 +285,7 @@ export default function PcShowroom({ embeddedMode = false, studentId: propStuden
           </div>
         ) : builds.length === 0 ? (
           <div className="text-center py-20">
-            <div className="w-20 h-20 bg-white shadow-sm border border-border rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-20 h-20 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Gauge size={40} className="text-secondary" />
             </div>
             <h3 className="text-lg font-bold text-secondary mb-2">Belum Ada Build</h3>
@@ -302,7 +302,7 @@ export default function PcShowroom({ embeddedMode = false, studentId: propStuden
               <div className="mt-8 flex justify-center">
                 <button 
                   onClick={() => setPage(p => p + 1)}
-                  className="px-6 py-2 bg-white shadow-sm border border-border hover:bg-white shadow-sm border border-border text-secondary border border-border rounded-xl transition"
+                  className="px-6 py-2 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-secondary rounded-xl transition hover:bg-slate-50 dark:hover:bg-slate-800"
                 >
                   Load More
                 </button>

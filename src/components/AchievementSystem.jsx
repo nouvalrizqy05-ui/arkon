@@ -191,13 +191,13 @@ export function BadgeCard({ badge, unlocked = false, size = 'md' }) {
       <div className={`${sizeClasses} rounded-2xl flex items-center justify-center transition-all duration-300
         ${unlocked 
           ? `bg-gradient-to-br ${badge.color} shadow-lg shadow-current/20 ring-2 ring-white/50` 
-          : 'bg-gray-100 border-2 border-dashed border-gray-300'
+          : 'bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-slate-300 dark:border-slate-700'
         }`}
       >
         <Icon size={iconSize} className={unlocked ? 'text-foreground drop-shadow-md' : 'text-foreground'} />
       </div>
       {size !== 'sm' && (
-        <span className={`text-[10px] font-bold text-center leading-tight max-w-[80px] ${unlocked ? 'text-gray-700' : 'text-secondary'}`}>
+        <span className={`text-[10px] font-bold text-center leading-tight max-w-[80px] ${unlocked ? 'text-foreground' : 'text-secondary'}`}>
           {badge.name}
         </span>
       )}
@@ -208,7 +208,7 @@ export function BadgeCard({ badge, unlocked = false, size = 'md' }) {
 // Profile Badges Panel (for ClassroomWorkspace dashboard)
 export function ProfileBadgesPanel({ studentName, unlockedBadges, levelInfo }) {
   return (
-    <div className="bg-white rounded-3xl border border-border shadow-sm p-6 mb-6">
+    <div className="bg-[var(--bg-surface)] rounded-3xl border border-border dark:border-slate-800 shadow-sm p-6 mb-6">
       <div className="flex items-start gap-5">
         {/* Avatar & Level */}
         <div className="relative shrink-0">
@@ -228,7 +228,7 @@ export function ProfileBadgesPanel({ studentName, unlockedBadges, levelInfo }) {
           <p className="text-xs text-secondary font-bold mb-3">{levelInfo.name} • {levelInfo.totalXP} XP</p>
           
           {/* XP Progress Bar */}
-          <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-primary to-primary rounded-full transition-all duration-700 ease-out"
               style={{ width: `${levelInfo.xpProgress * 100}%` }}
@@ -241,12 +241,12 @@ export function ProfileBadgesPanel({ studentName, unlockedBadges, levelInfo }) {
       </div>
 
       {/* Badge Grid */}
-      <div className="mt-5 pt-5 border-t border-border">
+      <div className="mt-5 pt-5 border-t border-border dark:border-slate-800">
         <div className="flex items-center justify-between mb-3">
           <h4 className="text-xs font-black text-foreground uppercase tracking-wider flex items-center gap-1.5">
             <Trophy size={14} className="text-amber-500" /> Achievement Badges
           </h4>
-          <span className="text-[10px] font-bold text-secondary bg-gray-100 px-2 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold text-secondary bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">
             {unlockedBadges.length}/{ALL_BADGE_IDS.length}
           </span>
         </div>
@@ -266,7 +266,7 @@ export function AchievementWall({ unlockedBadges, levelInfo }) {
     <div className="space-y-8 pb-12">
       {/* Overview Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white shadow-sm border border-border border border-border rounded-3xl p-6 flex items-center gap-4">
+        <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-3xl p-6 flex items-center gap-4">
           <div className="w-14 h-14 bg-amber-500/20 rounded-2xl flex items-center justify-center text-amber-600">
             <Trophy size={32} />
           </div>
@@ -275,7 +275,7 @@ export function AchievementWall({ unlockedBadges, levelInfo }) {
             <p className="text-2xl font-black text-foreground">{levelInfo.totalXP} XP</p>
           </div>
         </div>
-        <div className="bg-white shadow-sm border border-border border border-border rounded-3xl p-6 flex items-center gap-4">
+        <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-3xl p-6 flex items-center gap-4">
           <div className="w-14 h-14 bg-primary-light rounded-2xl flex items-center justify-center text-primary">
             <Crown size={32} />
           </div>
@@ -284,7 +284,7 @@ export function AchievementWall({ unlockedBadges, levelInfo }) {
             <p className="text-2xl font-black text-foreground">{levelInfo.name}</p>
           </div>
         </div>
-        <div className="bg-white shadow-sm border border-border border border-border rounded-3xl p-6 flex items-center gap-4">
+        <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-3xl p-6 flex items-center gap-4">
           <div className="w-14 h-14 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-600">
             <Award size={32} />
           </div>
@@ -307,8 +307,8 @@ export function AchievementWall({ unlockedBadges, levelInfo }) {
               key={id}
               className={`relative overflow-hidden rounded-3xl border transition-all duration-500 p-6 flex flex-col h-full
                 ${isUnlocked 
-                  ? 'bg-white shadow-sm border border-border border-border shadow-xl' 
-                  : 'bg-white shadow-sm border border-border border-border grayscale opacity-60'
+                  ? 'bg-[var(--bg-surface)] shadow-sm border-border dark:border-slate-800 shadow-xl' 
+                  : 'bg-[var(--bg-surface)] shadow-sm border-border dark:border-slate-800 grayscale opacity-60'
                 }`}
             >
               {/* Background Glow */}
@@ -319,11 +319,11 @@ export function AchievementWall({ unlockedBadges, levelInfo }) {
               <div className="flex items-start justify-between mb-6">
                 <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${isUnlocked ? badge.color : 'from-gray-700 to-gray-800'} flex items-center justify-center shadow-lg relative group-hover:scale-110 transition-transform duration-500`}>
                   <Icon size={32} className="text-foreground" />
-                  {isUnlocked && <div className="absolute inset-0 bg-white shadow-sm border border-border rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>}
+                  {isUnlocked && <div className="absolute inset-0 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>}
                 </div>
                 <div className="text-right">
                   <span className={`text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider
-                    ${isUnlocked ? 'bg-emerald-500/20 text-emerald-600 border border-emerald-500/30' : 'bg-white shadow-sm border border-border text-secondary border border-border'}`}>
+                    ${isUnlocked ? 'bg-emerald-500/20 text-emerald-600 border border-emerald-500/30' : 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-secondary'}`}>
                     {isUnlocked ? 'Unlocked' : 'Locked'}
                   </span>
                   <div className="mt-2 flex items-center justify-end gap-1">
@@ -338,7 +338,7 @@ export function AchievementWall({ unlockedBadges, levelInfo }) {
                 <p className={`text-sm leading-relaxed mb-4 transition-colors ${isUnlocked ? 'text-secondary' : 'text-secondary'}`}>{badge.desc}</p>
               </div>
 
-              <div className="mt-auto pt-4 border-t border-border">
+              <div className="mt-auto pt-4 border-t border-border dark:border-slate-800">
                 <div className="flex justify-between items-center mb-2">
                   <p className="text-[10px] font-black text-secondary uppercase tracking-widest">Task Requirement</p>
                   <span className={`text-[9px] font-bold ${isUnlocked ? 'text-emerald-600' : 'text-secondary'}`}>
@@ -346,8 +346,8 @@ export function AchievementWall({ unlockedBadges, levelInfo }) {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center border transition-colors ${isUnlocked ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-600' : 'border-border text-secondary'}`}>
-                    {isUnlocked ? <Check size={10} /> : <div className="w-1 h-1 bg-white shadow-sm border border-border rounded-full"></div>}
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center border transition-colors ${isUnlocked ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-600' : 'border-border dark:border-slate-800 text-secondary'}`}>
+                    {isUnlocked ? <Check size={10} /> : <div className="w-1 h-1 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-full"></div>}
                   </div>
                   <p className={`text-xs font-medium transition-colors ${isUnlocked ? 'text-secondary' : 'text-secondary'}`}>
                     Selesaikan: {badge.desc}
@@ -355,7 +355,7 @@ export function AchievementWall({ unlockedBadges, levelInfo }) {
                 </div>
                 {/* Progress Bar Mini */}
                 {!isUnlocked && (
-                  <div className="mt-3 w-full bg-white shadow-sm border border-border rounded-full h-1 overflow-hidden">
+                  <div className="mt-3 w-full bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-full h-1 overflow-hidden">
                     <div className="w-0 h-full bg-emerald-500/30 rounded-full" />
                   </div>
                 )}
@@ -375,7 +375,7 @@ export function AchievementToast({ badge, onDismiss }) {
 
   return (
     <div className="fixed bottom-6 right-6 z-[9999] animate-[slideUp_0.5s_ease-out]">
-      <div className="bg-white rounded-2xl shadow-2xl border border-border p-5 flex items-center gap-4 max-w-sm">
+      <div className="bg-[var(--bg-surface)] rounded-2xl shadow-2xl border border-border dark:border-slate-800 p-5 flex items-center gap-4 max-w-sm">
         <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${badge.color} flex items-center justify-center shrink-0 shadow-lg`}>
           <Icon size={24} className="text-foreground" />
         </div>
@@ -386,7 +386,7 @@ export function AchievementToast({ badge, onDismiss }) {
           <p className="font-black text-foreground text-sm">{badge.name}</p>
           <p className="text-[11px] text-secondary">{badge.desc} (+{badge.xp} XP)</p>
         </div>
-        <button onClick={onDismiss} className="p-1 text-secondary hover:text-gray-600 transition shrink-0">
+        <button onClick={onDismiss} className="p-1 text-secondary hover:text-foreground transition shrink-0">
           <X size={16} />
         </button>
       </div>

@@ -10,10 +10,10 @@ const WORK_TYPE_LABELS = {
 };
 
 const REVIEW_STATUS = {
-  pending: { label: 'Belum Diperiksa', color: 'bg-gray-100 text-gray-600', icon: Clock },
-  graded: { label: 'Sudah Dinilai', color: 'bg-blue-100 text-blue-700', icon: Star },
-  revision_needed: { label: 'Perlu Revisi', color: 'bg-amber-100 text-amber-700', icon: RotateCcw },
-  approved: { label: 'Disetujui', color: 'bg-emerald-100 text-emerald-700', icon: ThumbsUp },
+  pending: { label: 'Belum Diperiksa', color: 'bg-slate-100 dark:bg-slate-800 text-secondary', icon: Clock },
+  graded: { label: 'Sudah Dinilai', color: 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400', icon: Star },
+  revision_needed: { label: 'Perlu Revisi', color: 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400', icon: RotateCcw },
+  approved: { label: 'Disetujui', color: 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400', icon: ThumbsUp },
 };
 
 /**
@@ -112,23 +112,23 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
   // ─── DETAIL VIEW (Tinker This) ─────────
   if (selectedWork) {
     return (
-      <div className="h-full flex flex-col bg-gray-50 overflow-hidden">
+      <div className="h-full flex flex-col bg-slate-50 dark:bg-slate-950 overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 bg-[var(--bg-surface)] border-b border-border dark:border-slate-800 shrink-0">
           <div className="flex items-center gap-3">
-            <button onClick={handleBack} className="p-2 hover:bg-gray-100 rounded-xl transition" aria-label="ArrowLeft">
-              <ArrowLeft size={18} className="text-gray-600" />
+            <button onClick={handleBack} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition" aria-label="ArrowLeft">
+              <ArrowLeft size={18} className="text-secondary" />
             </button>
             <div>
-              <h3 className="font-bold text-gray-900">{selectedWork.student_name || 'Mahasiswa'}</h3>
-              <p className="text-xs text-gray-500">
+              <h3 className="font-bold text-foreground">{selectedWork.student_name || 'Mahasiswa'}</h3>
+              <p className="text-xs text-secondary">
                 {selectedWork.activity_title || 'Free Build'} • 
                 {selectedWork.is_submitted ? ' ✅ Submitted' : ' ⏳ In Progress'}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-[10px] font-bold">
+            <span className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 rounded-lg text-[10px] font-bold">
               <Lock size={12} /> Tinker Mode Active
             </span>
             {(() => {
@@ -142,9 +142,9 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
             })()}
             {selectedWork.grade !== null && selectedWork.grade !== undefined && (
               <span className={`px-3 py-1.5 rounded-lg text-sm font-black ${
-                selectedWork.grade >= 80 ? 'bg-emerald-100 text-emerald-700' :
-                selectedWork.grade >= 60 ? 'bg-amber-100 text-amber-700' :
-                'bg-red-100 text-red-700'
+                selectedWork.grade >= 80 ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400' :
+                selectedWork.grade >= 60 ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400' :
+                'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400'
               }`}>Nilai: {selectedWork.grade}</span>
             )}
           </div>
@@ -154,14 +154,14 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
         <div className="flex-1 flex overflow-hidden">
           {/* Work Data Visualization */}
           <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-4">
-              <h4 className="text-sm font-black text-gray-800 uppercase tracking-wider mb-4">Data Karya</h4>
+            <div className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 p-6 mb-4">
+              <h4 className="text-sm font-black text-foreground uppercase tracking-wider mb-4">Data Karya</h4>
               {selectedWork.work_data && Object.keys(selectedWork.work_data).length > 0 ? (
                 <div className="space-y-3">
                   {Object.entries(selectedWork.work_data).map(([key, value]) => (
-                    <div key={key} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wider min-w-[100px]">{key}</span>
-                      <span className="text-sm text-gray-800 font-medium">
+                    <div key={key} className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-xl">
+                      <span className="text-xs font-bold text-secondary uppercase tracking-wider min-w-[100px]">{key}</span>
+                      <span className="text-sm text-foreground font-medium">
                         {typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)}
                       </span>
                     </div>
@@ -174,13 +174,13 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
 
             {/* Score Breakdown */}
             {selectedWork.score_breakdown && Object.keys(selectedWork.score_breakdown).length > 0 && (
-              <div className="bg-white rounded-2xl border border-gray-200 p-6">
-                <h4 className="text-sm font-black text-gray-800 uppercase tracking-wider mb-4">Breakdown Skor</h4>
+              <div className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 p-6">
+                <h4 className="text-sm font-black text-foreground uppercase tracking-wider mb-4">Breakdown Skor</h4>
                 <div className="grid grid-cols-2 gap-3">
                   {Object.entries(selectedWork.score_breakdown).map(([key, value]) => (
-                    <div key={key} className="bg-indigo-50 rounded-xl p-4 text-center">
-                      <p className="text-2xl font-black text-indigo-600">{value}</p>
-                      <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider mt-1">{key}</p>
+                    <div key={key} className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-4 text-center">
+                      <p className="text-2xl font-black text-indigo-600 dark:text-indigo-400">{value}</p>
+                      <p className="text-[10px] font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-wider mt-1">{key}</p>
                     </div>
                   ))}
                 </div>
@@ -189,32 +189,32 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
           </div>
 
           {/* Notes Panel (Right Side) */}
-          <div className="w-[360px] border-l border-gray-200 bg-white shrink-0 hidden lg:flex flex-col">
+          <div className="w-[360px] border-l border-border dark:border-slate-800 bg-[var(--bg-surface)] shrink-0 hidden lg:flex flex-col">
             {/* Grading Panel */}
-            <div className="p-5 border-b border-gray-200">
-              <h4 className="text-sm font-black text-gray-800 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <div className="p-5 border-b border-border dark:border-slate-800">
+              <h4 className="text-sm font-black text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
                 <Star size={14} className="text-amber-500" /> Penilaian Dosen
               </h4>
               <div className="space-y-3">
                 <div>
-                  <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Nilai (0-100)</label>
+                  <label className="text-[10px] font-bold text-secondary uppercase tracking-wider">Nilai (0-100)</label>
                   <input
                     type="number"
                     min="0" max="100"
                     value={gradeInput}
                     onChange={e => setGradeInput(e.target.value)}
                     placeholder={selectedWork.grade ?? 'Belum dinilai'}
-                    className="w-full mt-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full mt-1 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-border dark:border-slate-700 rounded-xl text-sm font-bold text-foreground focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Catatan / Feedback</label>
+                  <label className="text-[10px] font-bold text-secondary uppercase tracking-wider">Catatan / Feedback</label>
                   <textarea
                     rows={3}
                     value={feedbackInput}
                     onChange={e => setFeedbackInput(e.target.value)}
                     placeholder={selectedWork.feedback || 'Tulis feedback untuk mahasiswa...'}
-                    className="w-full mt-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 resize-none focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full mt-1 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-border dark:border-slate-700 rounded-xl text-sm text-foreground resize-none focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
                   />
                 </div>
                 <div className="flex gap-2">
@@ -262,19 +262,19 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
 
   // ─── LIST VIEW ─────────
   return (
-    <div className="h-full overflow-y-auto bg-gray-50 custom-scrollbar">
+    <div className="h-full overflow-y-auto bg-slate-50 dark:bg-slate-950 custom-scrollbar">
       <div className="max-w-5xl mx-auto p-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-black text-gray-900 flex items-center gap-3">
+            <h2 className="text-2xl font-black text-foreground flex items-center gap-3">
               <Eye className="text-emerald-500" size={28} /> Karya Mahasiswa
             </h2>
-            <p className="text-sm text-gray-500 mt-1">Lihat, review, dan berikan feedback pada karya mahasiswa.</p>
+            <p className="text-sm text-secondary mt-1">Lihat, review, dan berikan feedback pada karya mahasiswa.</p>
           </div>
         </div>
 
         {/* Filter */}
-        <div className="flex items-center gap-2 mb-6 bg-white rounded-xl p-1.5 border border-gray-200 shadow-sm w-fit flex-wrap">
+        <div className="flex items-center gap-2 mb-6 bg-[var(--bg-surface)] rounded-xl p-1.5 border border-border dark:border-slate-800 shadow-sm w-fit flex-wrap">
           {[
             { id: 'all', label: 'Semua' },
             { id: 'submitted', label: 'Submitted' },
@@ -287,7 +287,7 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
               key={tab.id}
               onClick={() => setFilter(tab.id)}
               className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-                filter === tab.id ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'
+                filter === tab.id ? 'bg-indigo-600 text-white shadow-md' : 'text-secondary hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               {tab.label}
@@ -299,9 +299,9 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
         {isLoading ? (
           <div className="text-center py-16 text-secondary">Memuat karya mahasiswa...</div>
         ) : filteredWorks.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
+          <div className="text-center py-20 bg-[var(--bg-surface)] rounded-2xl border border-dashed border-border dark:border-slate-700">
             <Eye size={48} className="mx-auto text-foreground mb-4" />
-            <h3 className="text-lg font-bold text-gray-700 mb-2">Belum Ada Karya</h3>
+            <h3 className="text-lg font-bold text-foreground mb-2">Belum Ada Karya</h3>
             <p className="text-sm text-secondary">Mahasiswa belum mengerjakan aktivitas apapun di room ini.</p>
           </div>
         ) : (
@@ -314,7 +314,7 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.03 }}
-                  className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition-all group"
+                  className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 p-5 hover:border-primary/30 hover:shadow-md transition-all group"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -323,7 +323,7 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <p className="font-bold text-gray-900">{work.student_name || 'Mahasiswa'}</p>
+                          <p className="font-bold text-foreground">{work.student_name || 'Mahasiswa'}</p>
                           {work.nim && <span className="text-[10px] text-secondary font-mono">{work.nim}</span>}
                         </div>
                         <div className="flex items-center gap-3 mt-1">
@@ -350,8 +350,8 @@ export default function StudentWorkViewer({ roomId, token, apiUrl, userId, userN
                       })()}
                       {work.grade !== null && work.grade !== undefined && (
                         <span className={`px-2.5 py-1 rounded-lg text-xs font-black ${
-                          work.grade >= 80 ? 'bg-emerald-100 text-emerald-700' :
-                          work.grade >= 60 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+                          work.grade >= 80 ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400' :
+                          work.grade >= 60 ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400' : 'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400'
                         }`}>{work.grade}</span>
                       )}
                       {work.is_submitted ? (

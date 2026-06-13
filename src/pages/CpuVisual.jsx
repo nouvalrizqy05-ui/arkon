@@ -283,9 +283,9 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
   };
 
   return (
-    <div className={`h-full overflow-y-auto custom-scrollbar p-6 bg-muted`} id="cpu-simulator-container">
-      <div className="bg-white border border-border rounded-3xl p-6 md:p-8 shadow-sm">
-        <div className="flex flex-col xl:flex-row xl:items-center justify-between border-b border-border pb-5 mb-5 gap-3">
+    <div className={`h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50 dark:bg-slate-950`} id="cpu-simulator-container">
+      <div className="bg-[var(--bg-surface)] border border-border dark:border-slate-800 rounded-3xl p-6 md:p-8 shadow-sm">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between border-b border-border dark:border-slate-800 pb-5 mb-5 gap-3">
           <div>
             <h2 className="text-xl font-black text-foreground flex items-center gap-2">
               <Landmark className="w-5 h-5 text-indigo-600 animate-pulse" />
@@ -295,17 +295,17 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
               Rangkuman fungsional sasis mesin komputer model Stallings Chapter 3
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2 bg-white shadow-sm border border-border border border-border p-1.5 rounded-xl self-start xl:self-auto">
+          <div className="flex flex-wrap items-center gap-2 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 p-1.5 rounded-xl self-start xl:self-auto">
             <span className="text-[10px] text-secondary font-bold px-2">Preset Program:</span>
             <button
               onClick={() => loadPreset(1)}
-              className="px-3 py-1.5 text-xs font-black font-mono rounded-lg bg-indigo-600 hover:bg-indigo-500 text-foreground transition-all cursor-pointer shadow-sm"
+              className="px-3 py-1.5 text-xs font-black font-mono rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-all cursor-pointer shadow-sm"
             >
               Addition (X+Y)
             </button>
             <button
               onClick={() => loadPreset(2)}
-              className="px-3 py-1.5 text-xs font-black font-mono rounded-lg bg-pink-500 hover:bg-pink-400 text-foreground transition-all cursor-pointer shadow-sm"
+              className="px-3 py-1.5 text-xs font-black font-mono rounded-lg bg-pink-500 hover:bg-pink-400 text-white transition-all cursor-pointer shadow-sm"
             >
               Subtraction (A-B)
             </button>
@@ -314,8 +314,8 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Memory Board Frame */}
-          <div className="lg:col-span-4 bg-white shadow-sm border border-border border border-border rounded-2xl p-4 space-y-3 shadow-inner">
-            <div className="flex items-center justify-between text-xs font-bold text-secondary pb-2 border-b border-border">
+          <div className="lg:col-span-4 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-2xl p-4 space-y-3 shadow-inner">
+            <div className="flex items-center justify-between text-xs font-bold text-secondary pb-2 border-b border-border dark:border-slate-800">
               <span className="flex items-center gap-1"><Database className="w-3.5 h-3.5 text-indigo-600" /> RAM (Main Memory)</span>
               <span className="text-[10px] text-secondary font-bold">Ubah Nilai Bebas</span>
             </div>
@@ -330,15 +330,15 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
                     key={cell.address}
                     className={`flex items-center justify-between p-2.5 rounded-xl transition-all border ${
                       isActive 
-                        ? "bg-indigo-100 border-indigo-500/50 text-indigo-700 shadow-sm" 
+                        ? "bg-indigo-100 dark:bg-indigo-500/20 border-indigo-500/50 text-indigo-700 dark:text-indigo-400 shadow-sm" 
                         : isPCPoint 
-                          ? "bg-pink-500/20 border-pink-500/50 text-pink-300 shadow-sm" 
-                          : "bg-white shadow-sm border border-border border-border text-secondary shadow-sm"
+                          ? "bg-pink-500/20 border-pink-500/50 text-pink-500 dark:text-pink-300 shadow-sm" 
+                          : "bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-secondary"
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] text-secondary font-bold">{cell.address}</span>
-                      <span className={`px-2 py-0.5 rounded-md text-[9px] font-black ${isPCPoint ? "bg-pink-500/30 text-pink-300" : "bg-white shadow-sm border border-border text-secondary"}`}>
+                      <span className={`px-2 py-0.5 rounded-md text-[9px] font-black ${isPCPoint ? "bg-pink-500/30 text-pink-500 dark:text-pink-300" : "bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 text-secondary"}`}>
                         {cell.label || "Data"}
                       </span>
                     </div>
@@ -351,7 +351,7 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
                           type="number"
                           value={cell.value}
                           onChange={(e) => updateMemoryValue(idx, e.target.value)}
-                          className="w-12 bg-black/40 text-foreground border border-border text-center rounded-lg py-1 text-xs font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                          className="w-12 bg-black/5 dark:bg-black/40 text-foreground border border-border dark:border-slate-700 text-center rounded-lg py-1 text-xs font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                         />
                       )}
                     </div>
@@ -367,15 +367,15 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
 
           {/* Core CPU Registers & Execution visualization schematic */}
           <div className="lg:col-span-8 space-y-4">
-            <div className="bg-white shadow-sm border border-border border border-border rounded-2xl p-5 relative overflow-hidden shadow-inner">
+            <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-2xl p-5 relative overflow-hidden shadow-inner">
               {/* Stage banner indicator */}
               <div className="absolute top-4 right-4 flex items-center gap-1">
                 <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-black ${
-                  stage === "FETCH" ? "bg-indigo-100 text-indigo-600 border border-indigo-500/30" :
-                  stage === "DECODE" ? "bg-amber-500/20 text-amber-600 border border-amber-500/30" :
-                  stage === "EXECUTE" ? "bg-emerald-500/20 text-emerald-600 border border-emerald-500/30" :
-                  stage === "HALTED" ? "bg-rose-500/20 text-rose-600 border border-rose-500/30" :
-                  "bg-white shadow-sm border border-border text-secondary"
+                  stage === "FETCH" ? "bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30" :
+                  stage === "DECODE" ? "bg-amber-500/20 text-amber-600 dark:text-amber-500 border border-amber-500/30" :
+                  stage === "EXECUTE" ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-500 border border-emerald-500/30" :
+                  stage === "HALTED" ? "bg-rose-500/20 text-rose-600 dark:text-rose-500 border border-rose-500/30" :
+                  "bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 text-secondary"
                 }`}>
                   STAGE: {stage}
                 </span>
@@ -387,80 +387,80 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-2 relative z-10">
                 
                 {/* Control Unit Sub-Section */}
-                <div className="border border-border bg-black/20 p-3.5 rounded-xl space-y-3 shadow-sm">
-                  <span className="text-[10px] font-black text-secondary uppercase block text-center border-b border-border pb-1.5">Control Unit</span>
+                <div className="border border-border dark:border-slate-800 bg-slate-50 dark:bg-black/20 p-3.5 rounded-xl space-y-3 shadow-sm">
+                  <span className="text-[10px] font-black text-secondary uppercase block text-center border-b border-border dark:border-slate-800 pb-1.5">Control Unit</span>
                   
-                  <div className="bg-white shadow-sm border border-border p-2.5 rounded-xl border border-border">
+                  <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 p-2.5 rounded-xl">
                     <span className="text-[9px] text-secondary font-bold block uppercase">Program Counter (PC)</span>
                     <div className="flex items-center justify-between mt-0.5">
-                      <span className="text-sm font-mono font-black text-pink-400">0x0{registers.PC}</span>
+                      <span className="text-sm font-mono font-black text-pink-500 dark:text-pink-400">0x0{registers.PC}</span>
                       <span className="text-[9px] text-secondary font-bold font-mono">Next Addr</span>
                     </div>
                   </div>
 
-                  <div className={`bg-white shadow-sm border border-border p-2.5 rounded-xl border transition-all ${activePaths.mbrToIr ? "border-indigo-500/50 bg-indigo-100" : "border-border"}`}>
+                  <div className={`bg-[var(--bg-surface)] shadow-sm p-2.5 rounded-xl border transition-all ${activePaths.mbrToIr ? "border-indigo-500/50 bg-indigo-100 dark:bg-indigo-500/20" : "border-border dark:border-slate-700"}`}>
                     <span className="text-[9px] text-secondary font-bold block uppercase">Inst Register (IR)</span>
-                    <span className="text-xs font-mono font-black text-indigo-600 mt-0.5 block">{registers.IR}</span>
+                    <span className="text-xs font-mono font-black text-indigo-600 dark:text-indigo-400 mt-0.5 block">{registers.IR}</span>
                   </div>
                 </div>
 
                 {/* Memory Interface Registers */}
-                <div className="border border-border bg-black/20 p-3.5 rounded-xl space-y-3 shadow-sm">
-                  <span className="text-[10px] font-black text-secondary uppercase block text-center border-b border-border pb-1.5">Memory Interface</span>
+                <div className="border border-border dark:border-slate-800 bg-slate-50 dark:bg-black/20 p-3.5 rounded-xl space-y-3 shadow-sm">
+                  <span className="text-[10px] font-black text-secondary uppercase block text-center border-b border-border dark:border-slate-800 pb-1.5">Memory Interface</span>
 
-                  <div className={`bg-white shadow-sm border border-border p-2.5 rounded-xl border transition-all ${activePaths.pcToMar ? "border-pink-500/50 bg-pink-500/20" : "border-border"}`}>
+                  <div className={`bg-[var(--bg-surface)] shadow-sm p-2.5 rounded-xl border transition-all ${activePaths.pcToMar ? "border-pink-500/50 bg-pink-500/20" : "border-border dark:border-slate-700"}`}>
                     <span className="text-[9px] text-secondary font-bold block uppercase">Addr Register (MAR)</span>
                     <span className="text-xs font-mono font-black text-secondary mt-0.5 block">0x0{registers.MAR}</span>
                   </div>
 
-                  <div className={`bg-white shadow-sm border border-border p-2.5 rounded-xl border transition-all ${activePaths.ramToMbr || activePaths.acToMbr ? "border-indigo-500/50 bg-indigo-100" : "border-border"}`}>
+                  <div className={`bg-[var(--bg-surface)] shadow-sm p-2.5 rounded-xl border transition-all ${activePaths.ramToMbr || activePaths.acToMbr ? "border-indigo-500/50 bg-indigo-100 dark:bg-indigo-500/20" : "border-border dark:border-slate-700"}`}>
                     <span className="text-[9px] text-secondary font-bold block uppercase">Buffer Register (MBR)</span>
                     <span className="text-xs font-mono font-black text-secondary mt-0.5 block">{registers.MBR}</span>
                   </div>
                 </div>
 
                 {/* Execution Block (ALU / AC) */}
-                <div className="border border-border bg-black/20 p-3.5 rounded-xl space-y-3 shadow-sm">
-                  <span className="text-[10px] font-black text-secondary uppercase block text-center border-b border-border pb-1.5">Execution Core (ALU)</span>
+                <div className="border border-border dark:border-slate-800 bg-slate-50 dark:bg-black/20 p-3.5 rounded-xl space-y-3 shadow-sm">
+                  <span className="text-[10px] font-black text-secondary uppercase block text-center border-b border-border dark:border-slate-800 pb-1.5">Execution Core (ALU)</span>
 
-                  <div className={`bg-white shadow-sm border border-border p-2.5 rounded-xl border transition-all ${activePaths.aluToAc ? "border-emerald-500/50 bg-emerald-500/20" : "border-border"}`}>
+                  <div className={`bg-[var(--bg-surface)] shadow-sm p-2.5 rounded-xl border transition-all ${activePaths.aluToAc ? "border-emerald-500/50 bg-emerald-500/20" : "border-border dark:border-slate-700"}`}>
                     <span className="text-[9px] text-secondary font-bold block uppercase">Accumulator (AC)</span>
-                    <span className="text-base font-mono font-black text-emerald-600 mt-0.5 block">{registers.AC}</span>
+                    <span className="text-base font-mono font-black text-emerald-600 dark:text-emerald-500 mt-0.5 block">{registers.AC}</span>
                   </div>
 
-                  <div className="bg-white shadow-sm border border-border p-2 rounded-lg border border-border text-[10px] font-mono text-secondary flex items-center justify-between">
+                  <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 p-2 rounded-lg text-[10px] font-mono text-secondary flex items-center justify-between">
                     <span className="font-bold">Execution ALU</span>
-                    <span className="px-1.5 py-0.5 rounded text-[8px] bg-indigo-100 text-indigo-600 font-black">ACTIVE</span>
+                    <span className="px-1.5 py-0.5 rounded text-[8px] bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-black">ACTIVE</span>
                   </div>
                 </div>
 
               </div>
 
               {/* Glowing Bus Lines Map */}
-              <div className="border-t border-border mt-3 pt-3 grid grid-cols-2 md:grid-cols-4 gap-3 text-[10px] font-mono font-bold text-secondary">
+              <div className="border-t border-border dark:border-slate-800 mt-3 pt-3 grid grid-cols-2 md:grid-cols-4 gap-3 text-[10px] font-mono font-bold text-secondary">
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-3 h-3 rounded-full ${activePaths.pcToMar ? "bg-pink-500 shadow shadow-pink-500/50 animate-pulse" : "bg-white shadow-sm border border-border"}`} />
+                  <span className={`w-3 h-3 rounded-full ${activePaths.pcToMar ? "bg-pink-500 shadow shadow-pink-500/50 animate-pulse" : "bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700"}`} />
                   <span>PC → MAR (Addr Bus)</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-3 h-3 rounded-full ${activePaths.ramToMbr ? "bg-indigo-500 shadow shadow-indigo-500/50 animate-pulse" : "bg-white shadow-sm border border-border"}`} />
+                  <span className={`w-3 h-3 rounded-full ${activePaths.ramToMbr ? "bg-indigo-500 shadow shadow-indigo-500/50 animate-pulse" : "bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700"}`} />
                   <span>RAM → MBR (Data Read)</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-3 h-3 rounded-full ${activePaths.mbrToIr ? "bg-indigo-400 shadow shadow-indigo-400/50 animate-pulse" : "bg-white shadow-sm border border-border"}`} />
+                  <span className={`w-3 h-3 rounded-full ${activePaths.mbrToIr ? "bg-indigo-400 shadow shadow-indigo-400/50 animate-pulse" : "bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700"}`} />
                   <span>MBR → IR (Decode Bus)</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-3 h-3 rounded-full ${activePaths.mbrToRam ? "bg-rose-500 shadow shadow-rose-500/50 animate-pulse" : "bg-white shadow-sm border border-border"}`} />
+                  <span className={`w-3 h-3 rounded-full ${activePaths.mbrToRam ? "bg-rose-500 shadow shadow-rose-500/50 animate-pulse" : "bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700"}`} />
                   <span>MBR → RAM (Write Bus)</span>
                 </div>
               </div>
             </div>
 
             {/* Feedback console monitor */}
-            <div className="bg-black/40 border border-border rounded-2xl p-4 font-mono text-xs text-secondary shadow-md">
+            <div className="bg-slate-50 dark:bg-black/40 border border-border dark:border-slate-800 rounded-2xl p-4 font-mono text-xs text-secondary shadow-md">
               <span className="text-[10px] text-secondary uppercase block mb-1.5 font-bold">LOG SIKLUS MIKRO-OPERASI (MICRO-OPERATIONS CONSOLE)</span>
-              <div className="bg-black/60 border border-border p-3.5 rounded-xl min-h-[48px] flex items-center justify-start text-emerald-600 font-medium">
+              <div className="bg-white dark:bg-black/60 border border-border dark:border-slate-800 p-3.5 rounded-xl min-h-[48px] flex items-center justify-start text-emerald-600 dark:text-emerald-500 font-medium shadow-inner">
                 <span className="leading-relaxed">{cycleStep}</span>
               </div>
             </div>
@@ -472,7 +472,7 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
                   id="step-forward-btn"
                   onClick={runSingleCycleStep}
                   disabled={stage === "HALTED"}
-                  className="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-30 disabled:hover:bg-indigo-600 text-foreground font-black rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-md shadow-indigo-600/10 cursor-pointer"
+                  className="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-30 disabled:hover:bg-indigo-600 text-white font-black rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-md shadow-indigo-600/10 cursor-pointer"
                 >
                   <SkipForward className="w-4 h-4" />
                   Step Cycle (Satu Siklus)
@@ -483,7 +483,7 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
                     id="auto-run-btn"
                     onClick={() => setIsAutoPlaying(true)}
                     disabled={stage === "HALTED"}
-                    className="px-5 py-3 bg-pink-500 hover:bg-pink-400 disabled:opacity-30 disabled:hover:bg-pink-500 text-foreground font-black rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-md shadow-pink-500/10 cursor-pointer"
+                    className="px-5 py-3 bg-pink-500 hover:bg-pink-400 disabled:opacity-30 disabled:hover:bg-pink-500 text-white font-black rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-md shadow-pink-500/10 cursor-pointer"
                   >
                     <Play className="w-4 h-4" />
                     Auto Run
@@ -492,7 +492,7 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
                   <button
                     id="stop-btn"
                     onClick={() => setIsAutoPlaying(false)}
-                    className="px-5 py-3 bg-rose-500 hover:bg-rose-450 text-foreground font-black rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                    className="px-5 py-3 bg-rose-500 hover:bg-rose-450 text-white font-black rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
                   >
                     <Square className="w-4 h-4" />
                     Stop Play
@@ -500,12 +500,12 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
                 )}
               </div>
 
-              <div className="flex items-center gap-3 bg-white shadow-sm border border-border px-4 py-2 rounded-xl border border-border text-xs text-secondary font-mono shadow-sm">
+              <div className="flex items-center gap-3 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 px-4 py-2 rounded-xl text-xs text-secondary font-mono">
                 <span className="text-[10px] font-bold uppercase">Speed:</span>
                 <select
                   value={speed}
                   onChange={(e) => setSpeed(parseInt(e.target.value))}
-                  className="bg-black/40 text-foreground border border-border rounded-lg py-1 px-1.5 font-bold uppercase text-[10px] focus:outline-none"
+                  className="bg-black/5 dark:bg-black/40 text-foreground border border-border dark:border-slate-700 rounded-lg py-1 px-1.5 font-bold uppercase text-[10px] focus:outline-none"
                 >
                   <option value={2000}>Sangat Lambat (2s)</option>
                   <option value={1500}>Normal (1.5s)</option>

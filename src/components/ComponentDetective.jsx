@@ -13,15 +13,15 @@ function shuffleArray(array) {
 
 function ComponentDetectiveAdmin() {
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50">
+    <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50 dark:bg-slate-950">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
             <Search size={24} className="text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-black text-gray-900">Manajemen Component Detective</h2>
-            <p className="text-sm text-gray-500">Kelola kasus misteri, petunjuk, dan model 3D untuk mahasiswa.</p>
+            <h2 className="text-2xl font-black text-foreground">Manajemen Component Detective</h2>
+            <p className="text-sm text-secondary">Kelola kasus misteri, petunjuk, dan model 3D untuk mahasiswa.</p>
           </div>
         </div>
         <button className="bg-primary text-white font-bold py-2.5 px-5 rounded-xl hover:bg-primary-hover shadow-md flex items-center gap-2">
@@ -31,37 +31,37 @@ function ComponentDetectiveAdmin() {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {DETECTIVE_LEVELS.map(level => (
-          <div key={level.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-start">
+          <div key={level.id} className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-border dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 font-black text-[10px] rounded uppercase">Kasus {level.id}</span>
-                  <h3 className="font-bold text-gray-900">{level.name}</h3>
+                  <span className="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400 font-black text-[10px] rounded uppercase">Kasus {level.id}</span>
+                  <h3 className="font-bold text-foreground">{level.name}</h3>
                 </div>
-                <p className="text-xs text-gray-500">Kunci Jawaban: <strong className="text-emerald-600">{DETECTIVE_OPTIONS.find(o => o.id === level.componentId)?.label || level.componentId}</strong></p>
+                <p className="text-xs text-secondary">Kunci Jawaban: <strong className="text-emerald-600">{DETECTIVE_OPTIONS.find(o => o.id === level.componentId)?.label || level.componentId}</strong></p>
               </div>
               <div className="flex gap-2">
-                <button className="px-3 py-1.5 text-xs font-bold bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Edit</button>
-                <button className="px-3 py-1.5 text-xs font-bold bg-red-50 border border-red-200 rounded-lg text-red-600 hover:bg-red-100">Hapus</button>
+                <button className="px-3 py-1.5 text-xs font-bold bg-[var(--bg-surface)] border border-border dark:border-slate-700 rounded-lg text-foreground hover:bg-slate-50 dark:hover:bg-slate-800">Edit</button>
+                <button className="px-3 py-1.5 text-xs font-bold bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20">Hapus</button>
               </div>
             </div>
             <div className="p-4 flex-1">
-              <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Daftar Petunjuk (Clues)</h4>
+              <h4 className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-2">Daftar Petunjuk (Clues)</h4>
               <ul className="space-y-2 mb-4">
                 {level.clues.map((clue, idx) => (
-                  <li key={idx} className="text-xs text-gray-700 bg-gray-50 p-2 rounded-lg border border-gray-100 flex items-start gap-2">
+                  <li key={idx} className="text-xs text-foreground bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg border border-border dark:border-slate-800 flex items-start gap-2">
                     <span className="font-bold text-indigo-400">#{idx + 1}</span> {clue}
                   </li>
                 ))}
               </ul>
 
-              <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-100">
+              <div className="flex justify-between items-center mt-auto pt-3 border-t border-border dark:border-slate-800">
                 <div className="text-xs">
-                  <span className="text-gray-500">Reward: </span>
+                  <span className="text-secondary">Reward: </span>
                   <span className="font-bold text-amber-600">{level.rewards.join(' / ')} Koin</span>
                 </div>
                 <div className="text-xs">
-                  <span className="text-gray-500">Kesulitan: </span>
+                  <span className="text-secondary">Kesulitan: </span>
                   <span className={`font-bold ${level.difficulty === 'advanced' ? 'text-amber-600' : 'text-emerald-600'}`}>
                     {(level.difficulty || 'normal').toUpperCase()}
                   </span>
@@ -225,7 +225,7 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
             </div>
           </div>
         </div>
-        <button onClick={() => { setCurrentLevelIdx(0); onActivityComplete(); }} className="px-3 py-1.5 bg-white shadow-sm border border-border text-secondary rounded-lg text-[10px] font-bold hover:bg-white shadow-sm border border-border transition">Keluar Tugas</button>
+        <button onClick={() => { setCurrentLevelIdx(0); onActivityComplete(); }} className="px-3 py-1.5 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 text-secondary rounded-lg text-[10px] font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition">Keluar Tugas</button>
       </div>
     );
   };
@@ -246,22 +246,22 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl mb-12">
-          <div className="bg-white border border-border p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mx-auto mb-4 border border-indigo-100">
+          <div className="bg-[var(--bg-surface)] border border-border dark:border-slate-800 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-500/10 rounded-xl flex items-center justify-center mx-auto mb-4 border border-indigo-100 dark:border-indigo-500/20">
               <Search size={24} className="text-indigo-600" />
             </div>
             <h3 className="font-black text-foreground mb-2 text-sm uppercase tracking-wider">Analisis Klue</h3>
             <p className="text-xs text-secondary leading-relaxed">Baca deskripsi teknis dan fungsi komponen dengan teliti untuk menemukan jawabannya.</p>
           </div>
-          <div className="bg-white border border-border p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-4 border border-emerald-100">
+          <div className="bg-[var(--bg-surface)] border border-border dark:border-slate-800 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl flex items-center justify-center mx-auto mb-4 border border-emerald-100 dark:border-emerald-500/20">
               <Coins size={24} className="text-emerald-600" />
             </div>
             <h3 className="font-black text-foreground mb-2 text-sm uppercase tracking-wider">Dapatkan Koin</h3>
             <p className="text-xs text-secondary leading-relaxed">Berhasil menebak di klue pertama akan memberikan Anda koin maksimal (Gold).</p>
           </div>
-          <div className="bg-white border border-border p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center mx-auto mb-4 border border-rose-100">
+          <div className="bg-[var(--bg-surface)] border border-border dark:border-slate-800 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-rose-50 dark:bg-rose-500/10 rounded-xl flex items-center justify-center mx-auto mb-4 border border-rose-100 dark:border-rose-500/20">
               <Clock size={24} className="text-rose-600" />
             </div>
             <h3 className="font-black text-foreground mb-2 text-sm uppercase tracking-wider">Berlomba Waktu</h3>
@@ -293,11 +293,11 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
         <p className="text-secondary mb-8">Anda telah menebak semua komponen dengan sukses.</p>
 
         <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-8">
-          <div className="bg-white shadow-sm border border-border p-4 rounded-2xl border border-border text-center">
+          <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 p-4 rounded-2xl text-center">
             <p className="text-xs text-secondary font-bold uppercase tracking-widest mb-1">Total Skor</p>
             <p className="text-3xl font-black text-emerald-600">{totalScore}</p>
           </div>
-          <div className="bg-white shadow-sm border border-border p-4 rounded-2xl border border-border text-center">
+          <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 p-4 rounded-2xl text-center">
             <p className="text-xs text-secondary font-bold uppercase tracking-widest mb-1">Total Waktu</p>
             <p className="text-3xl font-black text-rose-600">{totalTime}s</p>
           </div>
@@ -313,7 +313,7 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
             setShuffledLevels(shuffleArray(DETECTIVE_LEVELS));
             setStatus('playing');
           }}
-          className="px-6 py-3 bg-primary hover:bg-primary text-foreground font-bold rounded-xl transition-all"
+          className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl transition-all"
         >
           Main Lagi
         </button>
@@ -355,9 +355,9 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
         {/* Main Game Area */}
         <div className="flex flex-col gap-4">
           {/* Level Progress */}
-          <div className="bg-white shadow-sm border border-border border border-border rounded-2xl p-4 flex items-center justify-between">
+          <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-2xl p-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="bg-primary text-foreground text-xs font-black px-2 py-1 rounded">LVL {level.id}</span>
+              <span className="bg-primary text-white text-xs font-black px-2 py-1 rounded">LVL {level.id}</span>
               <span className="text-foreground font-bold">{level.name}</span>
               {level.difficulty === 'advanced' && (
                 <span className="bg-amber-500/20 text-amber-600 text-[10px] font-black px-2 py-0.5 rounded-full border border-amber-500/30">⚡ ADVANCED</span>
@@ -417,7 +417,7 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
           )}
 
           {/* Clues */}
-          <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6 flex-1 flex flex-col">
+          <div className="bg-primary/5 dark:bg-indigo-500/10 border border-primary/20 dark:border-indigo-500/20 rounded-2xl p-6 flex-1 flex flex-col">
             <h3 className="text-sm font-bold text-primary mb-4 uppercase tracking-widest flex items-center gap-2">
               <Search size={16} /> Berkas Investigasi
             </h3>
@@ -427,7 +427,7 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
                 <div
                   key={idx}
                   className={`p-4 rounded-xl border transition-all duration-500 ${idx < openedClues
-                      ? 'bg-white shadow-sm border border-border border-border text-foreground'
+                      ? 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 text-foreground'
                       : 'bg-black/20 border-transparent text-transparent select-none blur-sm'
                     }`}
                 >
@@ -440,7 +440,7 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
             {openedClues < 3 && status === 'playing' && (
               <button
                 onClick={handleRevealClue}
-                className="mt-6 w-full py-3 bg-white shadow-sm border border-border hover:bg-white shadow-sm border border-border border border-border border-dashed text-secondary hover:text-foreground font-medium rounded-xl transition-all"
+                className="mt-6 w-full py-3 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 border-dashed hover:bg-slate-50 dark:hover:bg-slate-800 text-secondary hover:text-foreground font-medium rounded-xl transition-all"
               >
                 Buka Klue Berikutnya (Hadiah berkurang menjadi {level.rewards[openedClues]})
               </button>
@@ -449,13 +449,13 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
 
           {/* Guess Action */}
           {status !== 'correct' && (
-            <div className="bg-white shadow-sm border border-border border border-border rounded-2xl p-6">
+            <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-2xl p-6">
               <label className="block text-sm font-bold text-secondary mb-3">Tebakan Anda:</label>
               <div className="flex gap-3">
                 <select
                   value={guess}
                   onChange={(e) => setGuess(e.target.value)}
-                  className="flex-1 bg-black/40 border border-border rounded-xl px-4 text-foreground focus:outline-none focus:border-primary"
+                  className="flex-1 bg-slate-50 dark:bg-black/40 border border-border dark:border-slate-700 rounded-xl px-4 text-foreground focus:outline-none focus:border-primary"
                 >
                   <option value="" disabled>Pilih komponen...</option>
                   {levelOptions.map(opt => (
@@ -465,7 +465,7 @@ export default function ComponentDetective({ studentId, token, apiUrl, onCoinsEa
                 <button
                   onClick={handleGuess}
                   disabled={!guess}
-                  className="px-6 py-3 bg-primary hover:bg-primary disabled:opacity-50 text-foreground font-bold rounded-xl transition-all flex items-center gap-2"
+                  className="px-6 py-3 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-bold rounded-xl transition-all flex items-center gap-2"
                 >
                   Jawab
                 </button>

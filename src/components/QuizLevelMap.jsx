@@ -55,11 +55,11 @@ export default function QuizLevelMap({ completedLevels, onSelectLevel, studentTh
   const recommendedLevels = getRecommendedLevels(studentTheta, completedLevels);
 
   return (
-    <div className="relative flex-1 w-full h-full overflow-hidden bg-slate-50 transition-all duration-500">
+    <div className="relative flex-1 w-full h-full overflow-hidden bg-slate-50 dark:bg-slate-950 transition-all duration-500">
       {/* Background Image */}
       <img
         src="/models/map/thumbnail.jpg"
-        className="absolute inset-0 w-full h-full object-cover bg-slate-100"
+        className="absolute inset-0 w-full h-full object-cover bg-slate-100 dark:bg-slate-900"
         alt="Motherboard Map"
       />
 
@@ -149,13 +149,13 @@ export default function QuizLevelMap({ completedLevels, onSelectLevel, studentTh
       )}
 
       {/* Progress Indicator (Bottom Right) */}
-      <div className="absolute bottom-6 right-6 flex items-center gap-2 px-4 py-2 bg-primary-light border border-primary/30 rounded-2xl backdrop-blur-md shadow-xl">
+      <div className="absolute bottom-6 right-6 flex items-center gap-2 px-4 py-2 bg-primary-light dark:bg-indigo-900/40 border border-primary/30 dark:border-indigo-500/30 rounded-2xl backdrop-blur-md shadow-xl">
         <Trophy size={18} className="text-primary" />
         <span className="text-primary font-black text-base">{completedLevels.length}/14</span>
       </div>
 
       {/* Legend */}
-      <div className="absolute top-6 right-6 flex flex-col gap-2 scale-75 origin-top-right bg-black/20 p-3 rounded-2xl backdrop-blur-sm border border-border">
+      <div className="absolute top-6 right-6 flex flex-col gap-2 scale-75 origin-top-right bg-white/60 dark:bg-black/20 p-3 rounded-2xl backdrop-blur-sm border border-border dark:border-slate-800">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,1)]" />
           <span className="text-secondary text-[10px] font-bold uppercase tracking-widest">Selesai</span>

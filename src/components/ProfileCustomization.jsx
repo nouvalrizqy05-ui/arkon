@@ -222,7 +222,7 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
               <p className="text-[10px] text-secondary uppercase font-bold">Total XP</p>
               <p className="text-lg font-black text-emerald-600">{levelInfo?.totalXP || 0}</p>
             </div>
-            <div className="w-px h-8 bg-white shadow-sm border border-border"></div>
+            <div className="w-px h-8 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800"></div>
             <div className="text-center">
               <p className="text-[10px] text-secondary uppercase font-bold">Badges</p>
               <p className="text-lg font-black text-amber-600">{unlockedBadges?.length || 0}</p>
@@ -234,7 +234,7 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
         <button 
           onClick={exportAsPNG}
           disabled={exporting}
-          className="mt-6 w-full py-4 bg-white shadow-sm border border-border hover:bg-white shadow-sm border border-border border border-border rounded-2xl text-foreground font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+          className="mt-6 w-full py-4 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-2xl text-foreground font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50"
         >
           {exporting ? <div className="w-5 h-5 border-2 border-border border-t-white rounded-full animate-spin"></div> : <Download size={20} />}
           {exporting ? 'Merender...' : 'Download PNG Card'}
@@ -245,7 +245,7 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
       <div className="flex-1 flex flex-col gap-8">
         
         {/* Identitas Pribadi */}
-        <div className="bg-white shadow-sm border border-border border border-border p-6 rounded-3xl">
+        <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 p-6 rounded-3xl">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2">
               <User size={16} className="text-primary" /> Identitas Pribadi
@@ -262,7 +262,7 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
                 type="text" 
                 value={profile.full_name}
                 onChange={(e) => setProfile(p => ({ ...p, full_name: e.target.value }))}
-                className="w-full bg-black/40 border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors font-bold text-sm"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-border dark:border-slate-800 rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors font-bold text-sm"
               />
             </div>
             <div>
@@ -271,7 +271,7 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
                 type="text" 
                 value={profile.identifier_number}
                 onChange={(e) => setProfile(p => ({ ...p, identifier_number: e.target.value }))}
-                className="w-full bg-black/40 border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors font-bold text-sm"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-border dark:border-slate-800 rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors font-bold text-sm"
               />
             </div>
           </div>
@@ -286,7 +286,7 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
         </div>
 
         {/* Tagline */}
-        <div className="bg-white shadow-sm border border-border border border-border p-6 rounded-3xl">
+        <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 p-6 rounded-3xl">
           <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2 mb-4">
             <Edit3 size={16} className="text-primary" /> Custom Tagline
           </h3>
@@ -296,7 +296,7 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
               maxLength={30}
               value={profile.tagline}
               onChange={(e) => setProfile(p => ({ ...p, tagline: e.target.value }))}
-              className="flex-1 bg-black/40 border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors font-bold"
+              className="flex-1 bg-slate-50 dark:bg-slate-900 border border-border dark:border-slate-800 rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors font-bold"
             />
             <button 
               onClick={() => saveProfile({})}
@@ -309,10 +309,10 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
         </div>
 
         {/* Avatar Select */}
-        <div className="bg-white shadow-sm border border-border border border-border p-6 rounded-3xl">
+        <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 p-6 rounded-3xl">
           <h3 className="text-sm font-black text-foreground uppercase tracking-widest mb-4 flex items-center justify-between">
             <span>Pilih Avatar Hero</span>
-            <span className="text-[10px] bg-white shadow-sm border border-border px-2 py-1 rounded-md">{PROFILE_AVATARS.length} Tersedia</span>
+            <span className="text-[10px] bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 px-2 py-1 rounded-md">{PROFILE_AVATARS.length} Tersedia</span>
           </h3>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
             {PROFILE_AVATARS.map(avatar => {
@@ -325,8 +325,8 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
                   onClick={() => saveProfile({ avatar_id: avatar.id })}
                   className={`relative flex flex-col items-center gap-2 p-3 rounded-2xl transition-all ${
                     isSelected 
-                      ? 'bg-white shadow-sm border border-border scale-105 shadow-xl' 
-                      : 'hover:bg-white shadow-sm border border-border opacity-60 hover:opacity-100'
+                      ? 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 scale-105 shadow-xl' 
+                      : 'hover:bg-slate-50 dark:hover:bg-slate-800/50 border border-transparent hover:border-border dark:hover:border-slate-800 opacity-60 hover:opacity-100'
                   }`}
                 >
                   <div className={`w-14 h-14 rounded-xl flex items-center justify-center bg-gradient-to-br ${avatar.color}`}>
@@ -341,10 +341,10 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
         </div>
 
         {/* Frame Select */}
-        <div className="bg-white shadow-sm border border-border border border-border p-6 rounded-3xl">
+        <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 p-6 rounded-3xl">
           <h3 className="text-sm font-black text-foreground uppercase tracking-widest mb-4 flex items-center justify-between">
             <span>Frame Eksklusif</span>
-            <span className="text-[10px] bg-white shadow-sm border border-border px-2 py-1 rounded-md">Buka dengan Badge</span>
+            <span className="text-[10px] bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 px-2 py-1 rounded-md">Buka dengan Badge</span>
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {PROFILE_FRAMES.map(frame => {
@@ -358,10 +358,10 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
                   onClick={() => saveProfile({ frame_id: frame.id })}
                   className={`relative p-4 rounded-2xl text-left transition-all overflow-hidden ${
                     !unlocked 
-                      ? 'bg-black/40 border border-border opacity-50 cursor-not-allowed' 
+                      ? 'bg-slate-100 dark:bg-slate-800/40 border border-border dark:border-slate-700 opacity-50 cursor-not-allowed' 
                       : isSelected
                         ? 'bg-primary-light border border-primary shadow-lg scale-105'
-                        : 'bg-white shadow-sm border border-border border border-border hover:bg-white shadow-sm border border-border'
+                        : 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
                 >
                   <div className={`w-12 h-12 mb-3 mx-auto rounded-2xl bg-[#0f172a] flex items-center justify-center ${frame.style}`}>
@@ -391,7 +391,7 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
           <div className="flex flex-col sm:flex-row gap-4">
             <button 
               onClick={handleLogout}
-              className="flex-1 py-3 bg-white shadow-sm border border-border hover:bg-white shadow-sm border border-border border border-border rounded-xl font-bold text-foreground transition-all flex items-center justify-center gap-2"
+              className="flex-1 py-3 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-bold text-foreground transition-all flex items-center justify-center gap-2"
             >
               <LogOut size={18} /> Log Out
             </button>

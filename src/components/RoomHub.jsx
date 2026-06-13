@@ -119,11 +119,28 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
 
   // Listen for cross-component navigation (e.g. ArLab → Quiz CTA)
   useEffect(() => {
+    const normalizeTab = (tab) => {
+      const aliasMap = {
+        rooms: 'overview',
+        dashboard: 'overview',
+        simulator: 'cpu-simulator',
+        ar: 'ar-lab',
+        community: 'study-group',
+        tasks: 'my-activities',
+        insight: 'analytics',
+      };
+      return aliasMap[tab] || tab;
+    };
+
     const handler = (e) => {
-      if (e.detail?.tab) setActiveTab(e.detail.tab);
+      if (e.detail?.tab) setActiveTab(normalizeTab(e.detail.tab));
     };
     window.addEventListener('arkon-navigate', handler);
-    return () => window.removeEventListener('arkon-navigate', handler);
+    window.addEventListener('arkon:nav', handler);
+    return () => {
+      window.removeEventListener('arkon-navigate', handler);
+      window.removeEventListener('arkon:nav', handler);
+    };
   }, []);
 
   // Update URL sub-slash domain when activeTab changes (e.g. arkon.com/mahasiswa/overview)
@@ -517,12 +534,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
           </ErrorBoundary>
         ) : null;
 
-      case 'achievements':
-        return (
-          <ErrorBoundary inline name="Achievements">
-            <AchievementWall />
-          </ErrorBoundary>
-        );
+
 
       case 'heatmap':
         return userRole === 'dosen' ? (
@@ -745,7 +757,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
   };
 
   return (
-    <div className="fixed inset-0 flex overflow-hidden font-sans" style={{background:"#f8fafc"}}>
+    <div className="fixed inset-0 flex overflow-hidden font-sans bg-slate-50 dark:bg-slate-950">
       {/* Room Sidebar */}
       <RoomSidebar
         activeTab={activeTab}
@@ -765,14 +777,14 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={onBack}
-              className="md:hidden p-2 text-secondary hover:text-primary hover:bg-slate-50 border border-slate-200 rounded-lg transition-all"
+              className="md:hidden p-2 text-secondary hover:text-foreground dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg transition-all"
               title="Kembali ke Dashboard"
             >
               <ArrowLeft size={16} />
             </button>
             <button
               onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              className="md:hidden p-2 text-secondary hover:text-primary hover:bg-slate-50 border border-slate-200 rounded-lg transition-all"
+              className="md:hidden p-2 text-secondary hover:text-foreground dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg transition-all"
               title="Toggle Menu Room"
             >
               <Menu size={16} />
@@ -803,7 +815,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
             <div className="relative">
               <button
                 onClick={() => setIsNotifOpen(!isNotifOpen)}
-                className={`relative p-2 rounded-full transition cursor-pointer ${isNotifOpen ? 'bg-white shadow-sm border border-border text-foreground' : 'text-secondary hover:bg-white shadow-sm border border-border'}`}
+                className={`relative p-2 rounded-full transition cursor-pointer ${isNotifOpen ? 'bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white' : 'text-secondary hover:bg-white dark:hover:bg-slate-800 shadow-sm border border-border dark:border-slate-700'}`}
               >
                 <Bell size={18} />
                 {notifications.some(n => n.unread) && (
@@ -819,9 +831,9 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
                     initial={{ opacity: 0, y: 8, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                    className="absolute right-0 mt-2 w-72 bg-white border border-border rounded-2xl shadow-2xl overflow-hidden z-50"
+                    className="absolute right-0 mt-2 w-72 bg-white dark:bg-slate-900 border border-border dark:border-slate-700 rounded-2xl shadow-2xl overflow-hidden z-50"
                   >
-                    <div className="p-3 border-b border-border bg-white shadow-sm border border-border flex justify-between items-center">
+                    <div className="p-3 border-b border-border dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm flex justify-between items-center">
                       <span className="font-bold text-xs text-foreground">Notifikasi</span>
                       <button
                         onClick={() => setNotifications(n => n.map(x => ({ ...x, unread: false })))}
@@ -835,7 +847,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
                         <p className="p-6 text-center text-xs text-secondary">Belum ada notifikasi.</p>
                       ) : (
                         notifications.map(n => (
-                          <div key={n.id} className={`p-3 border-b border-border hover:bg-white shadow-sm border border-border transition-colors ${n.unread ? 'bg-primary-soft' : ''}`}>
+                          <div key={n.id} className={`p-3 border-b border-border dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm transition-colors ${n.unread ? 'bg-primary-soft' : ''}`}>
                             <p className="text-[10px] font-semibold text-primary uppercase tracking-widest">{n.title}</p>
                             <p className="text-xs text-secondary mt-0.5">{n.message}</p>
                           </div>
@@ -847,10 +859,10 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
               </AnimatePresence>
             </div>
 
-            <div className="h-5 w-px bg-white shadow-sm border border-border" />
+            <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
 
             {/* User avatar */}
-            <div onClick={() => navigate('/settings')} className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-xl transition-colors">
+            <div onClick={() => navigate('/settings')} className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 p-1.5 rounded-xl transition-colors">
               {userProfile ? (() => {
                 const av = PROFILE_AVATARS.find(a => a.id === userProfile.avatar_id) || PROFILE_AVATARS[0];
                 const AvatarIcon = iconComponents[av.icon] || User;
@@ -871,7 +883,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
         </header>
 
         {/* Content Area */}
-        <main className="flex-1 overflow-hidden relative min-w-0 pb-14 md:pb-0" style={{background:"#f8fafc"}}>
+        <main className="flex-1 overflow-hidden relative min-w-0 pb-14 md:pb-0">
           {renderContent()}
         </main>
       </div>
@@ -881,9 +893,9 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
       {/* Poll Modal */}
       {activePoll && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-6">
-          <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-sm text-center">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 w-full max-w-sm text-center">
             <h3 className="text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Polling dari Dosen</h3>
-            <p className="text-lg font-bold text-gray-900 mb-8">"{activePoll.question}"</p>
+            <p className="text-lg font-bold text-foreground mb-8">"{activePoll.question}"</p>
             <div className="grid grid-cols-2 gap-4">
               <button onClick={() => handlePollVote('up')} className="flex flex-col items-center gap-2 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl hover:bg-emerald-100 transition-all">
                 👍 <span className="font-bold text-sm">Paham</span>
@@ -939,7 +951,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
 
       {/* Mobile Bottom Nav — Mahasiswa only */}
       {userRole === 'mahasiswa' && (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border flex items-center justify-around px-2 py-2 z-50" aria-label="Navigasi mobile">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-[var(--bg-surface)] border-t border-border dark:border-slate-800 flex items-center justify-around px-2 py-2 z-50 transition-colors" aria-label="Navigasi mobile">
           {[
             { id: 'overview', icon: '📊', label: 'Room' },
             { id: 'assembly', icon: '🖥️', label: 'Rakit' },

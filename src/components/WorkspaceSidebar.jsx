@@ -48,7 +48,7 @@ export default function WorkspaceSidebar({ activeSection, onSectionChange, isCol
 
   return (
     <aside 
-      className={`${isCollapsed ? 'w-[80px]' : 'w-[220px]'} bg-[#0d1224] border-r border-border flex flex-col shrink-0 h-full transition-all duration-300 ease-in-out hidden md:flex`}
+      className={`${isCollapsed ? 'w-[80px]' : 'w-[220px]'} bg-[var(--bg-surface)] dark:bg-[#0d1224] border-r border-border dark:border-slate-800 flex flex-col shrink-0 h-full transition-all duration-300 ease-in-out hidden md:flex`}
       role="navigation"
       aria-label="Menu navigasi utama"
     >
@@ -56,7 +56,7 @@ export default function WorkspaceSidebar({ activeSection, onSectionChange, isCol
       <div className={`px-5 py-5 border-b border-border flex items-center ${isCollapsed ? 'justify-center' : 'justify-start'}`}>
         <Link to="/" className="flex items-center gap-3 no-underline group">
           <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:shadow-indigo-500/50 transition-shadow shrink-0">
-            <span className="text-foreground font-black text-sm">A</span>
+            <span className="text-white font-black text-sm">A</span>
           </div>
           {!isCollapsed && (
             <div className="animate-in fade-in slide-in-from-left-2 duration-300">
@@ -78,8 +78,8 @@ export default function WorkspaceSidebar({ activeSection, onSectionChange, isCol
               title={isCollapsed ? item.label : ''}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all border border-transparent
                 ${isActive(item.id)
-                  ? `${item.bgActive} text-foreground border-border shadow-inner`
-                  : 'text-secondary hover:text-secondary hover:bg-white shadow-sm border border-border'
+                  ? `${item.bgActive} text-foreground dark:text-white border-border shadow-inner`
+                  : 'text-secondary hover:text-foreground dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50'
                 } ${isCollapsed ? 'justify-center' : ''}`}
               aria-current={isActive(item.id) ? 'page' : undefined}
               aria-expanded={item.children ? pcQuestOpen : undefined}
@@ -105,10 +105,10 @@ export default function WorkspaceSidebar({ activeSection, onSectionChange, isCol
                   <button
                     key={child.id}
                     onClick={() => onSectionChange(child.id)}
-                    className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all
+                    className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all border border-transparent
                       ${activeSection === child.id 
                         ? 'text-rose-600 bg-rose-500/5' 
-                        : 'text-secondary hover:text-secondary hover:bg-white shadow-sm border border-border'}`}
+                        : 'text-secondary hover:text-foreground dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50'}`}
                     aria-current={activeSection === child.id ? 'page' : undefined}
                   >
                     {child.label}
@@ -124,7 +124,7 @@ export default function WorkspaceSidebar({ activeSection, onSectionChange, isCol
       <div className={`px-3 py-4 border-t border-border space-y-1 ${isCollapsed ? 'flex flex-col items-center' : ''}`} role="navigation" aria-label="Quick links">
         <Link
           to="/ar-lab"
-          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-secondary hover:text-secondary hover:bg-white shadow-sm border border-border transition-all no-underline ${isCollapsed ? 'justify-center' : ''}`}
+          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-secondary hover:text-foreground dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-transparent transition-all no-underline ${isCollapsed ? 'justify-center' : ''}`}
           title={isCollapsed ? "AR Hardware Lab" : ""}
         >
           <span className="text-base shrink-0">🔬</span>
@@ -132,7 +132,7 @@ export default function WorkspaceSidebar({ activeSection, onSectionChange, isCol
         </Link>
         <Link
           to="/cpu-simulator"
-          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-secondary hover:text-secondary hover:bg-white shadow-sm border border-border transition-all no-underline ${isCollapsed ? 'justify-center' : ''}`}
+          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-secondary hover:text-foreground dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-transparent transition-all no-underline ${isCollapsed ? 'justify-center' : ''}`}
           title={isCollapsed ? "CPU Simulator" : ""}
         >
           <span className="text-base shrink-0">⚡</span>

@@ -73,7 +73,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-[#080C1A] transition-colors relative">
-      <div className="bg-white dark:bg-slate-900 p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-md border border-border dark:border-slate-700 relative overflow-hidden">
+      <div className="bg-white dark:bg-[#131b2f] p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-md border border-border dark:border-slate-700 relative overflow-hidden">
         {step === 1 ? (
           <Link 
             to="/login" 
@@ -121,7 +121,7 @@ export default function ForgotPassword() {
                   required 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-border dark:border-slate-600 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-slate-50 dark:bg-slate-800 text-sm font-medium text-gray-900 dark:text-white" 
+                  className="input-field pl-12" 
                   placeholder="Masukkan email terdaftar" 
                 />
               </div>
@@ -155,7 +155,7 @@ export default function ForgotPassword() {
                   minLength="6"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-border dark:border-slate-600 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-slate-50 dark:bg-slate-800 text-sm font-medium text-gray-900 dark:text-white" 
+                  className="input-field pl-12" 
                   placeholder="Minimal 6 karakter" 
                 />
               </div>
@@ -172,7 +172,7 @@ export default function ForgotPassword() {
                   minLength="6"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-border dark:border-slate-600 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-slate-50 dark:bg-slate-800 text-sm font-medium text-gray-900 dark:text-white" 
+                  className="input-field pl-12" 
                   placeholder="Ketik ulang sandi baru" 
                 />
               </div>

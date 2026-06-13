@@ -70,7 +70,7 @@ function ToastItem({ toast, onRemove }) {
       </div>
       <button
         onClick={handleClose}
-        className="flex-shrink-0 mt-0.5 text-secondary hover:text-secondary transition-colors"
+        className="flex-shrink-0 mt-0.5 text-secondary hover:text-foreground dark:hover:text-white transition-colors"
         aria-label="Tutup notifikasi"
       >
         <X size={16} />

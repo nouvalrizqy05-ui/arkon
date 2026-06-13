@@ -20,7 +20,7 @@ export default function MobileBottomNav({ activeTab, onTabChange, coinCount }) {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 safe-area-bottom"
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-[var(--bg-surface)] border-t border-gray-200 dark:border-slate-800 safe-area-bottom transition-colors"
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
       <div className="flex items-center justify-around px-2 pt-1 pb-1.5">
@@ -33,7 +33,7 @@ export default function MobileBottomNav({ activeTab, onTabChange, coinCount }) {
               className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all active:scale-95
                 ${isActive
                   ? 'text-indigo-600 dark:text-indigo-400'
-                  : 'text-gray-500 dark:text-gray-500'
+                  : 'text-gray-500 dark:text-slate-400'
                 }`}
               aria-label={label}
               aria-current={isActive ? 'page' : undefined}
@@ -46,7 +46,7 @@ export default function MobileBottomNav({ activeTab, onTabChange, coinCount }) {
                   </span>
                 )}
               </div>
-              <span className={`text-[10px] font-semibold leading-none ${isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500'}`}>
+              <span className={`text-[10px] font-semibold leading-none ${isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-slate-400'}`}>
                 {label}
               </span>
             </button>

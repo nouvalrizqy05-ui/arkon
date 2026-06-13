@@ -36,7 +36,7 @@ function Avatar({ name, size = 'sm' }) {
 function TypingDots({ users }) {
   if (!users.length) return null;
   return (
-    <div className="flex items-center gap-2 px-4 py-1.5 bg-white border-t border-border">
+    <div className="flex items-center gap-2 px-4 py-1.5 bg-[var(--bg-surface)] border-t border-border dark:border-slate-800">
       <div className="flex gap-0.5">
         <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
         <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -65,7 +65,7 @@ function ChatBubble({ msg, isMe }) {
   if (isSystem) {
     return (
       <div className="flex justify-center my-1">
-        <span className="text-[10px] bg-slate-100 text-secondary px-3 py-1 rounded-full border border-border font-medium">
+        <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-secondary px-3 py-1 rounded-full border border-border dark:border-slate-700 font-medium">
           {msg.content}
         </span>
       </div>
@@ -75,12 +75,12 @@ function ChatBubble({ msg, isMe }) {
   if (isNote) {
     return (
       <div className="flex justify-center my-2">
-        <div className="max-w-[85%] bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 w-full">
+        <div className="max-w-[85%] bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-2xl px-4 py-3 w-full">
           <div className="flex items-center gap-1.5 mb-1.5">
             <BookOpen size={12} className="text-amber-600" />
             <span className="text-[10px] font-semibold text-amber-600 uppercase tracking-wide">Catatan dari {senderName}</span>
           </div>
-          <p className="text-sm text-amber-900 leading-relaxed italic">{msg.content}</p>
+          <p className="text-sm text-amber-900 dark:text-amber-200 leading-relaxed italic">{msg.content}</p>
           <p className="text-[10px] text-amber-500 mt-1.5 text-right">{time}</p>
         </div>
       </div>
@@ -97,7 +97,7 @@ function ChatBubble({ msg, isMe }) {
         <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm break-words whitespace-pre-wrap ${
           isMe
             ? 'bg-primary text-white rounded-br-sm'
-            : 'bg-white border border-border text-foreground rounded-bl-sm'
+            : 'bg-[var(--bg-surface)] border border-border dark:border-slate-800 text-foreground rounded-bl-sm'
         }`}>
           {msg.content}
         </div>
@@ -112,9 +112,9 @@ function GroupCard({ group, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="w-full p-4 bg-white border border-border rounded-2xl hover:border-primary/30 hover:shadow-card-hover transition-all text-left group flex items-center gap-3"
+      className="w-full p-4 bg-[var(--bg-surface)] border border-border dark:border-slate-800 rounded-2xl hover:border-primary/30 hover:shadow-card-hover transition-all text-left group flex items-center gap-3"
     >
-      <div className="w-10 h-10 bg-primary-soft border border-primary/20 rounded-xl flex items-center justify-center shrink-0">
+      <div className="w-10 h-10 bg-indigo-50 dark:bg-indigo-500/10 border border-primary/20 dark:border-indigo-500/20 rounded-xl flex items-center justify-center shrink-0">
         <Hash size={16} className="text-primary" />
       </div>
       <div className="flex-1 min-w-0">
@@ -159,9 +159,9 @@ function DosenMonitorView({ onEnterGroup, token, apiUrl, roomId }) {
 
   return (
     <div className="flex-1 overflow-y-auto custom-scrollbar">
-      <div className="p-4 bg-slate-50 border-b border-border">
+      <div className="p-4 bg-slate-50 dark:bg-slate-900 border-b border-border dark:border-slate-800">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-8 h-8 bg-primary-soft rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-indigo-50 dark:bg-indigo-500/10 rounded-lg flex items-center justify-center">
             <Shield size={15} className="text-primary" />
           </div>
           <div>
@@ -175,7 +175,7 @@ function DosenMonitorView({ onEnterGroup, token, apiUrl, roomId }) {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Cari nama grup..."
-            className="w-full bg-white border border-border rounded-xl pl-8 pr-3 py-2 text-xs text-foreground outline-none focus:border-primary transition-colors"
+            className="w-full bg-[var(--bg-surface)] border border-border dark:border-slate-700 rounded-xl pl-8 pr-3 py-2 text-xs text-foreground outline-none focus:border-primary transition-colors"
           />
         </div>
       </div>
@@ -193,10 +193,10 @@ function DosenMonitorView({ onEnterGroup, token, apiUrl, roomId }) {
           </div>
         ) : (
           filtered.map(group => (
-            <div key={group.id} className="bg-white border border-border rounded-2xl p-4">
+            <div key={group.id} className="bg-[var(--bg-surface)] border border-border dark:border-slate-800 rounded-2xl p-4">
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-primary-soft rounded-xl flex items-center justify-center">
+                  <div className="w-9 h-9 bg-indigo-50 dark:bg-indigo-500/10 rounded-xl flex items-center justify-center">
                     <Hash size={15} className="text-primary" />
                   </div>
                   <div>
@@ -206,7 +206,7 @@ function DosenMonitorView({ onEnterGroup, token, apiUrl, roomId }) {
                 </div>
                 <button
                   onClick={() => onEnterGroup(group)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-primary bg-primary-soft border border-primary/20 rounded-xl hover:bg-primary hover:text-white transition-all shrink-0"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-primary bg-indigo-50 dark:bg-indigo-500/10 border border-primary/20 dark:border-indigo-500/20 rounded-xl hover:bg-primary hover:text-white transition-all shrink-0"
                 >
                   <Eye size={12} /> Pantau
                 </button>
@@ -217,7 +217,7 @@ function DosenMonitorView({ onEnterGroup, token, apiUrl, roomId }) {
                   { label: 'Pesan', value: group.message_count || 0 },
                   { label: 'Online', value: group.online_count || 0, dot: true },
                 ].map(stat => (
-                  <div key={stat.label} className="bg-slate-50 rounded-xl p-2.5 text-center">
+                  <div key={stat.label} className="bg-slate-50 dark:bg-slate-800 rounded-xl p-2.5 text-center">
                     {stat.dot ? (
                       <div className="flex items-center justify-center gap-1">
                         <div className={`w-2 h-2 rounded-full ${stat.value > 0 ? 'bg-emerald-500' : 'bg-slate-300'}`} />
@@ -665,16 +665,16 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
   const availableGroups = isDosen ? [] : groups.filter(g => !g.is_member);
 
   return (
-    <div className="w-full h-full flex flex-col bg-white overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-[var(--bg-surface)] text-foreground overflow-hidden">
 
       {/* Top bar */}
-      <div className="px-4 py-3 border-b border-border bg-white flex items-center gap-3 shrink-0 shadow-sm">
+      <div className="px-4 py-3 border-b border-border dark:border-slate-800 bg-[var(--bg-surface)] flex items-center gap-3 shrink-0 shadow-sm">
         {activeGroup ? (
           <>
-            <button onClick={leaveGroup} className="p-1.5 text-secondary hover:text-foreground hover:bg-slate-100 rounded-lg transition-colors" aria-label="Kembali">
+            <button onClick={leaveGroup} className="p-1.5 text-secondary hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" aria-label="Kembali">
               <ArrowLeft size={16} />
             </button>
-            <div className="w-8 h-8 bg-primary-soft rounded-xl flex items-center justify-center">
+            <div className="w-8 h-8 bg-indigo-50 dark:bg-indigo-500/10 rounded-xl flex items-center justify-center">
               <Hash size={15} className="text-primary" />
             </div>
             <div className="flex-1 min-w-0">
@@ -702,7 +702,7 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
           </>
         ) : (
           <>
-            <div className="w-8 h-8 bg-primary-soft rounded-xl flex items-center justify-center">
+            <div className="w-8 h-8 bg-indigo-50 dark:bg-indigo-500/10 rounded-xl flex items-center justify-center">
               <MessageSquare size={15} className="text-primary" />
             </div>
             <div>
@@ -715,7 +715,7 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
 
       {/* Sub-tabs (inside group) */}
       {activeGroup && (
-        <div className="flex border-b border-border bg-white shrink-0">
+        <div className="flex border-b border-border dark:border-slate-800 bg-[var(--bg-surface)] shrink-0">
           {[
             { id: 'chat',  label: 'Chat',    icon: MessageSquare },
             { id: 'notes', label: 'Catatan', icon: BookOpen },
@@ -751,10 +751,10 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-[11px] font-semibold text-secondary uppercase tracking-widest">Grup Saya</p>
-                    <span className="text-[10px] bg-primary-soft text-primary px-2 py-0.5 rounded-full font-semibold">{myGroups.length}</span>
+                    <span className="text-[10px] bg-indigo-50 dark:bg-indigo-500/10 text-primary px-2 py-0.5 rounded-full font-semibold">{myGroups.length}</span>
                   </div>
                   {myGroups.length === 0 ? (
-                    <div className="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-5 text-center">
+                    <div className="bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-700 rounded-2xl p-5 text-center">
                       <Users size={24} className="text-slate-300 mx-auto mb-2" />
                       <p className="text-sm text-secondary">Belum ada grup</p>
                       <p className="text-[11px] text-secondary/70 mt-1">Buat atau join menggunakan kode</p>
@@ -770,33 +770,33 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => { setShowJoinForm(!showJoinForm); setShowCreateForm(false); }}
-                    className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold border transition-all ${showJoinForm ? 'bg-primary text-white border-primary' : 'bg-white text-foreground border-border hover:border-primary/40'}`}
+                    className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold border transition-all ${showJoinForm ? 'bg-primary text-white border-primary' : 'bg-[var(--bg-surface)] text-foreground border-border dark:border-slate-700 hover:border-primary/40'}`}
                   >
                     <UserPlus size={14} /> Join Grup
                   </button>
                   <button
                     onClick={() => { setShowCreateForm(!showCreateForm); setShowJoinForm(false); }}
-                    className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold border transition-all ${showCreateForm ? 'bg-primary text-white border-primary' : 'bg-white text-foreground border-border hover:border-primary/40'}`}
+                    className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold border transition-all ${showCreateForm ? 'bg-primary text-white border-primary' : 'bg-[var(--bg-surface)] text-foreground border-border dark:border-slate-700 hover:border-primary/40'}`}
                   >
                     <Plus size={14} /> Buat Grup
                   </button>
                 </div>
 
                 {showJoinForm && (
-                  <form onSubmit={handleJoinGroup} className="bg-sky-50 border border-sky-200 rounded-2xl p-4 space-y-2">
-                    <p className="text-[11px] font-semibold text-sky-700 uppercase tracking-wide">Kode Grup</p>
+                  <form onSubmit={handleJoinGroup} className="bg-sky-50 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-500/20 rounded-2xl p-4 space-y-2">
+                    <p className="text-[11px] font-semibold text-sky-700 dark:text-sky-400 uppercase tracking-wide">Kode Grup</p>
                     <div className="flex gap-2">
                       <input type="text" value={joinCode} onChange={e => setJoinCode(e.target.value.toUpperCase())}
                         placeholder="Contoh: KEL-1234"
-                        className="flex-1 bg-white border border-sky-200 rounded-xl px-3 py-2 text-xs font-mono text-foreground outline-none focus:border-primary transition-colors" />
+                        className="flex-1 bg-[var(--bg-surface)] border border-sky-200 dark:border-sky-500/30 rounded-xl px-3 py-2 text-xs font-mono text-foreground outline-none focus:border-primary transition-colors" />
                       <button type="submit" className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary-hover transition-colors">Join</button>
                     </div>
                   </form>
                 )}
 
                 {showCreateForm && (
-                  <form onSubmit={handleCreateGroup} className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 space-y-2">
-                    <p className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wide">Nama Grup</p>
+                  <form onSubmit={handleCreateGroup} className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 rounded-2xl p-4 space-y-2">
+                    <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide">Nama Grup</p>
                     <div className="flex gap-2">
                       <input type="text" value={newGroupName} onChange={e => setNewGroupName(e.target.value)}
                         placeholder="Contoh: Kelompok 1"

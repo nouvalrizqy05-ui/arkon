@@ -132,14 +132,14 @@ export default function ClassTournament({ studentId, token, apiUrl, roomId, sock
                 <p className="text-foreground font-bold text-sm">Soal {duelState.currentQ + 1} / {duelState.questions.length}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 bg-white shadow-sm border border-border border border-border px-4 py-2 rounded-xl">
+            <div className="flex items-center gap-2 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 px-4 py-2 rounded-xl">
               <Zap size={14} className="text-amber-600" />
               <span className="text-amber-600 font-black text-sm">{duelState.myScore}</span>
             </div>
           </div>
 
           {/* Question */}
-          <div className="bg-white shadow-sm border border-border border border-border rounded-3xl p-8 backdrop-blur-sm mb-6">
+          <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 rounded-3xl p-8 backdrop-blur-sm mb-6">
             <div className="flex items-center gap-2 mb-4">
               <Clock size={14} className="text-secondary" />
               <span className="text-[10px] font-bold text-secondary uppercase tracking-widest">{q.time} detik</span>
@@ -158,8 +158,8 @@ export default function ClassTournament({ studentId, token, apiUrl, roomId, sock
                   duelState.answered
                     ? i === q.correct
                       ? 'border-emerald-500 bg-emerald-500/20 text-emerald-300'
-                      : 'border-border bg-white shadow-sm border border-border text-secondary'
-                    : 'border-border bg-white shadow-sm border border-border text-foreground hover:border-rose-500 hover:bg-rose-500/10 hover:text-rose-300'
+                      : 'border-border dark:border-slate-700 bg-[var(--bg-surface)] shadow-sm text-secondary'
+                    : 'border-border dark:border-slate-700 bg-[var(--bg-surface)] shadow-sm text-foreground hover:border-rose-500 hover:bg-rose-500/10 hover:text-rose-300'
                 }`}
               >
                 <span className="mr-3 text-secondary font-black">{String.fromCharCode(65 + i)}.</span>
@@ -203,11 +203,11 @@ export default function ClassTournament({ studentId, token, apiUrl, roomId, sock
     const roundNames = { 1: 'Round 1', 2: 'Quarter Final', 3: 'Semi Final', 4: 'Final' };
 
     return (
-      <div className="h-full flex flex-col bg-slate-50 overflow-hidden">
+      <div className="h-full flex flex-col bg-slate-50 dark:bg-slate-950 overflow-hidden">
         {/* Header */}
-        <div className="px-8 py-6 border-b border-border flex items-center justify-between shrink-0">
+        <div className="px-8 py-6 border-b border-border dark:border-slate-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-4">
-            <button onClick={() => { setBracketData(null); setActiveTournament(null); }} className="p-2 bg-white shadow-sm border border-border hover:bg-white shadow-sm border border-border rounded-xl transition text-secondary hover:text-foreground" aria-label="XCircle">
+            <button onClick={() => { setBracketData(null); setActiveTournament(null); }} className="p-2 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition text-secondary hover:text-foreground" aria-label="XCircle">
               <XCircle size={20} />
             </button>
             <div>
@@ -236,14 +236,14 @@ export default function ClassTournament({ studentId, token, apiUrl, roomId, sock
                     </span>
                   </div>
                   {rounds[roundNum].map((match, mi) => (
-                    <div key={mi} className={`bg-white shadow-sm border border-border border rounded-2xl overflow-hidden transition-all ${
+                    <div key={mi} className={`bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-2xl overflow-hidden transition-all ${
                       match.status === 'active' ? 'border-rose-500/50 shadow-lg shadow-rose-500/10 animate-pulse' : 
-                      match.status === 'completed' ? 'border-emerald-500/30' : 'border-border'
+                      match.status === 'completed' ? 'border-emerald-500/30' : ''
                     }`}>
                       {/* Player 1 */}
-                      <div className={`flex items-center gap-3 px-4 py-3 border-b border-border ${match.winner_id === match.player1_id ? 'bg-emerald-500/10' : ''}`}>
+                      <div className={`flex items-center gap-3 px-4 py-3 border-b border-border dark:border-slate-800 ${match.winner_id === match.player1_id ? 'bg-emerald-500/10' : ''}`}>
                         <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-black ${
-                          match.winner_id === match.player1_id ? 'bg-emerald-500 text-foreground' : 'bg-white shadow-sm border border-border text-secondary'
+                          match.winner_id === match.player1_id ? 'bg-emerald-500 text-foreground' : 'bg-slate-50 dark:bg-slate-800 border border-border dark:border-slate-700 text-secondary'
                         }`}>
                           {match.winner_id === match.player1_id ? <Crown size={12} /> : '1'}
                         </div>
@@ -255,7 +255,7 @@ export default function ClassTournament({ studentId, token, apiUrl, roomId, sock
                       {/* Player 2 */}
                       <div className={`flex items-center gap-3 px-4 py-3 ${match.winner_id === match.player2_id ? 'bg-emerald-500/10' : ''}`}>
                         <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-black ${
-                          match.winner_id === match.player2_id ? 'bg-emerald-500 text-foreground' : 'bg-white shadow-sm border border-border text-secondary'
+                          match.winner_id === match.player2_id ? 'bg-emerald-500 text-foreground' : 'bg-slate-50 dark:bg-slate-800 border border-border dark:border-slate-700 text-secondary'
                         }`}>
                           {match.winner_id === match.player2_id ? <Crown size={12} /> : '2'}
                         </div>
@@ -268,7 +268,7 @@ export default function ClassTournament({ studentId, token, apiUrl, roomId, sock
                       <div className={`px-4 py-2 text-center text-[9px] font-black uppercase tracking-widest ${
                         match.status === 'active' ? 'bg-rose-500/20 text-rose-600' :
                         match.status === 'completed' ? 'bg-emerald-500/10 text-emerald-600' :
-                        'bg-white shadow-sm border border-border text-secondary'
+                        'bg-slate-50 dark:bg-slate-800 border border-border dark:border-slate-700 text-secondary'
                       }`}>
                         {match.status === 'active' ? '⚔️ LIVE DUEL' : match.status === 'completed' ? '✅ Selesai' : '⏳ Menunggu'}
                       </div>
@@ -297,7 +297,7 @@ export default function ClassTournament({ studentId, token, apiUrl, roomId, sock
   );
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar p-8 bg-slate-50">
+    <div className="h-full overflow-y-auto custom-scrollbar p-8 bg-slate-50 dark:bg-slate-950">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
@@ -311,14 +311,14 @@ export default function ClassTournament({ studentId, token, apiUrl, roomId, sock
           </div>
           <button 
             onClick={onBack}
-            className="px-4 py-2 bg-white shadow-sm border border-border hover:bg-white shadow-sm border border-border text-secondary hover:text-foreground rounded-xl text-xs font-bold transition flex items-center gap-2"
+            className="px-4 py-2 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-secondary hover:text-foreground rounded-xl text-xs font-bold transition flex items-center gap-2"
           >
             <ArrowLeft size={16} /> Kembali ke Kelas
           </button>
         </div>
 
         {tournaments.length === 0 ? (
-          <div className="text-center py-16 bg-white shadow-sm border border-border border border-border rounded-3xl">
+          <div className="text-center py-16 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-3xl">
             <Trophy size={48} className="text-secondary mx-auto mb-4" />
             <p className="font-bold text-secondary">Belum ada turnamen di kelas ini</p>
             <p className="text-secondary text-xs mt-1">Dosen akan membuat turnamen saat waktunya tiba</p>
@@ -326,7 +326,7 @@ export default function ClassTournament({ studentId, token, apiUrl, roomId, sock
         ) : (
           <div className="space-y-4">
             {tournaments.map(t => (
-              <div key={t.id} className="bg-white shadow-sm border border-border border border-border rounded-2xl p-6 hover:border-border transition-all group">
+              <div key={t.id} className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-2xl p-6 hover:border-border transition-all group">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
@@ -353,7 +353,7 @@ export default function ClassTournament({ studentId, token, apiUrl, roomId, sock
                     </span>
                     <button 
                       onClick={() => fetchBracket(t.id)}
-                      className="px-4 py-2 bg-white shadow-sm border border-border border border-border text-secondary hover:text-foreground hover:border-border rounded-xl text-xs font-bold transition"
+                      className="px-4 py-2 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 text-secondary hover:text-foreground hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl text-xs font-bold transition"
                     >
                       {t.status === 'registration' ? 'Daftar & Lihat' : 'Lihat Bracket'}
                     </button>

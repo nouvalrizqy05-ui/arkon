@@ -59,7 +59,7 @@ export default function DailyLoginModal({ studentId, token, apiUrl, onClaim, onC
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="bg-white border border-border rounded-3xl w-[420px] max-w-[90vw] shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-500">
+      <div className="bg-[var(--bg-surface)] border border-border dark:border-slate-800 rounded-3xl w-[420px] max-w-[90vw] shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-500">
         {/* Header */}
         <div className="relative bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-rose-500/20 p-6 text-center border-b border-border">
           <button onClick={() => { setShow(false); if(onClose) onClose(); }} className="absolute top-4 right-4 text-secondary hover:text-secondary transition">
@@ -87,7 +87,7 @@ export default function DailyLoginModal({ studentId, token, apiUrl, onClaim, onC
                       ? 'bg-amber-500/20 border-amber-500/50 scale-105'
                       : isPast
                         ? 'bg-emerald-500/10 border-emerald-500/30'
-                        : 'bg-white shadow-sm border border-border border-border'
+                        : 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800'
                   }`}
                 >
                   <span className="text-[10px] font-bold text-secondary mb-1">Day {day}</span>
@@ -122,7 +122,7 @@ export default function DailyLoginModal({ studentId, token, apiUrl, onClaim, onC
           ) : (
             <button
               onClick={() => { setShow(false); if(onClose) onClose(); }}
-              className="w-full py-3 bg-white shadow-sm border border-border text-foreground font-bold rounded-xl hover:bg-white shadow-sm border border-border transition-all text-sm"
+              className="w-full py-3 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 text-foreground font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all text-sm"
             >
               Tutup
             </button>

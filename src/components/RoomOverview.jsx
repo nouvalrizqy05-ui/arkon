@@ -52,7 +52,7 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
   }, [room?.id, userRole, apiUrl, token, memberCount]);
 
   return (
-    <div className="w-full h-full overflow-y-auto bg-gray-50 custom-scrollbar">
+    <div className="w-full h-full overflow-y-auto bg-slate-50 dark:bg-slate-950 transition-colors custom-scrollbar">
       {/* Hero Banner */}
       <div className="bg-gradient-to-br from-[#0B2F6D] via-[#1a3a7a] to-[#0d1f4d] text-foreground pt-10 pb-20 px-8 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
@@ -90,10 +90,10 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           {[
-            { label: 'Tugas', value: pendingActivities || 0, icon: ClipboardList, color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100' },
-            { label: 'Skor Tertinggi', value: stats.highScore || '-', icon: Trophy, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100' },
-            { label: 'Assembly', value: stats.assemblyCount || 0, icon: Cpu, color: 'text-primary', bg: 'bg-indigo-50', border: 'border-indigo-100' },
-            { label: 'Quiz Selesai', value: stats.quizCount || 0, icon: Gamepad2, color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100' },
+            { label: 'Tugas', value: pendingActivities || 0, icon: ClipboardList, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-500/10', border: 'border-amber-100 dark:border-amber-500/20' },
+            { label: 'Skor Tertinggi', value: stats.highScore || '-', icon: Trophy, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-500/10', border: 'border-emerald-100 dark:border-emerald-500/20' },
+            { label: 'Assembly', value: stats.assemblyCount || 0, icon: Cpu, color: 'text-primary', bg: 'bg-indigo-50 dark:bg-indigo-500/10', border: 'border-indigo-100 dark:border-indigo-500/20' },
+            { label: 'Quiz Selesai', value: stats.quizCount || 0, icon: Gamepad2, color: 'text-rose-600', bg: 'bg-rose-50 dark:bg-rose-500/10', border: 'border-rose-100 dark:border-rose-500/20' },
           ].map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -112,8 +112,8 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-6">
-          <h3 className="text-sm font-black text-gray-800 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 mb-6">
+          <h3 className="text-sm font-black text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
             <Activity size={16} className="text-indigo-500" />
             Mulai Aktivitas
           </h3>
@@ -122,13 +122,13 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
               <button
                 key={action.id}
                 onClick={() => onNavigate(action.id)}
-                className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-gray-100 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/5 transition-all bg-white hover:-translate-y-1"
+                className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/5 transition-all bg-white dark:bg-slate-800 hover:-translate-y-1"
               >
                 <div className={`w-14 h-14 bg-gradient-to-br ${action.color} rounded-2xl flex items-center justify-center text-2xl shadow-lg group-hover:scale-110 transition-transform`}>
                   {action.icon}
                 </div>
                 <div className="text-center">
-                  <p className="text-sm font-bold text-gray-800">{action.label}</p>
+                  <p className="text-sm font-bold text-foreground">{action.label}</p>
                   <p className="text-[10px] text-secondary mt-0.5">{action.desc}</p>
                 </div>
               </button>
@@ -138,7 +138,7 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
 
         {/* Pending Activities (from Dosen) */}
         {userRole === 'mahasiswa' && pendingActivities > 0 && (
-          <div className="bg-amber-50 rounded-2xl border border-amber-200 p-6 mb-6">
+          <div className="bg-amber-50 dark:bg-amber-500/10 rounded-2xl border border-amber-200 dark:border-amber-500/20 p-6 mb-6">
             <h3 className="text-sm font-black text-amber-800 uppercase tracking-wider mb-3 flex items-center gap-2">
               <ClipboardList size={16} className="text-amber-600" />
               Tugas Pending ({pendingActivities})
@@ -153,14 +153,14 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
         )}
 
         {/* Recent Activity Feed */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-          <h3 className="text-sm font-black text-gray-800 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+          <h3 className="text-sm font-black text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
             <Clock size={16} className="text-secondary" />
             Aktivitas Terbaru
           </h3>
           {(!recentActivity || recentActivity.length === 0) ? (
             <div className="text-center py-10">
-              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <Activity size={24} className="text-foreground" />
               </div>
               <p className="text-sm text-secondary font-medium">Belum ada aktivitas di room ini.</p>
@@ -169,16 +169,16 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
           ) : (
             <div className="space-y-3">
               {recentActivity.slice(0, 8).map((item, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                <div key={i} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0 ${
-                    item.type === 'assembly' ? 'bg-rose-100' :
-                    item.type === 'quiz' ? 'bg-amber-100' :
-                    'bg-indigo-100'
+                    item.type === 'assembly' ? 'bg-rose-100 dark:bg-rose-500/20' :
+                    item.type === 'quiz' ? 'bg-amber-100 dark:bg-amber-500/20' :
+                    'bg-indigo-100 dark:bg-indigo-500/20'
                   }`}>
                     {item.type === 'assembly' ? '🖥️' : item.type === 'quiz' ? '🎮' : '📝'}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-800 truncate">{item.description}</p>
+                    <p className="text-sm font-medium text-foreground truncate">{item.description}</p>
                     <p className="text-[10px] text-secondary">{item.student_name} • {new Date(item.created_at).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</p>
                   </div>
                   {item.score !== undefined && (
@@ -199,8 +199,8 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
         {/* Dosen: Adaptive Learning Insight */}
         {userRole === 'dosen' && (
           <div className="mt-6 space-y-6">
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-              <h3 className="text-sm font-black text-gray-800 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+              <h3 className="text-sm font-black text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
                 <AlertCircle size={16} className="text-red-500" /> Perhatian Pengajar
               </h3>
               {dosenLoading ? (
@@ -210,7 +210,7 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
+                  <div className="p-4 bg-amber-50 dark:bg-amber-500/10 rounded-xl border border-amber-100 dark:border-amber-500/20">
                     <p className="text-xs font-bold text-amber-800 mb-1">Tugas Belum Terkumpul</p>
                     <p className="text-2xl font-black text-amber-600">
                       {dosenStats?.pendingSubmissions ?? '—'}
@@ -221,7 +221,7 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
                         : 'Data tidak tersedia'}
                     </p>
                   </div>
-                  <div className="p-4 bg-rose-50 rounded-xl border border-rose-100">
+                  <div className="p-4 bg-rose-50 dark:bg-rose-500/10 rounded-xl border border-rose-100 dark:border-rose-500/20">
                     <p className="text-xs font-bold text-rose-800 mb-1">Mahasiswa Inaktif</p>
                     <p className="text-2xl font-black text-rose-600">
                       {dosenStats?.inactiveStudents ?? '—'}
@@ -232,8 +232,8 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
               )}
             </div>
 
-            <div className="bg-gradient-to-r from-indigo-50 to-violet-50 rounded-2xl border border-indigo-200 p-6">
-              <h3 className="text-sm font-black text-indigo-800 uppercase tracking-wider mb-2 flex items-center gap-2">
+            <div className="bg-gradient-to-r from-indigo-50 to-violet-50 dark:from-indigo-900/30 dark:to-violet-900/30 rounded-2xl border border-indigo-200 dark:border-indigo-800 p-6">
+              <h3 className="text-sm font-black text-indigo-800 dark:text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-2">
                 <TrendingUp size={16} className="text-primary" />
                 Insight Adaptive Learning
               </h3>

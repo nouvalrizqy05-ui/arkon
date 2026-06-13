@@ -120,13 +120,13 @@ export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName
         />
       )}
       <aside
-        className={`${isCollapsed ? 'hidden md:flex w-[64px]' : 'flex w-[260px] md:w-[220px] fixed md:static inset-y-0 left-0 z-50'} bg-white border-r border-slate-200 flex-col shrink-0 h-full transition-transform duration-300 ease-in-out ${isCollapsed ? '-translate-x-full md:translate-x-0' : 'translate-x-0'}`}
+        className={`${isCollapsed ? 'hidden md:flex w-[64px]' : 'flex w-[260px] md:w-[220px] fixed md:static inset-y-0 left-0 z-50'} bg-[var(--bg-surface)] dark:bg-slate-900 border-r border-border dark:border-slate-800 flex-col shrink-0 h-full transition-transform duration-300 ease-in-out ${isCollapsed ? '-translate-x-full md:translate-x-0' : 'translate-x-0'}`}
         role="navigation" aria-label="Room navigation">
 
       {/* Room header */}
-      <div className={`px-3 py-3 border-b border-slate-100 ${isCollapsed ? 'items-center' : ''}`}>
+      <div className={`px-3 py-3 border-b border-border dark:border-slate-800 ${isCollapsed ? 'items-center' : ''}`}>
         <div className="flex items-center gap-2 mb-2">
-          <button onClick={onToggleCollapse} className="p-1.5 text-secondary hover:text-primary hover:bg-slate-50 rounded-lg transition-colors cursor-pointer hidden md:block">
+          <button onClick={onToggleCollapse} className="p-1.5 text-secondary hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer hidden md:block">
             <Menu size={16} />
           </button>
           <button onClick={onBack}
@@ -165,7 +165,7 @@ export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName
               className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all
                 ${isActive(item.id)
                   ? `${item.bgActive} ${item.color} font-semibold`
-                  : 'text-secondary hover:text-foreground hover:bg-slate-50'
+                  : 'text-secondary hover:text-foreground dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
                 } ${isCollapsed ? 'justify-center' : ''}`}>
               <item.icon size={16} className={isActive(item.id) ? item.color : 'text-secondary'} />
               {!isCollapsed && (
@@ -182,14 +182,14 @@ export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName
 
             {/* Children */}
             {item.children && openGroup === item.id && !isCollapsed && (
-              <div className="ml-4 pl-3 border-l border-slate-200 mt-0.5 space-y-0.5">
+              <div className="ml-4 pl-3 border-l border-border dark:border-slate-700 mt-0.5 space-y-0.5">
                 {item.children.map(child => (
                   <button key={child.id} onClick={() => onTabChange(child.id)}
                     aria-current={activeTab === child.id ? 'page' : undefined}
                     className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all
                       ${activeTab === child.id
                         ? 'bg-primary-soft text-primary font-semibold'
-                        : 'text-secondary hover:text-foreground hover:bg-slate-50'
+                        : 'text-secondary hover:text-foreground dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
                       }`}>
                     {child.label}
                   </button>
@@ -214,7 +214,7 @@ export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName
                 className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all
                   ${activeTab === item.id
                     ? `${item.bgActive} ${item.color} font-semibold`
-                    : 'text-secondary hover:text-foreground hover:bg-slate-50'
+                    : 'text-secondary hover:text-foreground dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
                   } ${isCollapsed ? 'justify-center' : ''}`}>
                 <item.icon size={16} className={activeTab === item.id ? item.color : 'text-secondary'} />
                 {!isCollapsed && <span className="flex-1 text-left truncate">{item.label}</span>}
@@ -225,7 +225,7 @@ export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName
       </nav>
 
       {/* Footer Links */}
-      <div className={`px-2 py-2 border-t border-slate-100 flex flex-col gap-1 ${isCollapsed ? 'items-center' : ''}`}>
+      <div className={`px-2 py-2 border-t border-border dark:border-slate-800 flex flex-col gap-1 ${isCollapsed ? 'items-center' : ''}`}>
         <button onClick={() => onTabChange('about')}
           title={isCollapsed ? 'Tentang ARKON' : ''}
           className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-medium text-secondary hover:text-primary hover:bg-primary-soft transition-all">
@@ -240,7 +240,7 @@ export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName
         </button>
         <button onClick={handleLogout}
           title={isCollapsed ? 'Keluar' : ''}
-          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-red-600 hover:text-red-700 hover:bg-red-50 transition-all mt-1">
+          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all mt-1">
           <LogOut size={14} className="shrink-0" />
           {!isCollapsed && <span>Keluar</span>}
         </button>

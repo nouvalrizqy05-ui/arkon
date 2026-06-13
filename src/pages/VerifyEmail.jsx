@@ -44,7 +44,7 @@ export default function VerifyEmail() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-[#080C1A]">
-      <div className="bg-white dark:bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-border dark:border-border text-center">
+      <div className="bg-white dark:bg-[#131b2f] p-8 md:p-12 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-border dark:border-border text-center">
         {status === 'loading' && (
           <div className="flex flex-col items-center">
             <Loader2 className="w-16 h-16 text-primary animate-spin mb-6" />
@@ -55,14 +55,14 @@ export default function VerifyEmail() {
 
         {status === 'success' && (
           <div className="flex flex-col items-center">
-            <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mb-6 text-foreground shadow-lg shadow-emerald-500/20">
+            <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mb-6 text-white shadow-lg shadow-emerald-500/20">
               <CheckCircle2 size={40} />
             </div>
             <h1 className="text-2xl font-bold text-foreground">Verifikasi Berhasil!</h1>
             <p className="text-secondary mt-2 mb-8">{message}</p>
             <Link 
               to="/login" 
-              className="w-full py-4 bg-primary text-foreground rounded-2xl font-bold hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
+              className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
             >
               Lanjut ke Login <ArrowRight size={18} />
             </Link>
@@ -71,7 +71,7 @@ export default function VerifyEmail() {
 
         {status === 'error' && (
           <div className="flex flex-col items-center">
-            <div className="w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center mb-6 text-foreground shadow-lg shadow-rose-500/20">
+            <div className="w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center mb-6 text-white shadow-lg shadow-rose-500/20">
               <XCircle size={40} />
             </div>
             <h1 className="text-2xl font-bold text-foreground">Verifikasi Gagal</h1>

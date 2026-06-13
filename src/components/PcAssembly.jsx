@@ -6,15 +6,15 @@ import { calculateBenchmark } from '../data/benchmark-calculator';
 
 function PcAssemblyAdmin() {
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50">
+    <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50 dark:bg-slate-950">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-primary to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
             <Wrench size={24} className="text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-black text-gray-900">Manajemen Perakitan PC</h2>
-            <p className="text-sm text-gray-500">Buat skenario perakitan, atur budget, dan evaluasi hasil rakitan mahasiswa.</p>
+            <h2 className="text-2xl font-black text-foreground">Manajemen Perakitan PC</h2>
+            <p className="text-sm text-secondary">Buat skenario perakitan, atur budget, dan evaluasi hasil rakitan mahasiswa.</p>
           </div>
         </div>
         <button className="bg-primary text-white font-bold py-2.5 px-5 rounded-xl hover:bg-primary-hover shadow-md flex items-center gap-2">
@@ -23,55 +23,55 @@ function PcAssemblyAdmin() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-          <h3 className="font-bold text-gray-900 mb-1 flex items-center gap-2"><Target size={16} className="text-amber-500"/> Skenario Aktif</h3>
-          <p className="text-3xl font-black text-primary my-2">3 <span className="text-sm font-medium text-gray-500">Tugas</span></p>
+        <div className="bg-[var(--bg-surface)] p-5 rounded-2xl border border-border dark:border-slate-800 shadow-sm">
+          <h3 className="font-bold text-foreground mb-1 flex items-center gap-2"><Target size={16} className="text-amber-500"/> Skenario Aktif</h3>
+          <p className="text-3xl font-black text-primary my-2">3 <span className="text-sm font-medium text-secondary">Tugas</span></p>
         </div>
-        <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-          <h3 className="font-bold text-gray-900 mb-1 flex items-center gap-2"><Users size={16} className="text-emerald-500"/> Total Pengumpulan</h3>
-          <p className="text-3xl font-black text-emerald-600 my-2">124 <span className="text-sm font-medium text-gray-500">Mahasiswa</span></p>
+        <div className="bg-[var(--bg-surface)] p-5 rounded-2xl border border-border dark:border-slate-800 shadow-sm">
+          <h3 className="font-bold text-foreground mb-1 flex items-center gap-2"><Users size={16} className="text-emerald-500"/> Total Pengumpulan</h3>
+          <p className="text-3xl font-black text-emerald-600 my-2">124 <span className="text-sm font-medium text-secondary">Mahasiswa</span></p>
         </div>
-        <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-          <h3 className="font-bold text-gray-900 mb-1 flex items-center gap-2"><AlertTriangle size={16} className="text-red-500"/> Bottleneck Rata-rata</h3>
-          <p className="text-3xl font-black text-red-500 my-2">15% <span className="text-sm font-medium text-gray-500">Kasus</span></p>
+        <div className="bg-[var(--bg-surface)] p-5 rounded-2xl border border-border dark:border-slate-800 shadow-sm">
+          <h3 className="font-bold text-foreground mb-1 flex items-center gap-2"><AlertTriangle size={16} className="text-red-500"/> Bottleneck Rata-rata</h3>
+          <p className="text-3xl font-black text-red-500 my-2">15% <span className="text-sm font-medium text-secondary">Kasus</span></p>
         </div>
       </div>
 
-      <h3 className="text-lg font-black text-gray-900 mb-4">Daftar Skenario Tugas Perakitan</h3>
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <h3 className="text-lg font-black text-foreground mb-4">Daftar Skenario Tugas Perakitan</h3>
+      <div className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 shadow-sm overflow-hidden">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Judul Skenario</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Target (Kebutuhan)</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Limit Budget</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Status</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase text-center">Aksi</th>
+            <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-border dark:border-slate-800">
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Judul Skenario</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Target (Kebutuhan)</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Limit Budget</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Status</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase text-center">Aksi</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+            <tr className="border-b border-border dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
               <td className="p-4">
-                <p className="font-bold text-gray-900">PC Gaming Budget (Esports)</p>
-                <p className="text-xs text-gray-500">Rakitan PC untuk game kompetitif (CS2, Valorant) stabil 144fps.</p>
+                <p className="font-bold text-foreground">PC Gaming Budget (Esports)</p>
+                <p className="text-xs text-secondary">Rakitan PC untuk game kompetitif (CS2, Valorant) stabil 144fps.</p>
               </td>
-              <td className="p-4"><span className="px-2 py-1 bg-rose-50 text-rose-700 text-xs font-bold rounded">Gaming</span></td>
-              <td className="p-4 font-bold text-gray-700">Rp 8.000.000</td>
-              <td className="p-4"><span className="px-2 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-wider rounded-full">Aktif</span></td>
+              <td className="p-4"><span className="px-2 py-1 bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-400 text-xs font-bold rounded">Gaming</span></td>
+              <td className="p-4 font-bold text-foreground">Rp 8.000.000</td>
+              <td className="p-4"><span className="px-2 py-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-[10px] font-black uppercase tracking-wider rounded-full">Aktif</span></td>
               <td className="p-4 text-center">
-                <button className="px-3 py-1.5 text-xs font-bold bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Kelola</button>
+                <button className="px-3 py-1.5 text-xs font-bold bg-[var(--bg-surface)] border border-border dark:border-slate-700 rounded-lg text-foreground hover:bg-slate-50 dark:hover:bg-slate-800">Kelola</button>
               </td>
             </tr>
-            <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+            <tr className="border-b border-border dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
               <td className="p-4">
-                <p className="font-bold text-gray-900">Workstation Rendering 3D</p>
-                <p className="text-xs text-gray-500">Rakitan PC untuk Blender & Premiere Pro.</p>
+                <p className="font-bold text-foreground">Workstation Rendering 3D</p>
+                <p className="text-xs text-secondary">Rakitan PC untuk Blender & Premiere Pro.</p>
               </td>
-              <td className="p-4"><span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded">Rendering</span></td>
-              <td className="p-4 font-bold text-gray-700">Rp 25.000.000</td>
-              <td className="p-4"><span className="px-2 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-wider rounded-full">Aktif</span></td>
+              <td className="p-4"><span className="px-2 py-1 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 text-xs font-bold rounded">Rendering</span></td>
+              <td className="p-4 font-bold text-foreground">Rp 25.000.000</td>
+              <td className="p-4"><span className="px-2 py-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-[10px] font-black uppercase tracking-wider rounded-full">Aktif</span></td>
               <td className="p-4 text-center">
-                <button className="px-3 py-1.5 text-xs font-bold bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Kelola</button>
+                <button className="px-3 py-1.5 text-xs font-bold bg-[var(--bg-surface)] border border-border dark:border-slate-700 rounded-lg text-foreground hover:bg-slate-50 dark:hover:bg-slate-800">Kelola</button>
               </td>
             </tr>
           </tbody>
@@ -308,7 +308,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
           </div>
           <button
             onClick={onActivityComplete}
-            className="px-3 py-1.5 bg-white shadow-sm border border-border text-secondary rounded-lg text-[10px] font-bold hover:bg-white shadow-sm border border-border transition"
+            className="px-3 py-1.5 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 text-secondary hover:text-foreground rounded-lg text-[10px] font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition"
           >Keluar Tugas</button>
         </div>
       )}
@@ -334,7 +334,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-xl border border-border mr-2">
+            <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-900 p-1 rounded-xl border border-border dark:border-slate-800 mr-2">
                <button 
                 onClick={() => { setIsLearningMode(false); setEquippedComponents({}); }}
                 className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${!isLearningMode ? 'bg-primary text-white shadow-md' : 'text-secondary hover:text-foreground'}`}
@@ -362,7 +362,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
 
       {/* Gudang Komponen (Inventory) - Fix horizontal overflow */}
       <div className="pb-2 shrink-0 z-20 w-full overflow-hidden min-w-0">
-        <div className="bg-white border border-border rounded-xl p-2.5 w-full overflow-hidden flex flex-col shadow-sm">
+        <div className="bg-white dark:bg-slate-900 border border-border dark:border-slate-800 rounded-xl p-2.5 w-full overflow-hidden flex flex-col shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-black text-foreground flex items-center gap-2">
               <span className="text-lg">📦</span> Gudang Komponen
@@ -372,8 +372,8 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
               <button
                 onClick={() => setGudangFilter('all')}
                 className={`shrink-0 px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all ${gudangFilter === 'all'
-                    ? 'bg-white shadow-sm border border-border border-border text-foreground'
-                    : 'bg-white shadow-sm border border-border border-border text-secondary hover:text-secondary'
+                    ? 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 text-foreground'
+                    : 'bg-transparent shadow-sm border border-transparent text-secondary hover:text-foreground'
                   }`}
               >
                 Semua
@@ -386,8 +386,8 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                     key={cat}
                     onClick={() => setGudangFilter(cat)}
                     className={`shrink-0 px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all flex items-center gap-1 ${isActive
-                        ? 'bg-emerald-50 border-emerald-200 text-emerald-600'
-                        : 'bg-white border-border text-secondary hover:text-foreground'
+                        ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
+                        : 'bg-transparent border-transparent text-secondary hover:text-foreground'
                       }`}
                   >
                     {CATEGORY_EMOJIS[cat]}
@@ -424,8 +424,8 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                       key={item.id}
                       onClick={() => toggleEquip(item)}
                       className={`shrink-0 w-28 p-2 rounded-lg border text-left transition-all relative overflow-hidden ${isEquipped
-                          ? 'bg-emerald-50 border-emerald-300 ring-1 ring-emerald-200'
-                          : 'bg-white border-border hover:border-indigo-300 hover:bg-primary-soft'
+                          ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30 ring-1 ring-emerald-200 dark:ring-emerald-500/20'
+                          : 'bg-white dark:bg-slate-800 border-border dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500/50 hover:bg-primary-soft dark:hover:bg-indigo-900/20'
                         }`}
                     >
                       <div className="text-2xl mb-2">{item.emoji}</div>
@@ -503,7 +503,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
       {/* Benchmark Result Card */}
       {showBenchmark && benchmark && (
         <div className="pb-2 shrink-0 animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="bg-white border border-border shadow-sm rounded-2xl p-5">
+          <div className="bg-white dark:bg-slate-900 border border-border dark:border-slate-800 shadow-sm rounded-2xl p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-black text-foreground flex items-center gap-2">
                 <Gauge size={16} className="text-primary" /> PC Benchmark Score
@@ -528,7 +528,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                       <span className={`text-xs font-black ${data.tierTextColor.replace('400', '600')}`}>{data.score}</span>
                     </div>
                   </div>
-                  <div className="h-2 bg-slate-50 rounded-full overflow-hidden">
+                  <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div className={`h-full ${barColor} rounded-full transition-all duration-700`} style={{ width: `${data.score}%` }} />
                   </div>
                 </div>
@@ -574,7 +574,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
       {/* Share Modal */}
       {showShareModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl animate-in zoom-in duration-200">
+          <div className="bg-[var(--bg-surface)] border border-border dark:border-slate-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl animate-in zoom-in duration-200">
             <h3 className="text-lg font-black text-foreground mb-2">Share Build ke Showroom</h3>
             <p className="text-secondary text-xs mb-4">Beri nama build PC kamu dan share ke seluruh kelas!</p>
             <input
@@ -582,13 +582,13 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
               value={buildName}
               onChange={(e) => setBuildName(e.target.value)}
               placeholder="Contoh: Budget Gaming Beast"
-              className="w-full bg-white shadow-sm border border-border border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder-white/20 focus:outline-none focus:border-primary/50 mb-4"
+              className="w-full bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary/50 mb-4"
               maxLength={50}
             />
             <div className="flex gap-3">
               <button
                 onClick={() => setShowShareModal(false)}
-                className="flex-1 py-2.5 bg-white shadow-sm border border-border border border-border text-secondary font-bold rounded-xl text-xs hover:bg-white shadow-sm border border-border transition"
+                className="flex-1 py-2.5 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 text-secondary hover:text-foreground font-bold rounded-xl text-xs hover:bg-slate-50 dark:hover:bg-slate-800 transition"
               >
                 Batal
               </button>
@@ -605,11 +605,11 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
       )}
 
       {/* 3D View - Main Assembly Area (Expanded) */}
-      <div className={`${isFullscreen ? 'fixed inset-0 z-[100] m-0 rounded-0' : 'w-full h-[500px] md:h-[700px] lg:h-[800px] relative mb-8 rounded-2xl border border-border'} overflow-hidden bg-slate-50 shadow-lg transition-all duration-300`}>
+      <div className={`${isFullscreen ? 'fixed inset-0 z-[100] m-0 rounded-0' : 'w-full h-[500px] md:h-[700px] lg:h-[800px] relative mb-8 rounded-2xl border border-border'} overflow-hidden bg-slate-50 dark:bg-slate-950 shadow-lg transition-all duration-300`}>
         {/* Fullscreen Toggle Button - Moved to Left to avoid overlapping with Transform Config */}
         <button
           onClick={() => setIsFullscreen(!isFullscreen)}
-          className="absolute top-4 left-4 z-30 p-2.5 bg-white shadow-sm border border-border backdrop-blur-md border border-border text-foreground rounded-xl hover:bg-white transition-all active:scale-95 group shadow-sm"
+          className="absolute top-4 left-4 z-30 p-2.5 bg-white/80 dark:bg-slate-800/80 shadow-sm border border-border dark:border-slate-700 backdrop-blur-md text-foreground hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95 group shadow-sm"
           title={isFullscreen ? "Keluar Layar Penuh" : "Layar Penuh"}
         >
           {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
@@ -617,12 +617,12 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
 
         {/* Complete Badge */}
         {isComplete && compatibility.isCompatible && (
-          <div className="absolute bottom-4 right-4 z-20 bg-white shadow-sm border border-border backdrop-blur-md border border-emerald-200 p-4 rounded-2xl shadow-xl animate-in slide-in-from-right-4 fade-in duration-500 max-w-[240px]">
+          <div className="absolute bottom-4 right-4 z-20 bg-white/90 dark:bg-slate-900/90 shadow-sm border border-emerald-200 dark:border-emerald-500/30 backdrop-blur-md p-4 rounded-2xl shadow-xl animate-in slide-in-from-right-4 fade-in duration-500 max-w-[240px]">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center shadow-md shadow-emerald-500/30">
                 <CheckCircle2 size={18} className="text-white" />
               </div>
-              <h2 className="text-sm font-black text-gray-900">PC Nyala! 🎉</h2>
+              <h2 className="text-sm font-black text-foreground">PC Nyala! 🎉</h2>
             </div>
             <p className="text-[10px] text-emerald-600 font-bold leading-tight">
               Semua komponen kompatibel dan terpasang sempurna.
@@ -636,12 +636,12 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
 
         {/* Incompatible Warning */}
         {isComplete && !compatibility.isCompatible && (
-          <div className="absolute bottom-4 right-4 z-20 bg-slate-50/80 backdrop-blur-md border border-red-500/30 p-4 rounded-2xl shadow-2xl shadow-red-500/20 animate-in slide-in-from-right-4 fade-in duration-500 max-w-[240px]">
+          <div className="absolute bottom-4 right-4 z-20 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md border border-red-500/30 p-4 rounded-2xl shadow-2xl shadow-red-500/20 animate-in slide-in-from-right-4 fade-in duration-500 max-w-[240px]">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center shadow-lg shadow-red-500/30">
                 <AlertCircle size={18} className="text-white" />
               </div>
-              <h2 className="text-sm font-black text-gray-900">Error! 💥</h2>
+              <h2 className="text-sm font-black text-foreground">Error! 💥</h2>
             </div>
             <p className="text-[10px] text-red-400 font-bold leading-tight">
               {compatibility.errors.length} masalah kompatibilitas. PC tidak bisa booting.
@@ -652,7 +652,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
         {/* Fallback Toggle Button */}
         <button
           onClick={() => setUse2DFallback(!use2DFallback)}
-          className="absolute top-4 right-4 z-30 px-3 py-1.5 bg-white shadow-sm border border-border backdrop-blur-md text-secondary rounded-lg text-[10px] font-bold hover:bg-slate-50 transition-all flex items-center gap-1.5"
+          className="absolute top-4 right-4 z-30 px-3 py-1.5 bg-white/80 dark:bg-slate-800/80 shadow-sm border border-border dark:border-slate-700 backdrop-blur-md text-secondary hover:text-foreground rounded-lg text-[10px] font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center gap-1.5"
         >
           {use2DFallback ? <Monitor size={14} /> : <HardDrive size={14} />}
           {use2DFallback ? 'Gunakan 3D View' : 'Mode 2D (Low-end)'}
@@ -660,20 +660,20 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
 
         {/* 3D View Iframe or 2D Fallback */}
         {use2DFallback ? (
-          <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100/50 p-8">
-            <div className="w-48 h-48 border-4 border-dashed border-slate-300 rounded-3xl flex items-center justify-center bg-white mb-6 shadow-sm">
+          <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100/50 dark:bg-slate-900/50 p-8">
+            <div className="w-48 h-48 border-4 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl flex items-center justify-center bg-white dark:bg-slate-800 mb-6 shadow-sm">
               <span className="text-4xl">🖥️</span>
             </div>
-            <h3 className="text-lg font-black text-slate-700 mb-2">Mode 2D Sederhana Aktif</h3>
-            <p className="text-xs text-slate-500 mb-6 text-center max-w-sm leading-relaxed">
+            <h3 className="text-lg font-black text-foreground mb-2">Mode 2D Sederhana Aktif</h3>
+            <p className="text-xs text-secondary mb-6 text-center max-w-sm leading-relaxed">
               Ini adalah tampilan fallback statis untuk perangkat yang tidak mendukung WebGL. Komponen yang Anda lengkapi di panel bawah akan tercatat secara logis.
             </p>
             <div className="flex flex-wrap gap-2 justify-center max-w-lg">
               {assembledCategories.length === 0 ? (
-                <span className="text-xs text-slate-400 font-bold italic">Belum ada komponen terpasang</span>
+                <span className="text-xs text-secondary font-bold italic">Belum ada komponen terpasang</span>
               ) : (
                 assembledCategories.map(cat => (
-                  <div key={cat} className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-[10px] font-black uppercase flex items-center gap-1.5">
+                  <div key={cat} className="px-3 py-1.5 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 rounded-lg text-[10px] font-black uppercase flex items-center gap-1.5">
                     <CheckCircle2 size={12} />
                     {CATEGORY_LABELS[cat] || cat}
                   </div>
@@ -712,7 +712,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
       {/* ONBOARDING TOUR MODAL */}
       {tourStep > 0 && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
             <div className="absolute top-0 left-0 w-full h-2 flex">
               <div className={`h-full transition-all duration-300 ${tourStep >= 1 ? 'bg-primary flex-1' : 'bg-gray-100 flex-1'}`}></div>
               <div className={`h-full transition-all duration-300 ${tourStep >= 2 ? 'bg-primary flex-1' : 'bg-gray-100 flex-1'}`}></div>
@@ -724,12 +724,12 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                 <div className="w-16 h-16 bg-primary-light text-primary rounded-2xl flex items-center justify-center mb-6 shadow-inner mx-auto">
                   <Wrench size={32} />
                 </div>
-                <h3 className="text-2xl font-black text-center mb-3 text-gray-900">Selamat Datang di Assembly Lab!</h3>
-                <p className="text-center text-gray-600 mb-8 leading-relaxed">
+                <h3 className="text-2xl font-black text-center mb-3 text-foreground">Selamat Datang di Assembly Lab!</h3>
+                <p className="text-center text-secondary mb-8 leading-relaxed">
                   Di sini kamu bisa merakit PC dari komponen yang kamu dapatkan atau beli di Shop.
                 </p>
                 <div className="flex justify-between items-center">
-                  <button onClick={completeTour} className="text-sm font-bold text-secondary hover:text-gray-600 transition">Lewati</button>
+                  <button onClick={completeTour} className="text-sm font-bold text-secondary hover:text-foreground transition">Lewati</button>
                   <button onClick={() => setTourStep(2)} className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl shadow-lg shadow-indigo-600/20 transition">Lanjut</button>
                 </div>
               </>
@@ -737,15 +737,15 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
 
             {tourStep === 2 && (
               <>
-                <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner mx-auto">
+                <div className="w-16 h-16 bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-2xl flex items-center justify-center mb-6 shadow-inner mx-auto">
                   <Monitor size={32} />
                 </div>
-                <h3 className="text-2xl font-black text-center mb-3 text-gray-900">Perhatikan Urutan!</h3>
-                <p className="text-center text-gray-600 mb-8 leading-relaxed">
+                <h3 className="text-2xl font-black text-center mb-3 text-foreground">Perhatikan Urutan!</h3>
+                <p className="text-center text-secondary mb-8 leading-relaxed">
                   Kamu harus memasang komponen secara berurutan: <br/> <b>Motherboard → CPU → GPU → RAM → Storage → PSU → Cooler → Case</b>.
                 </p>
                 <div className="flex justify-between items-center">
-                  <button onClick={() => setTourStep(1)} className="text-sm font-bold text-secondary hover:text-gray-600 transition">Kembali</button>
+                  <button onClick={() => setTourStep(1)} className="text-sm font-bold text-secondary hover:text-foreground transition">Kembali</button>
                   <button onClick={() => setTourStep(3)} className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl shadow-lg shadow-indigo-600/20 transition">Lanjut</button>
                 </div>
               </>
@@ -753,15 +753,15 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
 
             {tourStep === 3 && (
               <>
-                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner mx-auto">
+                <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center mb-6 shadow-inner mx-auto">
                   <Shield size={32} />
                 </div>
-                <h3 className="text-2xl font-black text-center mb-3 text-gray-900">Kecocokan & Benchmark</h3>
-                <p className="text-center text-gray-600 mb-8 leading-relaxed">
+                <h3 className="text-2xl font-black text-center mb-3 text-foreground">Kecocokan & Benchmark</h3>
+                <p className="text-center text-secondary mb-8 leading-relaxed">
                   Pastikan indikator <b>Compatibility</b> menunjukkan hijau (cocok). Saat semua 8 komponen terpasang, kamu bisa melihat skor Benchmark PC-mu!
                 </p>
                 <div className="flex justify-between items-center">
-                  <button onClick={() => setTourStep(2)} className="text-sm font-bold text-secondary hover:text-gray-600 transition">Kembali</button>
+                  <button onClick={() => setTourStep(2)} className="text-sm font-bold text-secondary hover:text-foreground transition">Kembali</button>
                   <button onClick={completeTour} className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition">Mulai Merakit!</button>
                 </div>
               </>

@@ -20,6 +20,10 @@ module.exports = {
         border:     '#e2e8f0',     // slate-200
         // Accent for data/charts
         accent:     '#0ea5e9',     // sky-500
+        // Additional dark mode colors
+        dim:        '#94a3b8',     // slate-400, better contrast on dark bg
+        'dark-surface': '#131b2f',
+        'dark-border': '#1e293b',
       },
       fontFamily: {
         sans: ['Lexend Deca', 'sans-serif'],

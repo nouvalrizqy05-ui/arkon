@@ -76,7 +76,7 @@ class ErrorBoundary extends React.Component {
             )}
             <button
               onClick={this.handleReload}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white shadow-sm border border-border border border-border text-foreground font-bold rounded-lg text-xs hover:bg-white shadow-sm border border-border transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white font-bold rounded-lg text-xs hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95"
             >
               <RefreshCw size={12} /> Coba Lagi
             </button>
@@ -86,7 +86,7 @@ class ErrorBoundary extends React.Component {
 
       // === FULL PAGE MODE: Untuk App-level wrapping ===
       return (
-        <div className="min-h-screen bg-muted flex items-center justify-center p-6">
+        <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center p-6">
           <div className="max-w-md w-full text-center">
             {/* Error Icon */}
             <div className="w-20 h-20 bg-red-500/15 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-red-500/20">
@@ -119,13 +119,13 @@ class ErrorBoundary extends React.Component {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={this.handleReload}
-                className="flex items-center gap-2 px-5 py-2.5 bg-white shadow-sm border border-border border border-border text-foreground font-bold rounded-xl text-sm hover:bg-white shadow-sm border border-border transition-all active:scale-95"
+                className="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white font-bold rounded-xl text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95"
               >
                 <RefreshCw size={16} /> Coba Lagi
               </button>
               <button
                 onClick={this.handleGoHome}
-                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-foreground font-bold rounded-xl text-sm hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-indigo-500/20"
+                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-xl text-sm hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-indigo-500/20"
               >
                 <Home size={16} /> Ke Beranda
               </button>

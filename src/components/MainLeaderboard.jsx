@@ -81,16 +81,16 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
           </h1>
           <p className="text-secondary text-sm mt-1">Peringkat akan di-reset setiap 3 bulan. Pemuncak akhir season akan mendapat gelar Archi Master.</p>
           {roomId && (
-            <div className="flex bg-white shadow-sm border border-border border border-border p-1 rounded-xl w-fit mt-4">
+            <div className="flex bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 p-1 rounded-xl w-fit mt-4">
               <button 
                 onClick={() => setScope('room')}
-                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${scope === 'room' ? 'bg-primary text-foreground' : 'text-secondary hover:text-secondary'}`}
+                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${scope === 'room' ? 'bg-primary text-white' : 'text-secondary hover:text-foreground'}`}
               >
                 Kelas Ini
               </button>
               <button 
                 onClick={() => setScope('global')}
-                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${scope === 'global' ? 'bg-primary text-foreground' : 'text-secondary hover:text-secondary'}`}
+                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${scope === 'global' ? 'bg-primary text-white' : 'text-secondary hover:text-foreground'}`}
               >
                 Global
               </button>
@@ -99,7 +99,7 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
         </div>
         
         {season && (
-          <div className="bg-white shadow-sm border border-border border border-border rounded-2xl p-4 flex flex-col items-end">
+          <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-2xl p-4 flex flex-col items-end">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xs font-bold text-primary uppercase tracking-widest">{season.name}</span>
             </div>
@@ -123,7 +123,7 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
               className={`flex items-center gap-2 px-4 py-3 rounded-xl font-bold whitespace-nowrap transition-all duration-300 ${
                 isActive 
                   ? `${cat.bg} ${cat.color} border border-${cat.color.split('-')[1]}-500/50 shadow-lg`
-                  : 'bg-white shadow-sm border border-border text-secondary hover:bg-white shadow-sm border border-border hover:text-foreground border border-transparent'
+                  : 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-foreground'
               }`}
             >
               <CatIcon size={18} />
@@ -134,8 +134,8 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
       </div>
 
       {/* Leaderboard Table */}
-      <div className="flex-1 bg-white shadow-sm border border-border border border-border rounded-3xl overflow-hidden flex flex-col min-h-0">
-        <div className="flex items-center px-6 py-4 border-b border-border bg-black/20 text-xs font-bold text-secondary uppercase tracking-widest">
+      <div className="flex-1 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-3xl overflow-hidden flex flex-col min-h-0">
+        <div className="flex items-center px-6 py-4 border-b border-border dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs font-bold text-secondary uppercase tracking-widest">
           <div className="w-16">Rank</div>
           <div className="flex-1">Mahasiswa</div>
           <div className="w-32 text-right">Skor / Poin</div>
@@ -157,10 +157,10 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
               {data.map((player) => (
                 <div 
                   key={player.id}
-                  className={`flex items-center px-4 py-3 rounded-2xl transition-all ${
+                  className={`flex items-center px-4 py-3 rounded-2xl transition-all border border-transparent ${
                     player.id === studentId 
-                      ? 'bg-primary-light border border-primary/50' 
-                      : 'hover:bg-white shadow-sm border border-border border border-transparent'
+                      ? 'bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200 dark:border-indigo-500/30' 
+                      : 'hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:border-border dark:hover:border-slate-800'
                   }`}
                 >
                   <div className="w-16 font-black text-xl">
@@ -178,7 +178,7 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
                     />
                     <div className="truncate">
                       <div className="flex items-center gap-2">
-                        <span className={`font-bold truncate ${player.id === studentId ? 'text-indigo-700' : 'text-secondary'}`}>
+                        <span className={`font-bold truncate ${player.id === studentId ? 'text-indigo-700 dark:text-indigo-400' : 'text-foreground'}`}>
                           {player.full_name}
                         </span>
                         {player.is_master && (

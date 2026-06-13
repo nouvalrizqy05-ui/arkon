@@ -39,7 +39,7 @@ export default function HeroSection() {
     <section ref={heroRef} className="relative pt-28 pb-20 overflow-hidden min-h-[95vh] flex flex-col items-center justify-center">
       {/* Background Blurs */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-[100px] pointer-events-none -z-20" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-indigo-100 rounded-full blur-[100px] pointer-events-none -z-20" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-indigo-100 dark:bg-indigo-900/20 rounded-full blur-[100px] pointer-events-none -z-20" />
 
       {/* Floating 3D IT Elements */}
       <div className="absolute inset-0 pointer-events-none overflow-visible">
@@ -77,7 +77,7 @@ export default function HeroSection() {
       {/* Hero Content */}
       <div className="container mx-auto px-6 text-center relative z-20 max-w-5xl mt-8">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white shadow-sm border border-border backdrop-blur-md border border-blue-200 text-primary text-xs md:text-sm font-bold mb-8 shadow-sm">
+          <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 backdrop-blur-md text-primary text-xs md:text-sm font-bold mb-8">
             <GraduationCap className="w-4 h-4" />
             LIDM 2027 — TENTH GROUP (KELOMPOK 10)
           </span>
@@ -103,7 +103,7 @@ export default function HeroSection() {
           <a href="/register" className="px-8 py-4 bg-gradient-to-br from-primary to-indigo-600 text-white rounded-2xl font-black text-lg hover:scale-105 transition-all shadow-[0_10px_40px_-10px_rgba(22,93,255,0.8)] flex items-center justify-center gap-2 cursor-pointer no-underline">
             Mulai Belajar <ArrowRight className="w-5 h-5 text-white" />
           </a>
-          <a href="/cpu-simulator" className="px-8 py-4 bg-white shadow-sm border border-border backdrop-blur-md border-2 border-blue-100 text-foreground rounded-2xl font-bold text-lg hover:border-primary transition-all flex items-center justify-center cursor-pointer shadow-sm group no-underline">
+          <a href="/cpu-simulator" className="px-8 py-4 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 backdrop-blur-md text-foreground rounded-2xl font-bold text-lg hover:border-primary transition-all flex items-center justify-center cursor-pointer group no-underline">
             Coba CPU Simulator <Cpu className="w-5 h-5 ml-2 text-secondary group-hover:text-primary transition-colors" />
           </a>
         </motion.div>
@@ -111,20 +111,20 @@ export default function HeroSection() {
         {/* 3 Pilar Inovasi */}
         <motion.div
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-4xl mx-auto border-t border-slate-200/50 pt-10"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-4xl mx-auto border-t border-slate-200/50 dark:border-slate-800/50 pt-10"
         >
           <div className="flex flex-col items-center gap-2">
-            <div className="p-3 bg-blue-100 text-primary rounded-xl"><BrainCircuit className="w-6 h-6" /></div>
+            <div className="p-3 bg-blue-100 dark:bg-blue-900/40 text-primary rounded-xl"><BrainCircuit className="w-6 h-6" /></div>
             <h3 className="font-bold text-foreground">AI Tutor & RAG</h3>
             <p className="text-xs text-secondary">Rangkum PDF materi otomatis, buat kuis, dan tanya jawab AI 24/7.</p>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className="p-3 bg-rose-100 text-rose-600 rounded-xl"><Gamepad2 className="w-6 h-6" /></div>
+            <div className="p-3 bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 rounded-xl"><Gamepad2 className="w-6 h-6" /></div>
             <h3 className="font-bold text-foreground">PC Quest Map</h3>
             <p className="text-xs text-secondary">Kuis gamifikasi dengan peta level motherboard dan sistem koin.</p>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className="p-3 bg-emerald-100 text-emerald-600 rounded-xl"><BarChart2 className="w-6 h-6" /></div>
+            <div className="p-3 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-xl"><BarChart2 className="w-6 h-6" /></div>
             <h3 className="font-bold text-foreground">Lecturer Analytics</h3>
             <p className="text-xs text-secondary">Dashboard IRT untuk memantau pemahaman mahasiswa secara otomatis.</p>
           </div>

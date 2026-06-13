@@ -175,6 +175,35 @@ export default function LecturerDashboard() {
     toast.success(`Room "${newRoom.course_name}" berhasil dibuat! Kode: ${newRoom.room_code}`);
   };
 
+  const openCreateRoomModal = () => setIsCreateModalOpen(true);
+
+  const openInviteRoom = () => {
+    if (activeRoom) {
+      toast.info(`Kode room: ${activeRoom.room_code}`);
+    } else {
+      toast.info('Buka room untuk melihat kode undangan mahasiswa.');
+    }
+    navigate('/lecturer-dashboard');
+  };
+
+  const openLiveQuiz = () => {
+    if (!activeRoom) {
+      toast.warning('Buka room terlebih dahulu untuk memulai Live Quiz.');
+      return;
+    }
+    openRoom(activeRoom);
+    setTimeout(() => window.dispatchEvent(new CustomEvent('arkon-navigate', { detail: { tab: 'live-quiz' } })), 500);
+  };
+
+  const openAnalytics = () => {
+    if (!activeRoom) {
+      toast.warning('Buka room terlebih dahulu untuk melihat analytics.');
+      return;
+    }
+    openRoom(activeRoom);
+    setTimeout(() => window.dispatchEvent(new CustomEvent('arkon-navigate', { detail: { tab: 'analytics' } })), 500);
+  };
+
   // ═══════════════════════════════════
   // STATE: ROOM — Full RoomHub (Dosen perspective)
   // ═══════════════════════════════════
@@ -218,8 +247,8 @@ export default function LecturerDashboard() {
   return (
     <div className="fixed inset-0 flex overflow-hidden font-sans text-foreground bg-slate-50 dark:bg-slate-950">
       {/* ─── SIDEBAR ─── */}
-      <aside className="hidden lg:flex flex-col w-[260px] h-full bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 shrink-0 z-40">
-        <div className="flex items-center gap-3 h-[70px] px-6 border-b border-gray-100 shrink-0">
+      <aside className="hidden lg:flex flex-col w-[260px] h-full bg-white dark:bg-slate-900 border-r border-border dark:border-slate-800 shrink-0 z-40">
+        <div className="flex items-center gap-3 h-[70px] px-6 border-b border-border dark:border-slate-800 shrink-0">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-emerald-sm" style={{background:"linear-gradient(135deg,#059669,#047857)"}}>
             <Layers className="w-5 h-5 text-white" />
           </div>
@@ -315,9 +344,9 @@ export default function LecturerDashboard() {
                   </div>
                 )}
                 {rooms.length > 1 && (
-                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                    <p className="text-sm text-blue-700 font-semibold">💡 Tips: Bank soal ditampilkan untuk room pertama Anda.</p>
-                    <p className="text-xs text-blue-600 mt-1">Masuk ke dalam room untuk mengelola bank soal room spesifik.</p>
+                  <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 rounded-xl">
+                    <p className="text-sm text-blue-700 dark:text-blue-400 font-semibold">💡 Tips: Bank soal ditampilkan untuk room pertama Anda.</p>
+                    <p className="text-xs text-blue-600 dark:text-blue-300 mt-1">Masuk ke dalam room untuk mengelola bank soal room spesifik.</p>
                   </div>
                 )}
               </div>
@@ -336,15 +365,15 @@ export default function LecturerDashboard() {
               <div className="p-8 max-w-6xl mx-auto">
               <div className="flex justify-between items-center mb-8">
                 <div>
-                  <h2 className="text-2xl font-black text-gray-900">
+                  <h2 className="text-2xl font-black text-foreground">
                     {showArchived ? 'Room Diarsipkan' : 'Daftar Room Anda'}
                   </h2>
-                  <p className="text-gray-500 text-sm">Kelola room dan pantau progres mahasiswa.</p>
+                  <p className="text-secondary text-sm">Kelola room dan pantau progres mahasiswa.</p>
                 </div>
                 <div className="flex gap-3">
                   <button
                     onClick={() => setShowArchived(!showArchived)}
-                    className="px-4 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-bold text-sm hover:bg-gray-50 transition"
+                    className="px-4 py-2.5 rounded-xl border border-border dark:border-slate-700 text-secondary font-bold text-sm hover:text-foreground hover:bg-slate-50 dark:hover:bg-slate-800 transition"
                   >
                     {showArchived ? 'Lihat Room Aktif' : 'Lihat Arsip'}
                   </button>
@@ -362,6 +391,12 @@ export default function LecturerDashboard() {
                 <DosenOnboardingWizard
                   token={token}
                   onComplete={() => console.log('Onboarding complete')}
+                  actions={{
+                    createRoom: openCreateRoomModal,
+                    inviteStudents: openInviteRoom,
+                    launchLiveQuiz: openLiveQuiz,
+                    openAnalytics: openAnalytics,
+                  }}
                 />
               )}
 
@@ -376,11 +411,11 @@ export default function LecturerDashboard() {
                 const lowTopics = Object.entries(topicCounts).filter(([_, count]) => count < 20);
                 if (lowTopics.length > 0) {
                   return (
-                    <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3 items-start">
-                      <AlertTriangle className="text-amber-600 shrink-0 mt-0.5" size={20} />
+                    <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl flex gap-3 items-start">
+                      <AlertTriangle className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" size={20} />
                       <div>
-                        <h4 className="text-sm font-bold text-amber-800">Peringatan Validitas IRT (Kurang Soal)</h4>
-                        <p className="text-xs text-amber-700 mt-1">
+                        <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300">Peringatan Validitas IRT (Kurang Soal)</h4>
+                        <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
                           Model IRT membutuhkan minimal 20 soal per topik untuk estimasi theta yang reliable. 
                           Topik berikut belum memenuhi standar: {lowTopics.map(t => `${t[0]} (${t[1]}/20)`).join(', ')}.
                         </p>
@@ -396,11 +431,11 @@ export default function LecturerDashboard() {
                   {[1, 2, 3, 4, 5, 6].map(i => <SkeletonCard key={i} />)}
                 </div>
               ) : rooms.filter(r => (showArchived ? r.status === 'archived' : r.status !== 'archived')).length === 0 ? (
-                <div className="w-full flex flex-col items-center justify-center py-20 bg-white border border-dashed border-gray-300 rounded-3xl">
-                  <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <div className="w-full flex flex-col items-center justify-center py-20 bg-[var(--bg-surface)] border border-dashed border-border dark:border-slate-700 rounded-3xl">
+                  <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
                     <Layers size={32} className="text-secondary" />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-700 mb-2">Belum Ada Room {showArchived ? 'Diarsipkan' : ''}</h3>
+                  <h3 className="text-lg font-bold text-foreground mb-2">Belum Ada Room {showArchived ? 'Diarsipkan' : ''}</h3>
                   {!showArchived && (
                     <button
                       onClick={() => setIsCreateModalOpen(true)}
@@ -425,13 +460,13 @@ export default function LecturerDashboard() {
                           <Users size={24} />
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="bg-gray-100 text-gray-700 text-[10px] font-black px-3 py-1.5 rounded-lg border border-gray-200 uppercase tracking-wider">
+                          <span className="bg-slate-100 dark:bg-slate-800 text-secondary text-[10px] font-black px-3 py-1.5 rounded-lg border border-border dark:border-slate-700 uppercase tracking-wider">
                             {room.room_code}
                           </span>
                           {!showArchived && (
                             <button
                               onClick={(e) => handleArchiveRoom(e, room.id)}
-                              className="p-1.5 text-secondary hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-all"
+                              className="p-1.5 text-secondary hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10 rounded-lg transition-all"
                               title="Arsipkan Room"
                             >
                               <Layers size={16} />
@@ -439,7 +474,7 @@ export default function LecturerDashboard() {
                           )}
                           <button
                             onClick={(e) => handleDeleteRoom(e, room.id)}
-                            className="p-1.5 text-secondary hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                            className="p-1.5 text-secondary hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all"
                             title="Hapus Room"
                           >
                             <Trash2 size={16} />
@@ -447,7 +482,7 @@ export default function LecturerDashboard() {
                         </div>
                       </div>
 
-                      <h3 className="font-bold text-lg text-gray-900 mb-1 group-hover:text-[#2467ce] transition-colors">
+                      <h3 className="font-bold text-lg text-foreground mb-1 group-hover:text-[#2467ce] transition-colors">
                         {room.course_name}
                       </h3>
                       <p className="text-xs text-secondary mb-3">
@@ -457,12 +492,12 @@ export default function LecturerDashboard() {
 
                       {/* Live Badge */}
                       {room.is_live && (
-                        <span className="inline-flex items-center gap-1 bg-rose-100 text-rose-600 text-[10px] font-black px-2.5 py-1 rounded-full border border-rose-200 mb-3 animate-pulse">
+                        <span className="inline-flex items-center gap-1 bg-rose-100 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[10px] font-black px-2.5 py-1 rounded-full border border-rose-200 dark:border-rose-500/30 mb-3 animate-pulse">
                           🔴 SEDANG LIVE
                         </span>
                       )}
 
-                      <div className="mt-auto border-t border-gray-100 pt-4 flex justify-between items-center">
+                      <div className="mt-auto border-t border-border dark:border-slate-800 pt-4 flex justify-between items-center">
                         <button
                           onClick={(e) => { e.stopPropagation(); openRoom(room); }}
                           className="btn-primary px-4 py-2 text-sm"

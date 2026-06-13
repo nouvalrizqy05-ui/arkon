@@ -22,7 +22,7 @@ export default function Navbar({ subtext = "WORKSPACE", hideDarkMode = false, hi
           {!hideDarkMode && (
             <button 
               onClick={toggleTheme}
-              className="p-2.5 rounded-xl bg-muted dark:bg-white shadow-sm border border-border text-secondary dark:text-secondary hover:text-primary transition-all border border-transparent dark:border-border"
+              className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-secondary dark:text-slate-300 hover:text-primary dark:hover:text-white transition-all"
               title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
@@ -31,8 +31,8 @@ export default function Navbar({ subtext = "WORKSPACE", hideDarkMode = false, hi
           
           {!hideAuth && (
             <>
-              <div className="h-6 w-px bg-border dark:bg-white shadow-sm border border-border mx-1"></div>
-              <Link to="/login" className="text-sm font-semibold text-secondary dark:text-secondary hover:text-primary transition-colors">
+              <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1"></div>
+              <Link to="/login" className="text-sm font-semibold text-secondary dark:text-slate-300 hover:text-primary transition-colors">
                 Sign In
               </Link>
               <Link to="/register" className="text-sm font-bold bg-primary text-foreground px-5 py-2.5 rounded-xl hover:bg-primary-hover transition-all shadow-md shadow-primary/20">

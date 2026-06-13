@@ -63,8 +63,7 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
       {/* ── Left panel — branding ───────────────── */}
-      <div className="hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between p-10 relative overflow-hidden"
-        style={{ background: 'linear-gradient(145deg,#ecfdf5 0%,#d1fae5 40%,#a7f3d0 100%)' }}>
+      <div className="hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between p-10 relative overflow-hidden bg-gradient-to-br from-emerald-50 via-emerald-100 to-emerald-200 dark:from-[#05111b] dark:via-[#081a28] dark:to-[#050f18]">
         {/* Layered depth circles */}
         <div className="absolute top-[-80px] right-[-80px] w-80 h-80 rounded-full"
           style={{ background: 'rgba(5,150,105,.08)' }} />
@@ -75,11 +74,10 @@ export default function Login() {
 
         <div className="relative z-10">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-em"
-              style={{ background: 'linear-gradient(135deg,#059669,#047857)' }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-em bg-gradient-to-br from-emerald-600 to-emerald-800">
               <GraduationCap className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-black tracking-tight text-foreground">
+            <span className="text-xl font-black tracking-tight text-foreground dark:text-white">
               AR<span className="text-gradient-em">KON</span>
             </span>
           </Link>
@@ -113,7 +111,7 @@ export default function Login() {
       </div>
 
       {/* ── Right panel — form ──────────────────── */}
-      <div className="flex-1 flex items-center justify-center p-6 md:p-10 bg-white dark:bg-slate-900">
+      <div className="flex-1 flex items-center justify-center p-6 md:p-10 bg-[var(--bg-primary)]">
         <div className="w-full max-w-md animate-fade-up">
 
           {/* Back link */}

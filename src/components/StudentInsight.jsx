@@ -30,10 +30,10 @@ export default function StudentInsight({ studentId, token, apiUrl }) {
   if (loading) return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 bg-gray-200 rounded-xl animate-pulse" />
+        <div className="w-10 h-10 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse" />
         <div className="space-y-2">
-          <div className="h-5 w-48 bg-gray-200 rounded-md animate-pulse" />
-          <div className="h-3 w-32 bg-gray-100 rounded-md animate-pulse" />
+          <div className="h-5 w-48 bg-slate-200 dark:bg-slate-800 rounded-md animate-pulse" />
+          <div className="h-3 w-32 bg-slate-100 dark:bg-slate-700 rounded-md animate-pulse" />
         </div>
       </div>
       
@@ -85,7 +85,7 @@ export default function StudentInsight({ studentId, token, apiUrl }) {
           { label: 'Streak Flashcard', value: `${streak.current_streak || 0} 🔥`, icon: Flame, color: 'text-amber-500', bg: 'bg-amber-50' },
           { label: 'Badges', value: badges || 0, icon: Award, color: 'text-emerald-500', bg: 'bg-emerald-50' },
         ].map((s, i) => (
-          <div key={i} className="bg-white rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow">
+          <div key={i} className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 p-5 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-3">
               <div className={`w-9 h-9 ${s.bg} rounded-xl flex items-center justify-center`}>
                 <s.icon size={18} className={s.color} />
@@ -100,7 +100,7 @@ export default function StudentInsight({ studentId, token, apiUrl }) {
       {/* MAIN CONTENT: Radar + UAS Prediction */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Radar Chart */}
-        <div className="bg-white rounded-3xl border border-border p-6 shadow-sm">
+        <div className="bg-[var(--bg-surface)] rounded-3xl border border-border dark:border-slate-800 p-6 shadow-sm">
           <h3 className="font-black text-foreground text-sm flex items-center gap-2 mb-4">
             <Target size={16} className="text-primary" /> Kekuatan per Topik
           </h3>
@@ -123,7 +123,7 @@ export default function StudentInsight({ studentId, token, apiUrl }) {
         </div>
 
         {/* UAS Prediction Gauge */}
-        <div className="bg-white rounded-3xl border border-border p-6 shadow-sm flex flex-col items-center justify-center">
+        <div className="bg-[var(--bg-surface)] rounded-3xl border border-border dark:border-slate-800 p-6 shadow-sm flex flex-col items-center justify-center">
           <h3 className="font-black text-foreground text-sm flex items-center gap-2 mb-6 self-start">
             <TrendingUp size={16} className="text-emerald-500" /> Prediksi Nilai UAS
           </h3>
@@ -154,7 +154,7 @@ export default function StudentInsight({ studentId, token, apiUrl }) {
             </>
           ) : (
             <div className="flex flex-col items-center justify-center flex-1 text-center">
-              <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
+              <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center mb-4">
                 <TrendingUp size={32} className="text-foreground" />
               </div>
               <p className="font-bold text-secondary text-sm">Belum cukup data</p>
@@ -165,26 +165,26 @@ export default function StudentInsight({ studentId, token, apiUrl }) {
       </div>
 
       {/* WEAKNESS DETECTOR */}
-      <div className="bg-white rounded-3xl border border-border p-6 shadow-sm">
+      <div className="bg-[var(--bg-surface)] rounded-3xl border border-border dark:border-slate-800 p-6 shadow-sm">
         <h3 className="font-black text-foreground text-sm flex items-center gap-2 mb-4">
           <AlertTriangle size={16} className="text-amber-500" /> Weakness Detector
         </h3>
         {weaknesses.length > 0 ? (
           <div className="space-y-3">
             {weaknesses.map((w, i) => (
-              <div key={i} className="flex items-center gap-4 p-4 bg-red-50 border border-red-100 rounded-2xl">
-                <div className="w-10 h-10 bg-red-100 text-red-500 rounded-xl flex items-center justify-center shrink-0">
+              <div key={i} className="flex items-center gap-4 p-4 bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 rounded-2xl">
+                <div className="w-10 h-10 bg-red-100 dark:bg-red-500/20 text-red-500 dark:text-red-400 rounded-xl flex items-center justify-center shrink-0">
                   <AlertTriangle size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-red-800 text-sm truncate">{w.topic}</p>
-                  <p className="text-[10px] text-red-600">Skor rata-rata: {w.score}% ({w.attempts} percobaan)</p>
+                  <p className="font-bold text-red-800 dark:text-red-300 text-sm truncate">{w.topic}</p>
+                  <p className="text-[10px] text-red-600 dark:text-red-400">Skor rata-rata: {w.score}% ({w.attempts} percobaan)</p>
                 </div>
                 <div className="flex gap-2 shrink-0">
-                  <span className="px-3 py-1.5 bg-white text-red-600 border border-red-200 rounded-lg text-[10px] font-bold cursor-pointer hover:bg-red-50 transition">
+                  <span className="px-3 py-1.5 bg-[var(--bg-surface)] text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 rounded-lg text-[10px] font-bold cursor-pointer hover:bg-red-50 dark:hover:bg-red-500/10 transition">
                     🎴 Review Flashcard
                   </span>
-                  <span className="px-3 py-1.5 bg-white text-red-600 border border-red-200 rounded-lg text-[10px] font-bold cursor-pointer hover:bg-red-50 transition">
+                  <span className="px-3 py-1.5 bg-[var(--bg-surface)] text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 rounded-lg text-[10px] font-bold cursor-pointer hover:bg-red-50 dark:hover:bg-red-500/10 transition">
                     ⚡ Ulangi Kuis
                   </span>
                 </div>
@@ -192,20 +192,20 @@ export default function StudentInsight({ studentId, token, apiUrl }) {
             ))}
           </div>
         ) : (
-          <div className="flex items-center gap-4 p-4 bg-emerald-50 border border-emerald-100 rounded-2xl">
-            <div className="w-10 h-10 bg-emerald-100 text-emerald-500 rounded-xl flex items-center justify-center">
+          <div className="flex items-center gap-4 p-4 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-2xl">
+            <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-500 dark:text-emerald-400 rounded-xl flex items-center justify-center">
               <CheckCircle size={18} />
             </div>
             <div>
-              <p className="font-bold text-emerald-800 text-sm">Tidak ada kelemahan terdeteksi!</p>
-              <p className="text-[10px] text-emerald-600">Semua topik memiliki skor di atas 60%. Pertahankan!</p>
+              <p className="font-bold text-emerald-800 dark:text-emerald-300 text-sm">Tidak ada kelemahan terdeteksi!</p>
+              <p className="text-[10px] text-emerald-600 dark:text-emerald-400">Semua topik memiliki skor di atas 60%. Pertahankan!</p>
             </div>
           </div>
         )}
       </div>
 
       {/* ACTIVITY TIMELINE */}
-      <div className="bg-white rounded-3xl border border-border p-6 shadow-sm">
+      <div className="bg-[var(--bg-surface)] rounded-3xl border border-border dark:border-slate-800 p-6 shadow-sm">
         <h3 className="font-black text-foreground text-sm flex items-center gap-2 mb-4">
           <Flame size={16} className="text-orange-500" /> Aktivitas Belajar (14 Hari Terakhir)
         </h3>

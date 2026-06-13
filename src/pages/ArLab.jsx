@@ -11,15 +11,15 @@ import ErrorBoundary from '../components/ErrorBoundary';
 
 function ArLabAdmin() {
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50">
+    <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50 dark:bg-slate-950">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
             <Layers size={24} className="text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-black text-gray-900">Manajemen AR Laboratory</h2>
-            <p className="text-sm text-gray-500">Kelola koleksi aset 3D dan deskripsi materi komponen PC.</p>
+            <h2 className="text-2xl font-black text-foreground">Manajemen AR Laboratory</h2>
+            <p className="text-sm text-secondary">Kelola koleksi aset 3D dan deskripsi materi komponen PC.</p>
           </div>
         </div>
         <button className="bg-primary text-white font-bold py-2.5 px-5 rounded-xl hover:bg-primary-hover shadow-md flex items-center gap-2">
@@ -29,7 +29,7 @@ function ArLabAdmin() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {COMPONENTS.map(comp => (
-          <div key={comp.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden group">
+          <div key={comp.id} className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 shadow-sm overflow-hidden group">
             <div className={`h-32 bg-gradient-to-br ${comp.color} flex items-center justify-center relative`}>
               <comp.icon size={48} className="text-white opacity-20" />
               <div className="absolute inset-0 flex items-center justify-center">
@@ -41,13 +41,13 @@ function ArLabAdmin() {
             <div className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <comp.icon size={16} className={`text-gradient-to-r ${comp.color.replace('from-', 'text-').split(' ')[0]}`} />
-                <h3 className="font-bold text-gray-900 line-clamp-1">{comp.name}</h3>
+                <h3 className="font-bold text-foreground line-clamp-1">{comp.name}</h3>
               </div>
-              <p className="text-xs text-gray-500 line-clamp-2 mb-4 h-8">{comp.description}</p>
+              <p className="text-xs text-secondary line-clamp-2 mb-4 h-8">{comp.description}</p>
               
               <div className="flex gap-2">
-                <button className="flex-1 px-3 py-1.5 text-xs font-bold bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">Edit Materi</button>
-                <button className="flex-1 px-3 py-1.5 text-xs font-bold bg-indigo-50 border border-indigo-200 rounded-lg text-indigo-700 hover:bg-indigo-100 transition-colors">Ganti 3D</button>
+                <button className="flex-1 px-3 py-1.5 text-xs font-bold bg-[var(--bg-surface)] border border-border dark:border-slate-700 rounded-lg text-foreground hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Edit Materi</button>
+                <button className="flex-1 px-3 py-1.5 text-xs font-bold bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 rounded-lg text-indigo-700 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors">Ganti 3D</button>
               </div>
             </div>
           </div>
@@ -359,30 +359,30 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
   }
 
   return (
-    <div className={`${embeddedMode ? 'h-full overflow-y-auto' : 'min-h-screen'} bg-[#0a0e1a] text-foreground font-sans overflow-x-hidden`}>
+    <div className={`${embeddedMode ? 'h-full overflow-y-auto' : 'min-h-screen'} bg-slate-50 dark:bg-[#0a0e1a] text-foreground font-sans overflow-x-hidden`}>
       {/* Header — hidden in embedded mode */}
       {!embeddedMode && (
         <div className="max-w-7xl mx-auto flex items-center justify-between h-20 px-6">
           <div className="flex items-center gap-4">
             <Link to="/" className="flex items-center gap-3 no-underline text-foreground hover:opacity-80 transition">
               <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/30">
-                <Layers className="w-5 h-5 text-foreground" />
+                <Layers className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h1 className="font-bold text-lg leading-none">ARKON</h1>
                 <p className="text-[10px] text-primary font-bold tracking-wide">AR LABORATORY</p>
               </div>
             </Link>
-            <div className="h-8 w-px bg-white shadow-sm border border-border hidden md:block" />
+            <div className="h-8 w-px bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 hidden md:block" />
             <Link to="/" className="hidden md:flex items-center gap-2 text-secondary hover:text-foreground transition-colors font-semibold text-sm no-underline">
               <ArrowLeft size={16} /> Kembali
             </Link>
           </div>
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white shadow-sm border border-border border border-border rounded-xl text-xs font-bold text-secondary">
+            <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-xl text-xs font-bold text-secondary">
               <RotateCcw className="w-3.5 h-3.5" /> Putar 3D dengan drag
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/30 rounded-xl text-xs font-bold text-emerald-600">
+            <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/30 rounded-xl text-xs font-bold text-emerald-600 dark:text-emerald-400">
               <Smartphone className="w-3.5 h-3.5" /> AR pada Mobile
             </div>
           </div>
@@ -395,8 +395,8 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
 
           {/* Video Anatomi Komputer */}
           <div className="max-w-3xl mx-auto mb-16">
-            <div className="relative rounded-[2rem] overflow-hidden border border-border bg-white/[0.02] shadow-2xl p-2 md:p-3 backdrop-blur-sm">
-              <div className="aspect-video w-full rounded-[1.5rem] overflow-hidden bg-[#050505] relative border border-border group shadow-inner">
+            <div className="relative rounded-[2rem] overflow-hidden border border-border dark:border-slate-800 bg-white/50 dark:bg-white/[0.02] shadow-2xl p-2 md:p-3 backdrop-blur-sm">
+              <div className="aspect-video w-full rounded-[1.5rem] overflow-hidden bg-[#050505] relative border border-border dark:border-slate-800 group shadow-inner">
                 <video
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.01]"
                   controls
@@ -460,7 +460,7 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
                     className={`group relative p-4 rounded-2xl border transition-all duration-300 cursor-pointer text-center flex flex-col items-center gap-3
                   ${selectedId === comp.id
                         ? `bg-gradient-to-br ${comp.color} border-transparent shadow-xl scale-[1.05]`
-                        : 'bg-white/[0.04] border-border hover:border-border hover:bg-white/[0.08]'
+                        : 'bg-[var(--bg-surface)] dark:bg-white/[0.04] border-border hover:border-border dark:border-slate-800 dark:hover:bg-white/[0.08] shadow-sm'
                       }`}
                   >
                     <comp.icon className={`w-7 h-7 ${selectedId === comp.id ? 'text-foreground' : comp.textColor}`} />
@@ -477,33 +477,33 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
 
                   {/* 3D Model Viewer (3 cols) */}
                   <div className="lg:col-span-3 relative">
-                    <div className={`rounded-[2rem] overflow-hidden border ${selected.borderColor} bg-gradient-to-br from-white/[0.03] to-white/[0.01] shadow-2xl`}>
+                    <div className={`rounded-[2rem] overflow-hidden border ${selected.borderColor} bg-[var(--bg-surface)] dark:bg-gradient-to-br dark:from-white/[0.03] dark:to-white/[0.01] shadow-2xl`}>
 
                       {/* Header Bar */}
-                      <div className={`px-6 py-4 border-b border-border bg-gradient-to-r ${selected.color} flex items-center justify-between`}>
+                      <div className={`px-6 py-4 border-b border-border dark:border-slate-800 bg-gradient-to-r ${selected.color} flex items-center justify-between`}>
                         <div className="flex items-center gap-3">
-                          <selected.icon className="w-5 h-5 text-foreground" />
-                          <h3 className="font-black text-foreground">{selected.name}</h3>
+                          <selected.icon className="w-5 h-5 text-white" />
+                          <h3 className="font-black text-white">{selected.name}</h3>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="px-3 py-1 bg-white shadow-sm border border-border rounded-full text-[10px] font-bold text-foreground">3D Model</span>
+                          <span className="px-3 py-1 bg-white/20 backdrop-blur-sm shadow-sm rounded-full text-[10px] font-bold text-white">3D Model</span>
                           <button
                             id="close-model-viewer"
                             onClick={handleClose}
                             title="Tutup viewer"
-                            className="w-8 h-8 bg-white shadow-sm border border-border hover:bg-white shadow-sm border border-border rounded-full flex items-center justify-center transition-colors"
+                            className="w-8 h-8 bg-white/20 backdrop-blur-sm shadow-sm hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
                           >
-                            <X className="w-4 h-4 text-foreground" />
+                            <X className="w-4 h-4 text-white" />
                           </button>
                         </div>
                       </div>
 
                       {/* Model Viewer Container */}
-                      <div className="relative bg-white w-full h-[400px] md:h-[500px] lg:h-[650px] overflow-hidden">
+                      <div className="relative bg-slate-100 dark:bg-[#050505] w-full h-[400px] md:h-[500px] lg:h-[650px] overflow-hidden">
 
                         {/* React-side Loading Skeleton */}
                         {isModelLoading && (
-                          <div className="absolute inset-0 bg-white z-10">
+                          <div className="absolute inset-0 bg-[var(--bg-surface)] z-10">
                             <SkeletonLoader variant="simulator" />
                           </div>
                         )}
@@ -541,7 +541,7 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
                       </div>
 
                       {/* Bottom bar */}
-                      <div className="px-6 py-3 border-t border-border bg-white/[0.02] flex items-center justify-between">
+                      <div className="px-6 py-3 border-t border-border dark:border-slate-800 bg-[var(--bg-surface)] dark:bg-white/[0.02] flex items-center justify-between">
                         <p className="text-secondary text-xs font-medium">Drag untuk memutar • Scroll untuk zoom • Pinch di mobile</p>
                         <div className="flex items-center gap-2 text-secondary text-xs">
                           <Maximize2 className="w-3.5 h-3.5" /> 3D Interactive
@@ -554,12 +554,12 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
                   <div className="lg:col-span-2 space-y-5">
 
                     {/* Description */}
-                    <div className={`p-6 rounded-2xl border ${selected.borderColor} bg-white/[0.03] relative overflow-hidden`}>
+                    <div className={`p-6 rounded-2xl border ${selected.borderColor} bg-[var(--bg-surface)] dark:bg-white/[0.03] relative overflow-hidden shadow-sm`}>
                       <div className="flex flex-col mb-3">
                         <div className="flex items-center gap-2 mb-1">
                           <h4 className={`font-black text-xl ${selected.textColor}`}>{selected.shortName}</h4>
                           {selected.referenceChapter && (
-                            <span className="px-2 py-0.5 bg-white shadow-sm border border-border text-secondary text-[9px] font-bold uppercase rounded-md border border-border">
+                            <span className="px-2 py-0.5 bg-[var(--bg-surface)] shadow-sm text-secondary text-[9px] font-bold uppercase rounded-md border border-border dark:border-slate-700">
                               {selected.referenceChapter}
                             </span>
                           )}
@@ -582,7 +582,7 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
                     {/* Specs */}
                     <div className="space-y-2">
                       {selected.specs.map((spec, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-3 bg-white/[0.03] border border-border rounded-xl">
+                        <div key={idx} className="flex items-center justify-between p-3 bg-[var(--bg-surface)] dark:bg-white/[0.03] border border-border dark:border-slate-800 rounded-xl shadow-sm">
                           <span className="text-secondary text-xs font-bold">{spec.label}</span>
                           <span className="text-foreground font-bold text-xs">{spec.value}</span>
                         </div>
@@ -631,7 +631,7 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
                     <button
                       id="close-panel-btn"
                       onClick={handleClose}
-                      className="w-full flex items-center justify-center gap-2 py-3 bg-white/[0.04] border border-border hover:bg-white/[0.08] hover:border-border rounded-2xl text-secondary hover:text-foreground text-sm font-bold transition-all duration-200"
+                      className="w-full flex items-center justify-center gap-2 py-3 bg-[var(--bg-surface)] dark:bg-white/[0.04] border border-border dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-white/[0.08] rounded-2xl text-secondary hover:text-foreground text-sm font-bold transition-all duration-200"
                     >
                       <X className="w-4 h-4" /> Tutup Panel
                     </button>
@@ -639,7 +639,7 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
                 </div>
               ) : (
                 /* Empty state */
-                <div className="flex flex-col items-center justify-center py-20 bg-white/[0.02] border border-border border-dashed rounded-[2rem]">
+                <div className="flex flex-col items-center justify-center py-20 bg-[var(--bg-surface)] dark:bg-white/[0.02] border border-border dark:border-slate-800 border-dashed rounded-[2rem]">
                   <CircuitBoard className="w-16 h-16 text-secondary mb-6" />
                   <h3 className="text-xl font-black text-secondary mb-2">Pilih Komponen</h3>
                   <p className="text-secondary text-sm font-medium">Klik salah satu komponen di atas untuk melihat model 3D dan detail arsitekturnya.</p>

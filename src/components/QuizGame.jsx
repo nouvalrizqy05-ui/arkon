@@ -24,42 +24,42 @@ function QuizMapAdmin() {
   
   if (selectedLevel) {
     return (
-      <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50">
+      <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50 dark:bg-slate-950">
         <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => setSelectedLevel(null)} className="p-2 bg-white border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors" aria-label="ArrowRight">
+          <button onClick={() => setSelectedLevel(null)} className="p-2 bg-white dark:bg-slate-800 border border-border dark:border-slate-700 rounded-lg text-secondary hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-foreground dark:hover:text-white transition-colors" aria-label="ArrowRight">
             <ArrowRight size={18} className="rotate-180" />
           </button>
           <div>
-            <h2 className="text-xl font-black text-gray-900">Kelola Soal: {selectedLevel.name}</h2>
-            <p className="text-sm text-gray-500">Edit, tambah, atau hapus bank soal untuk level ini.</p>
+            <h2 className="text-xl font-black text-foreground">Kelola Soal: {selectedLevel.name}</h2>
+            <p className="text-sm text-secondary">Edit, tambah, atau hapus bank soal untuk level ini.</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-6">
-          <div className="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-            <span className="font-bold text-gray-700 text-sm">Daftar Soal ({selectedLevel.questions.length})</span>
+        <div className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 shadow-sm overflow-hidden mb-6">
+          <div className="p-4 border-b border-border dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex justify-between items-center">
+            <span className="font-bold text-foreground text-sm">Daftar Soal ({selectedLevel.questions.length})</span>
             <button className="px-4 py-2 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary-hover shadow-sm">
               + Tambah Soal
             </button>
           </div>
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-border dark:divide-slate-800">
             {selectedLevel.questions.map((q, i) => (
-              <div key={i} className="p-4 hover:bg-gray-50 transition-colors">
+              <div key={i} className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                 <div className="flex justify-between items-start gap-4 mb-3">
-                  <h4 className="font-bold text-gray-900 text-sm flex-1 leading-relaxed">{q.question}</h4>
+                  <h4 className="font-bold text-foreground text-sm flex-1 leading-relaxed">{q.question}</h4>
                   <div className="flex gap-2 shrink-0">
-                    <button className="px-3 py-1.5 text-xs font-bold bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Edit</button>
-                    <button className="px-3 py-1.5 text-xs font-bold bg-red-50 border border-red-200 rounded-lg text-red-600 hover:bg-red-100">Hapus</button>
+                    <button className="px-3 py-1.5 text-xs font-bold bg-[var(--bg-surface)] border border-border dark:border-slate-700 rounded-lg text-foreground hover:bg-slate-50 dark:hover:bg-slate-800">Edit</button>
+                    <button className="px-3 py-1.5 text-xs font-bold bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20">Hapus</button>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 mb-3">
                   {q.options.map((opt, optIdx) => (
-                    <div key={optIdx} className={`p-2 rounded-lg text-xs border ${optIdx === q.answer ? 'bg-emerald-50 border-emerald-200 text-emerald-800 font-medium' : 'bg-white border-gray-200 text-gray-600'}`}>
+                    <div key={optIdx} className={`p-2 rounded-lg text-xs border ${optIdx === q.answer ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-medium' : 'bg-[var(--bg-surface)] border-border dark:border-slate-700 text-secondary'}`}>
                       <span className="font-bold mr-2">{String.fromCharCode(65 + optIdx)}.</span> {opt}
                     </div>
                   ))}
                 </div>
-                <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-3 text-xs text-indigo-800">
+                <div className="bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 rounded-lg p-3 text-xs text-indigo-800 dark:text-indigo-300">
                   <span className="font-bold uppercase tracking-widest text-[10px] text-indigo-500 mb-1 block">Penjelasan Jawaban (Feedback):</span>
                   {q.explanation}
                 </div>
@@ -72,15 +72,15 @@ function QuizMapAdmin() {
   }
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50">
+    <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50 dark:bg-slate-950">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
             <Star size={24} className="text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-black text-gray-900">Manajemen Bank Soal</h2>
-            <p className="text-sm text-gray-500">Kelola kurikulum dan data soal (CRUD) untuk mode adaptif mahasiswa.</p>
+            <h2 className="text-2xl font-black text-foreground">Manajemen Bank Soal</h2>
+            <p className="text-sm text-secondary">Kelola kurikulum dan data soal (CRUD) untuk mode adaptif mahasiswa.</p>
           </div>
         </div>
       </div>
@@ -89,22 +89,22 @@ function QuizMapAdmin() {
         {quizData.levels.map(level => {
           const colors = LEVEL_COLORS[level.color] || LEVEL_COLORS['emerald'];
           return (
-            <div key={level.id} className="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedLevel(level)}>
+            <div key={level.id} className="bg-[var(--bg-surface)] border border-border dark:border-slate-800 rounded-2xl p-5 hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedLevel(level)}>
               <div className="flex justify-between items-start mb-3">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${colors.bg} ${colors.text} shadow-sm border ${colors.border}`}>
                   {level.emoji || '📝'}
                 </div>
-                <span className="px-2.5 py-1 bg-gray-100 text-gray-600 text-[10px] font-black rounded-lg uppercase tracking-wider">Level {level.id}</span>
+                <span className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-secondary text-[10px] font-black rounded-lg uppercase tracking-wider">Level {level.id}</span>
               </div>
-              <h3 className="font-bold text-gray-900 mb-1">{level.name}</h3>
-              <p className="text-xs text-gray-500 mb-4 h-8 overflow-hidden">{level.desc}</p>
+              <h3 className="font-bold text-foreground mb-1">{level.name}</h3>
+              <p className="text-xs text-secondary mb-4 h-8 overflow-hidden">{level.desc}</p>
               
               <div className="flex items-center justify-between mt-auto">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase">Total Soal</span>
+                  <span className="text-[10px] font-bold text-secondary uppercase">Total Soal</span>
                   <span className="text-sm font-black text-primary">{level.questions.length} Butir</span>
                 </div>
-                <button className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 font-bold text-xs rounded-lg hover:bg-indigo-100 transition-colors">
+                <button className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 font-bold text-xs rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors">
                   Kelola Soal <ChevronRight size={14} />
                 </button>
               </div>
@@ -535,7 +535,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
             </div>
           </div>
         </div>
-        <button onClick={() => { setSelectedLevel(null); onActivityComplete(); }} className="px-3 py-1.5 bg-white shadow-sm border border-border text-secondary rounded-lg text-[10px] font-bold hover:bg-white shadow-sm border border-border transition">Keluar Tugas</button>
+        <button onClick={() => { setSelectedLevel(null); onActivityComplete(); }} className="px-3 py-1.5 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:text-foreground dark:hover:text-white rounded-lg text-[10px] font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition">Keluar Tugas</button>
       </div>
     );
   };
@@ -544,7 +544,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
   if (!selectedLevel) {
     // ... (rest of the map screen)
     return (
-      <div className="h-full flex flex-col overflow-y-auto custom-scrollbar" style={{background:"#f8fafc"}}>
+      <div className="h-full flex flex-col overflow-y-auto custom-scrollbar bg-slate-50 dark:bg-slate-950">
         {renderBanner()}
         {/* Fix #3: Bank Health Warning Banner (FR-IRT-006) */}
         {bankHealthWarning && (
@@ -600,10 +600,10 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
       : `Luar biasa! Pemahamanmu sangat solid di seluruh topik pada level ini.`;
 
     return (
-      <div className="h-full flex flex-col overflow-y-auto custom-scrollbar" style={{background:"#f8fafc"}}>
+      <div className="h-full flex flex-col overflow-y-auto custom-scrollbar bg-slate-50 dark:bg-slate-950">
         {renderBanner()}
         <div className="flex-1 flex items-center justify-center p-6">
-        <div className="bg-white/[0.03] border border-border rounded-3xl p-8 max-w-md w-full text-center relative overflow-hidden">
+        <div className="bg-[var(--bg-surface)] border border-border dark:border-slate-800 rounded-3xl p-8 max-w-md w-full text-center relative overflow-hidden">
           {passed && <div className="absolute inset-0 bg-emerald-500/5 pointer-events-none" />}
 
           <div className={`w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg ${passed ? 'bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-500/30' : 'bg-gradient-to-br from-red-400 to-rose-500 shadow-red-500/30'
@@ -630,11 +630,11 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
           )}
 
           <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="bg-white shadow-sm border border-border border border-border rounded-xl p-4">
+            <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-xl p-4">
               <p className={`text-3xl font-black ${passed ? 'text-emerald-600' : 'text-red-400'}`}>{percentage}%</p>
               <p className="text-[10px] text-secondary font-bold uppercase tracking-widest">Skor Akhir</p>
             </div>
-            <div className="bg-white shadow-sm border border-border border border-border rounded-xl p-4">
+            <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-xl p-4">
               <p className="text-3xl font-black text-amber-600">🪙 {earnedInSession}</p>
               <p className="text-[10px] text-secondary font-bold uppercase tracking-widest">Koin Didapat</p>
             </div>
@@ -668,7 +668,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
           </div>
 
           <div className="flex gap-3">
-            <button onClick={() => startLevel(selectedLevel.id)} className="flex-1 py-3 bg-white shadow-sm border border-border border border-border text-foreground font-bold rounded-xl hover:bg-white shadow-sm border border-border transition text-sm flex items-center justify-center gap-2" aria-label="RotateCcw">
+            <button onClick={() => startLevel(selectedLevel.id)} className="flex-1 py-3 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition text-sm flex items-center justify-center gap-2" aria-label="RotateCcw">
               <RotateCcw size={14} /> {passed ? 'Main Lagi' : 'Ulangi'}
             </button>
             <button onClick={() => setSelectedLevel(null)} className="flex-1 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary-hover transition text-sm flex items-center justify-center gap-2">
@@ -692,7 +692,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
                     <button 
                       key={g.id}
                       onClick={() => shareToGroup(g.id)}
-                      className="w-full text-left px-4 py-2 text-xs text-secondary hover:bg-white shadow-sm border border-border hover:text-cyan-400 transition-colors flex items-center justify-between"
+                      className="w-full text-left px-4 py-2 text-xs text-secondary hover:bg-slate-800 shadow-sm border-border dark:border-slate-700 hover:text-cyan-400 transition-colors flex items-center justify-between"
                     >
                       <span className="truncate">{g.name}</span>
                       <Users size={12} className="shrink-0 ml-2" />
@@ -714,12 +714,12 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
   const progress = ((currentQ) / currentQuestions.length) * 100;
 
   return (
-    <div className="h-full flex flex-col overflow-y-auto custom-scrollbar p-6 relative" style={{background:"#f8fafc"}}>
+    <div className="h-full flex flex-col overflow-y-auto custom-scrollbar p-6 relative bg-slate-50 dark:bg-slate-950">
       {renderBanner()}
       {/* Exit Confirmation Modal */}
       {isExiting && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-md animate-in fade-in duration-300" style={{background:"rgba(248,250,252,0.85)"}}>
-          <div className="bg-white border border-border p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl">
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-6 bg-slate-50/85 dark:bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-[var(--bg-surface)] border border-border dark:border-slate-800 p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl">
             <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-red-500">
               <AlertCircle size={32} />
             </div>
@@ -730,7 +730,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
             <div className="flex gap-3">
               <button
                 onClick={() => setIsExiting(false)}
-                className="flex-1 py-3 bg-white shadow-sm border border-border border border-border text-foreground font-bold rounded-xl hover:bg-white shadow-sm border border-border transition text-sm"
+                className="flex-1 py-3 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition text-sm"
               >
                 Lanjutkan
               </button>
@@ -750,7 +750,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsExiting(true)}
-            className="p-2 bg-white shadow-sm border border-border border border-border text-secondary hover:text-foreground hover:bg-red-500/20 hover:border-red-500/30 rounded-xl transition-all"
+            className="p-2 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:text-foreground dark:hover:text-white hover:bg-red-500/20 hover:border-red-500/30 rounded-xl transition-all"
             title="Keluar Kuis"
           >
             <ArrowRight size={18} className="rotate-180" />
@@ -781,7 +781,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
 
       {/* Progress & Timer */}
       <div className="flex items-center gap-4 mb-8 shrink-0">
-        <div className="flex-1 h-2 bg-white shadow-sm border border-border rounded-full overflow-hidden">
+        <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-800 shadow-sm rounded-full overflow-hidden">
           <div className="h-full bg-primary transition-all duration-300" style={{ width: `${progress}%` }} />
         </div>
         <div className="flex items-center gap-2 min-w-[60px]" role="timer" aria-label={`Sisa waktu: ${timeLeft} detik`}>
@@ -798,8 +798,8 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
 
       {/* Question Card */}
       <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto w-full">
-        <div className="w-full bg-white/[0.02] border border-border rounded-3xl p-8 relative">
-          <div className="absolute -top-4 left-8 px-4 py-1 bg-indigo-500 rounded-full text-[10px] font-black text-foreground uppercase tracking-widest">
+        <div className="w-full bg-[var(--bg-surface)] border border-border dark:border-slate-800 shadow-sm rounded-3xl p-8 relative">
+          <div className="absolute -top-4 left-8 px-4 py-1 bg-indigo-500 rounded-full text-[10px] font-black text-white uppercase tracking-widest">
             Pertanyaan {currentQ + 1}
           </div>
 
@@ -847,7 +847,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
 
           <div className="grid grid-cols-1 gap-3">
             {question.options.map((opt, i) => {
-              let optClass = 'border-border bg-white/[0.02] hover:bg-white/[0.05] text-secondary';
+              let optClass = 'border-border dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-secondary hover:text-foreground';
               if (showResult) {
                 if (i === question.answer) optClass = 'border-emerald-500/50 bg-emerald-500/20 text-emerald-600';
                 else if (i === selectedOption && !answers[currentQ]?.correct) optClass = 'border-red-500/50 bg-red-500/20 text-red-400';
@@ -863,7 +863,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
                   disabled={showResult}
                   className={`w-full text-left p-5 rounded-2xl border-2 transition-all group flex items-center gap-4 ${optClass}`}
                 >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black border-2 transition-all ${showResult && i === question.answer ? 'bg-emerald-500 border-emerald-400 text-foreground' : 'bg-white shadow-sm border border-border border-border group-hover:bg-indigo-100'
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black border-2 transition-all ${showResult && i === question.answer ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-white dark:bg-slate-800 shadow-sm border-border dark:border-slate-700 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900 group-hover:border-indigo-200 dark:group-hover:border-indigo-800 group-hover:text-indigo-600 dark:group-hover:text-indigo-300'
                     }`}>
                     {String.fromCharCode(65 + i)}
                   </div>
@@ -904,7 +904,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
                     )}
                     <button 
                       onClick={handleNextQuestion}
-                      className="flex items-center gap-2 px-5 py-2.5 bg-white shadow-sm border border-border hover:bg-white shadow-sm border border-border text-foreground rounded-xl text-xs font-bold transition"
+                      className="flex items-center gap-2 px-5 py-2.5 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-foreground rounded-xl text-xs font-bold transition"
                     >
                       Lanjut <ArrowRight size={14} />
                     </button>

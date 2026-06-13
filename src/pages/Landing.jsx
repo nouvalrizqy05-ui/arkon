@@ -73,10 +73,10 @@ export default function Landing() {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-foreground font-sans selection:bg-primary/20 overflow-x-hidden">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-foreground font-sans selection:bg-primary/20 overflow-x-hidden">
 
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border border-border backdrop-blur-xl border-b border-border transition-colors">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-slate-950/90 shadow-sm border-b border-border backdrop-blur-xl transition-colors">
         <div className="container mx-auto max-w-7xl flex items-center justify-between h-20 px-6">
           <Link to="/" className="flex items-center gap-3 no-underline">
             <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/30">
@@ -92,7 +92,7 @@ export default function Landing() {
           <div className="flex items-center gap-3">
             {isLoggedIn ? (
               <>
-                <span className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-white border border-border rounded-full text-sm font-semibold text-foreground">
+                <span className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-border rounded-full text-sm font-semibold text-foreground">
                   🤖 Halo, {userName}
                 </span>
                 <Link to={dashboardPath} className="px-6 py-2.5 bg-emerald-700 text-white rounded-xl font-bold text-sm hover:bg-emerald-800 transition-colors shadow-lg no-underline">
@@ -118,7 +118,7 @@ export default function Landing() {
           <div className="flex w-max animate-marquee gap-6 hover:[animation-play-state:paused]">
             {[...BENEFITS, ...BENEFITS].map((item, idx) => (
               <div key={idx}
-                className="group w-[300px] md:w-[360px] shrink-0 p-8 rounded-[2rem] bg-white backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center aspect-[4/3]">
+                className="group w-[300px] md:w-[360px] shrink-0 p-8 rounded-[2rem] bg-white dark:bg-slate-800 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center aspect-[4/3]">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-indigo-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-primary/30">
                   <item.icon className="w-8 h-8 text-white" />
                 </div>
@@ -142,10 +142,10 @@ export default function Landing() {
 
             {/* Box 1: CPU Visual Simulator (Large Left) */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
-              className="col-span-1 md:col-span-2 lg:col-span-2 md:row-span-2 relative group p-8 rounded-[2.5rem] bg-white border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all"
+              className="col-span-1 md:col-span-2 lg:col-span-2 md:row-span-2 relative group p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all"
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
-              <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center mb-6">
+              <div className="w-14 h-14 rounded-2xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center mb-6">
                 <Cpu className="w-7 h-7 text-primary" />
               </div>
               <h3 className="text-3xl font-black mb-4 text-foreground">CPU Visual Simulator<br />& Assembly Engine</h3>
@@ -164,7 +164,7 @@ export default function Landing() {
 
             {/* Box 3: PC Quest Gamification */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
-              className="col-span-1 md:col-span-1 lg:col-span-1 md:row-span-1 relative p-8 rounded-[2.5rem] bg-white border border-border shadow-xl overflow-hidden flex flex-col justify-end hover:-translate-y-1 transition-all"
+              className="col-span-1 md:col-span-1 lg:col-span-1 md:row-span-1 relative p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-border shadow-xl overflow-hidden flex flex-col justify-end hover:-translate-y-1 transition-all"
             >
               <Gamepad2 className="w-10 h-10 text-rose-500 mb-4" />
               <h3 className="text-xl font-black mb-2 text-foreground">PC Quest Map</h3>
@@ -175,7 +175,7 @@ export default function Landing() {
 
             {/* Box 5: Lecturer Analytics (Full Width Bottom) */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }}
-              className="col-span-1 md:col-span-3 lg:col-span-4 md:row-span-1 relative p-8 rounded-[2.5rem] bg-white border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all flex flex-col md:flex-row items-start md:items-center justify-between"
+              className="col-span-1 md:col-span-3 lg:col-span-4 md:row-span-1 relative p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all flex flex-col md:flex-row items-start md:items-center justify-between"
             >
               <div className="absolute top-1/2 left-1/2 w-full h-full bg-emerald-500/5 rounded-full -translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
               <div className="max-w-xl z-10">
@@ -196,7 +196,7 @@ export default function Landing() {
             >
               <div className="absolute right-[-5%] bottom-[-20%] opacity-10"><CircuitBoard className="w-64 h-64 text-white/10" /></div>
               <div className="max-w-xl z-10">
-                <span className="inline-block px-3 py-1 bg-white shadow-sm border border-border backdrop-blur text-foreground text-[10px] font-black uppercase rounded-full w-max mb-3">Augmented Reality</span>
+                <span className="inline-block px-3 py-1 bg-white dark:bg-slate-800/80 shadow-sm border border-border dark:border-slate-700 backdrop-blur text-foreground text-[10px] font-black uppercase rounded-full w-max mb-3">Augmented Reality</span>
                 <div className="flex items-center gap-3 mb-3">
                   <CircuitBoard className="w-8 h-8 text-white" />
                   <h3 className="text-2xl font-black text-white">AR Computer Lab</h3>
@@ -227,7 +227,7 @@ export default function Landing() {
               <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
                 className={`p-8 rounded-[2rem] border ${persona.bg} flex flex-col items-center text-center`}
               >
-                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mb-6 shadow-sm">
                   <persona.icon className={`w-8 h-8 ${persona.color}`} />
                 </div>
                 <h3 className="text-xl font-black text-foreground mb-3">{persona.title}</h3>
@@ -239,26 +239,26 @@ export default function Landing() {
       </section>
 
       {/* PROBLEM GAP SECTION */}
-      <section className="py-24 bg-white border-y border-border">
+      <section className="py-24 bg-[var(--bg-primary)] border-y border-border">
         <div className="container mx-auto px-6 max-w-6xl text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16">
             <h2 className="text-3xl md:text-5xl font-black mb-6 text-foreground">Mengapa <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">ARKON</span> Dibutuhkan?</h2>
             <p className="text-secondary text-lg max-w-2xl mx-auto font-medium">Data pendidikan vokasi dan tinggi di Indonesia menunjukkan kesenjangan infrastruktur yang nyata.</p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="p-8 rounded-[2rem] bg-red-50 border border-red-100 flex flex-col items-center">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="p-8 rounded-[2rem] bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 flex flex-col items-center">
               <span className="text-5xl font-black text-red-500 mb-4">78%</span>
               <p className="font-bold text-foreground mb-2">Kurang Fasilitas</p>
               <p className="text-secondary text-sm">Kampus di Indonesia kekurangan laboratorium komputer yang memadai dan up-to-date.</p>
               <span className="text-xs text-red-400 mt-4 font-bold uppercase">Sumber: BPS 2023</span>
             </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="p-8 rounded-[2rem] bg-orange-50 border border-orange-100 flex flex-col items-center">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="p-8 rounded-[2rem] bg-orange-50 dark:bg-orange-950/30 border border-orange-100 dark:border-orange-900/50 flex flex-col items-center">
               <span className="text-5xl font-black text-orange-500 mb-4">Rp 500Jt+</span>
               <p className="font-bold text-foreground mb-2">Biaya Investasi Tinggi</p>
               <p className="text-secondary text-sm">Biaya rata-rata untuk membangun satu laboratorium hardware komputer yang komprehensif.</p>
               <span className="text-xs text-orange-400 mt-4 font-bold uppercase">Sumber: Kemendikbud</span>
             </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="p-8 rounded-[2rem] bg-indigo-50 border border-indigo-100 flex flex-col items-center">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="p-8 rounded-[2rem] bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 flex flex-col items-center">
               <span className="text-5xl font-black text-indigo-500 mb-4">4.2x</span>
               <p className="font-bold text-foreground mb-2">Lebih Efektif</p>
               <p className="text-secondary text-sm">Mahasiswa terbukti lebih aktif berpartisipasi dengan metode gamified learning & simulasi.</p>
@@ -269,7 +269,7 @@ export default function Landing() {
       </section>
 
       {/* SDGs CONTRIBUTION SECTION */}
-      <section id="sdgs" className="py-32 bg-gradient-to-b from-white to-muted">
+      <section id="sdgs" className="py-32 bg-gradient-to-b from-[var(--bg-primary)] to-muted">
         <div className="container mx-auto px-6 max-w-6xl text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16">
             <h2 className="text-3xl md:text-5xl font-black mb-6 text-foreground">Kontribusi Terhadap <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-600">SDGs</span></h2>
@@ -278,7 +278,7 @@ export default function Landing() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-              className="p-10 rounded-[3rem] bg-white border border-border shadow-xl text-left relative overflow-hidden"
+              className="p-10 rounded-[3rem] bg-white dark:bg-slate-800 border border-border shadow-xl text-left relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 -translate-y-1/2 translate-x-1/2 rounded-full" />
               <div className="w-16 h-16 bg-[#C5192D] rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-red-500/20">
@@ -291,7 +291,7 @@ export default function Landing() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-              className="p-10 rounded-[3rem] bg-white border border-border shadow-xl text-left relative overflow-hidden"
+              className="p-10 rounded-[3rem] bg-white dark:bg-slate-800 border border-border shadow-xl text-left relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 -translate-y-1/2 translate-x-1/2 rounded-full" />
               <div className="w-16 h-16 bg-[#F36D25] rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-orange-500/20">
@@ -317,7 +317,7 @@ export default function Landing() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TESTIMONIALS.map((item, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-                className="p-8 rounded-[2rem] bg-white border border-border shadow-xl hover:-translate-y-2 transition-transform duration-300">
+                className="p-8 rounded-[2rem] bg-white dark:bg-slate-800 border border-border shadow-xl hover:-translate-y-2 transition-transform duration-300">
                 <div className="flex gap-1 mb-6">
                   {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-600" />)}
                 </div>
@@ -338,7 +338,7 @@ export default function Landing() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-32 bg-white border-y border-border">
+      <section id="faq" className="py-32 bg-[var(--bg-primary)] border-y border-border">
         <div className="container mx-auto px-6 max-w-4xl">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-black mb-6 text-foreground">Pertanyaan <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-indigo-500">Umum</span></h2>
@@ -388,22 +388,22 @@ export default function Landing() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
                 {/* Educators */}
-                <Link to="/register" className="p-5 bg-white shadow-sm border border-border backdrop-blur-sm border border-border rounded-2xl hover:bg-white shadow-sm border border-border transition-all group no-underline">
-                  <GraduationCap className="w-8 h-8 text-foreground mx-auto mb-3 group-hover:scale-110 transition-transform" />
-                  <p className="text-foreground font-black text-sm mb-1">Dosen</p>
-                  <p className="text-secondary text-[10px] font-medium">Buat Room & Kelola Kelas</p>
+                <Link to="/register" className="p-5 bg-white/10 hover:bg-white/20 shadow-sm border border-white/20 backdrop-blur-sm rounded-2xl transition-all group no-underline text-white">
+                  <GraduationCap className="w-8 h-8 text-white mx-auto mb-3 group-hover:scale-110 transition-transform" />
+                  <p className="font-black text-sm mb-1 text-white">Dosen</p>
+                  <p className="text-white/70 text-[10px] font-medium">Buat Room & Kelola Kelas</p>
                 </Link>
                 {/* Students */}
-                <Link to="/register" className="p-5 bg-white shadow-sm border border-border backdrop-blur-sm border border-border rounded-2xl hover:bg-white shadow-sm border border-border transition-all group no-underline">
-                  <Users className="w-8 h-8 text-foreground mx-auto mb-3 group-hover:scale-110 transition-transform" />
-                  <p className="text-foreground font-black text-sm mb-1">Mahasiswa</p>
-                  <p className="text-secondary text-[10px] font-medium">Join Room via Kode</p>
+                <Link to="/register" className="p-5 bg-white/10 hover:bg-white/20 shadow-sm border border-white/20 backdrop-blur-sm rounded-2xl transition-all group no-underline text-white">
+                  <Users className="w-8 h-8 text-white mx-auto mb-3 group-hover:scale-110 transition-transform" />
+                  <p className="font-black text-sm mb-1 text-white">Mahasiswa</p>
+                  <p className="text-white/70 text-[10px] font-medium">Join Room via Kode</p>
                 </Link>
                 {/* On your own */}
-                <Link to="/register" className="p-5 bg-white shadow-sm border border-border backdrop-blur-sm border border-border rounded-2xl hover:bg-white shadow-sm border border-border transition-all group no-underline">
-                  <Monitor className="w-8 h-8 text-foreground mx-auto mb-3 group-hover:scale-110 transition-transform" />
-                  <p className="text-foreground font-black text-sm mb-1">Mandiri</p>
-                  <p className="text-secondary text-[10px] font-medium">Buat Room Pribadi</p>
+                <Link to="/register" className="p-5 bg-white/10 hover:bg-white/20 shadow-sm border border-white/20 backdrop-blur-sm rounded-2xl transition-all group no-underline text-white">
+                  <Monitor className="w-8 h-8 text-white mx-auto mb-3 group-hover:scale-110 transition-transform" />
+                  <p className="font-black text-sm mb-1 text-white">Mandiri</p>
+                  <p className="text-white/70 text-[10px] font-medium">Buat Room Pribadi</p>
                 </Link>
               </div>
             </div>
@@ -412,7 +412,7 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="pt-20 pb-10 border-t border-border bg-white">
+      <footer className="pt-20 pb-10 border-t border-border bg-[var(--bg-surface)]">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
             <div className="col-span-1 md:col-span-1">

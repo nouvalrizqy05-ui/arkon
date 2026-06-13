@@ -16,7 +16,7 @@ const STEPS = [
     desc: 'Mulai dengan membuat room kelas untuk mata kuliah Anda.',
     action: 'Buat Room Sekarang',
     color: 'bg-indigo-500',
-    path: '/lecturer-dashboard/create-room'
+    actionKey: 'createRoom'
   },
   {
     id: 'invite_students',
@@ -25,7 +25,7 @@ const STEPS = [
     desc: 'Bagikan kode room ke mahasiswa agar mereka bisa bergabung.',
     action: 'Lihat Kode Room',
     color: 'bg-blue-500',
-    path: '/lecturer-dashboard/rooms'
+    actionKey: 'inviteStudents'
   },
   {
     id: 'launch_quiz',
@@ -34,7 +34,7 @@ const STEPS = [
     desc: 'Coba fitur live quiz — soal dikirim real-time ke semua mahasiswa.',
     action: 'Buat Live Quiz',
     color: 'bg-green-500',
-    path: '/lecturer-dashboard/live-quiz'
+    actionKey: 'launchLiveQuiz'
   },
   {
     id: 'see_analytics',
@@ -43,26 +43,14 @@ const STEPS = [
     desc: 'Pantau distribusi kemampuan mahasiswa dan hitung N-Gain.',
     action: 'Buka Analytics',
     color: 'bg-purple-500',
-    path: '/lecturer-dashboard/analytics'
+    actionKey: 'openAnalytics'
   }
 ];
 
-export default function DosenOnboardingWizard({ token, onComplete }) {
+export default function DosenOnboardingWizard({ token, onComplete, actions = {} }) {
   const [completedSteps, setCompletedSteps] = useState({});
   const [currentStep, setCurrentStep] = useState(0);
   const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    // Load progress from localStorage
-    const saved = localStorage.getItem('arkon_onboarding_dosen');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      setCompletedSteps(parsed.completed || {});
-      if (parsed.dismissed) setDismissed(true);
-    }
-    // Also fetch from backend
-    if (token) fetchProgress();
-  }, [token]);
 
   const fetchProgress = async () => {
     try {
@@ -77,6 +65,18 @@ export default function DosenOnboardingWizard({ token, onComplete }) {
       }
     } catch { /* silent */ }
   };
+
+  useEffect(() => {
+    // Load progress from localStorage
+    const saved = localStorage.getItem('arkon_onboarding_dosen');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setCompletedSteps(parsed.completed || {});
+      if (parsed.dismissed) setDismissed(true);
+    }
+    // Also fetch from backend
+    if (token) fetchProgress();
+  }, [token]);
 
   const markStep = async (stepId) => {
     const newCompleted = { ...completedSteps, [stepId]: true };
@@ -100,6 +100,18 @@ export default function DosenOnboardingWizard({ token, onComplete }) {
     if (Object.keys(newCompleted).length >= STEPS.length) {
       setTimeout(() => { onComplete?.(); }, 1500);
     }
+  };
+
+  const handleAction = async (step) => {
+    const actionFn = actions[step.actionKey];
+    if (typeof actionFn === 'function') {
+      try {
+        await actionFn();
+      } catch (err) {
+        console.error('Onboarding action failed:', err);
+      }
+    }
+    markStep(step.id);
   };
 
   const handleDismiss = () => {
@@ -162,7 +174,7 @@ export default function DosenOnboardingWizard({ token, onComplete }) {
                 {!done && <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">{step.desc}</p>}
                 {isCurrent && !done && (
                   <button
-                    onClick={() => markStep(step.id)}
+                    onClick={() => handleAction(step)}
                     className="mt-2 flex items-center gap-1 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
                   >
                     {step.action} <ArrowRight size={10} />

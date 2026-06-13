@@ -208,7 +208,7 @@ export default function ClassroomWorkspace() {
             <DoorOpen size={16} />
             <span className="font-semibold text-sm">Room Saya</span>
           </div>
-          <button onClick={() => navigate('/settings')} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-secondary hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all cursor-pointer">
+          <button onClick={() => navigate('/settings')} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-secondary hover:text-foreground dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all cursor-pointer">
             <Settings size={16} />
             <span className="font-semibold text-sm">Pengaturan</span>
           </button>
@@ -259,10 +259,10 @@ export default function ClassroomWorkspace() {
           <div className="grid grid-cols-3 gap-4 mb-8">
             {[
               { label: 'Room Aktif',    val: joinedRooms.length,    color: 'text-primary',  bg: 'bg-primary-soft', border: 'border-primary/15',  Icon: DoorOpen },
-              { label: 'Badge',         val: unlockedBadges.length, color: 'text-amber-600',bg: 'bg-amber-50',     border: 'border-amber-200',   Icon: Trophy },
-              { label: 'Tugas Pending', val: pendingTaskCount ?? '—', color: 'text-rose-600', bg: 'bg-rose-50',  border: 'border-rose-200',    Icon: ClipboardList },
+              { label: 'Badge',         val: unlockedBadges.length, color: 'text-amber-600',bg: 'bg-amber-50 dark:bg-amber-500/10',     border: 'border-amber-200 dark:border-amber-500/20',   Icon: Trophy },
+              { label: 'Tugas Pending', val: pendingTaskCount ?? '—', color: 'text-rose-600', bg: 'bg-rose-50 dark:bg-rose-500/10',  border: 'border-rose-200 dark:border-rose-500/20',    Icon: ClipboardList },
             ].map(({ label, val, color, bg, border, Icon }) => (
-              <div key={label} className={`card p-4 border ${border} ${bg} flex items-center gap-3`}>
+              <div key={label} className={`card p-4 border ${border} ${bg} dark:bg-[var(--bg-surface)] flex items-center gap-3`}>
                 <div className={`w-9 h-9 rounded-lg ${bg} border ${border} flex items-center justify-center flex-shrink-0`}>
                   <Icon size={18} className={color} />
                 </div>
@@ -339,7 +339,7 @@ export default function ClassroomWorkspace() {
                           <span className={`w-1.5 h-1.5 rounded-full ${meta.dot}`} />
                           {meta.label}
                         </span>
-                        <span className="text-[10px] font-mono font-semibold text-secondary bg-slate-100 px-2 py-1 rounded-md">
+                        <span className="text-[10px] font-mono font-semibold text-secondary bg-slate-100 dark:bg-slate-800 dark:text-slate-300 px-2 py-1 rounded-md">
                           {room.room_code}
                         </span>
                       </div>
@@ -383,7 +383,7 @@ export default function ClassroomWorkspace() {
         activeTab="rooms"
         onTabChange={(tab) => {
           // Dispatch to RoomHub if inside a room
-          window.dispatchEvent(new CustomEvent('arkon:nav', { detail: { tab } }));
+          window.dispatchEvent(new CustomEvent('arkon-navigate', { detail: { tab } }));
         }}
         coinCount={null}
       />

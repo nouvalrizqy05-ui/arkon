@@ -44,11 +44,11 @@ export default function HeatMapPanel({ activeRoom, token, apiUrl }) {
   };
 
   const getColor = (score) => {
-    if (score === null) return 'bg-gray-100 text-secondary';
-    if (score >= 80) return 'bg-emerald-100 text-emerald-800 border-emerald-200';
-    if (score >= 60) return 'bg-amber-100 text-amber-800 border-amber-200';
-    if (score >= 40) return 'bg-orange-100 text-orange-800 border-orange-200';
-    return 'bg-red-100 text-red-800 border-red-200';
+    if (score === null) return 'bg-slate-100 dark:bg-slate-800 text-secondary';
+    if (score >= 80) return 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30';
+    if (score >= 60) return 'bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-400 border-amber-200 dark:border-amber-500/30';
+    if (score >= 40) return 'bg-orange-100 dark:bg-orange-500/20 text-orange-800 dark:text-orange-400 border-orange-200 dark:border-orange-500/30';
+    return 'bg-rose-100 dark:bg-rose-500/20 text-rose-800 dark:text-rose-400 border-rose-200 dark:border-rose-500/30';
   };
 
   const getColorBg = (score) => {
@@ -157,13 +157,13 @@ export default function HeatMapPanel({ activeRoom, token, apiUrl }) {
           <span className="text-[10px] font-bold text-red-700">&lt;40</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-6 h-6 rounded bg-gray-100 border border-gray-200" />
-          <span className="text-[10px] font-bold text-gray-500">Belum ada</span>
+          <div className="w-6 h-6 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700" />
+          <span className="text-[10px] font-bold text-secondary">Belum ada</span>
         </div>
       </div>
 
       {heatData.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-dashed border-gray-300 p-16 text-center">
+        <div className="bg-[var(--bg-surface)] rounded-3xl border border-dashed border-border dark:border-slate-700 p-16 text-center">
           <AlertCircle className="mx-auto text-foreground mb-3" size={32} />
           <h3 className="font-bold text-foreground mb-1">Belum Ada Data</h3>
           <p className="text-secondary text-sm">Data heat map akan muncul setelah mahasiswa menyelesaikan kuis dari materi yang telah Anda upload.</p>
@@ -171,7 +171,7 @@ export default function HeatMapPanel({ activeRoom, token, apiUrl }) {
       ) : (
         <>
           {/* Topic Average Summary Bar */}
-          <div className="bg-white rounded-3xl border border-border shadow-sm p-6 mb-6">
+          <div className="bg-[var(--bg-surface)] rounded-3xl border border-border shadow-sm p-6 mb-6">
             <h3 className="text-xs font-black text-secondary uppercase tracking-widest mb-4 flex items-center gap-2">
               <TrendingUp size={14} /> Rata-Rata Per Topik
             </h3>
@@ -186,16 +186,16 @@ export default function HeatMapPanel({ activeRoom, token, apiUrl }) {
           </div>
 
           {/* Heat Map Grid */}
-          <div className="bg-white rounded-3xl border border-border shadow-sm overflow-hidden">
+          <div className="bg-[var(--bg-surface)] rounded-3xl border border-border shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[600px]">
                 <thead>
-                  <tr className="bg-gray-50">
-                    <th className="p-4 border-b border-gray-100 font-bold text-xs text-secondary uppercase tracking-wider sticky left-0 bg-gray-50 z-10">
+                  <tr className="bg-slate-50 dark:bg-slate-900">
+                    <th className="p-4 border-b border-border dark:border-slate-800 font-bold text-xs text-secondary uppercase tracking-wider sticky left-0 bg-slate-50 dark:bg-slate-900 z-10">
                       <div className="flex items-center gap-2"><Users size={14} /> Mahasiswa</div>
                     </th>
                     {topics.map(t => (
-                      <th key={t.id} className="p-4 border-b border-gray-100 font-bold text-xs text-secondary uppercase tracking-wider text-center min-w-[100px]">
+                      <th key={t.id} className="p-4 border-b border-border dark:border-slate-800 font-bold text-xs text-secondary uppercase tracking-wider text-center min-w-[100px]">
                         <div className="flex items-center justify-center gap-1"><BookOpen size={12} /> {t.name}</div>
                       </th>
                     ))}
@@ -203,19 +203,18 @@ export default function HeatMapPanel({ activeRoom, token, apiUrl }) {
                 </thead>
                 <tbody>
                   {students.map(s => (
-                    <tr key={s.id} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="p-4 border-b border-gray-50 font-medium text-sm text-foreground sticky left-0 bg-white z-10">
+                    <tr key={s.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                      <td className="p-4 border-b border-border dark:border-slate-800 font-medium text-sm text-foreground sticky left-0 bg-[var(--bg-surface)] z-10">
                         {s.name}
                       </td>
                       {topics.map(t => {
                         const scoreData = getScore(s.id, t.id);
                         const avg = scoreData?.avg ?? null;
                         return (
-                          <td key={t.id} className="p-2 border-b border-gray-50 text-center">
+                          <td key={t.id} className="p-2 border-b border-border dark:border-slate-800 text-center">
                             <button
                               onClick={() => scoreData && setDrillDown({ studentName: s.name, topicName: t.name, avgScore: avg, attemptCount: scoreData.attempts })}
                               className={`w-full px-3 py-2 rounded-xl text-sm font-black border transition-all hover:scale-105 ${getColor(avg)} ${scoreData ? 'cursor-pointer' : 'cursor-default'}`}
-                              style={{ backgroundColor: getColorBg(avg) }}
                             >
                               {avg !== null ? avg : '-'}
                             </button>
@@ -234,19 +233,19 @@ export default function HeatMapPanel({ activeRoom, token, apiUrl }) {
       {/* Drill-down Modal */}
       {drillDown && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-sm">
+          <div className="bg-[var(--bg-surface)] rounded-3xl shadow-2xl p-8 w-full max-w-sm">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-black text-foreground">Detail Skor</h3>
-              <button onClick={() => setDrillDown(null)} className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-500 transition">
+              <button onClick={() => setDrillDown(null)} className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full text-secondary transition">
                 <X size={16} />
               </button>
             </div>
             <div className="space-y-4">
-              <div className="bg-gray-50 rounded-2xl p-4">
+              <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl p-4">
                 <p className="text-xs font-bold text-secondary uppercase tracking-widest mb-1">Mahasiswa</p>
                 <p className="font-bold text-foreground">{drillDown.studentName}</p>
               </div>
-              <div className="bg-gray-50 rounded-2xl p-4">
+              <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl p-4">
                 <p className="text-xs font-bold text-secondary uppercase tracking-widest mb-1">Topik</p>
                 <p className="font-bold text-foreground">{drillDown.topicName}</p>
               </div>
@@ -255,8 +254,8 @@ export default function HeatMapPanel({ activeRoom, token, apiUrl }) {
                   <p className="text-3xl font-black">{drillDown.avgScore}</p>
                   <p className="text-[10px] font-bold uppercase tracking-widest mt-1">Rata-Rata</p>
                 </div>
-                <div className="bg-primary-soft border border-indigo-200 rounded-2xl p-4 text-center">
-                  <p className="text-3xl font-black text-indigo-700">{drillDown.attemptCount}</p>
+                <div className="bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 rounded-2xl p-4 text-center">
+                  <p className="text-3xl font-black text-indigo-700 dark:text-indigo-400">{drillDown.attemptCount}</p>
                   <p className="text-[10px] font-bold text-primary uppercase tracking-widest mt-1">Percobaan</p>
                 </div>
               </div>
