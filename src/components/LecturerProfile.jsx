@@ -128,10 +128,7 @@ export default function LecturerProfile({ userId, token, apiUrl, onProfileUpdate
     }
   };
 
-    } finally {
-      setTimeout(() => setSaving(false), 500);
-    }
-  };
+
 
   useEffect(() => {
     const savedCustomAvatar = localStorage.getItem('arkon_custom_avatar');
