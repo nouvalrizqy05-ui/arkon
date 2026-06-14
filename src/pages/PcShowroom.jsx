@@ -28,8 +28,8 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
   const [commentText, setCommentText] = useState('');
   const [sending, setSending] = useState(false);
   
-  // Simulated local state for rating (for UI purposes since DB isn't updated yet)
   const [dosenScore, setDosenScore] = useState(build.dosen_score || '');
+  const [dosenFeedback, setDosenFeedback] = useState(build.dosen_feedback || '');
   const [isScored, setIsScored] = useState(!!build.dosen_score);
 
   const myLike = build.my_like;
@@ -84,20 +84,16 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
   };
 
   const handleScoreSubmit = async () => {
-    if (!dosenScore) return;
+    if (!dosenScore || isScored) return;
     try {
       const res = await fetch(`${apiUrl}/api/showroom/builds/${build.id}/grade`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ dosen_score: parseInt(dosenScore) })
+        body: JSON.stringify({ dosen_score: parseInt(dosenScore), dosen_feedback: dosenFeedback })
       });
-      if (res.ok) {
-        setIsScored(true);
-      } else {
-        console.error('Gagal menyimpan nilai showroom');
-      }
+      if (res.ok) setIsScored(true);
     } catch (err) {
-      console.error('Showroom grade error:', err);
+      console.error(err);
     }
   };
 
@@ -140,21 +136,21 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
         <button onClick={() => handleReact('like')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${myLike ? 'bg-blue-500/20 text-blue-600 border border-blue-500/30' : 'bg-slate-50 dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:bg-blue-500/10 hover:text-blue-600'}`} aria-label="ThumbsUp">
           <ThumbsUp size={13} /> {build.like_count || 0}
         </button>
-        <button onClick={() => handleReact('fire')} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${myFire ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30' : 'bg-slate-50 dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:bg-orange-500/10 hover:text-orange-400'}`} aria-label="Flame">
+        <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleReact('fire'); }} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${myFire ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30' : 'bg-slate-50 dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:bg-orange-500/10 hover:text-orange-400'}`} aria-label="Flame">
           <Flame size={13} /> {build.fire_count || 0}
         </button>
-        <button onClick={() => setShowComments(!showComments)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-50 dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:bg-slate-100 dark:hover:bg-slate-700 transition-all ml-auto" aria-label="MessageCircle">
+        <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); setShowComments(!showComments); }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-50 dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:bg-slate-100 dark:hover:bg-slate-700 transition-all ml-auto" aria-label="MessageCircle">
           <MessageCircle size={13} /> {build.comment_count || comments.length}
         </button>
       </div>
 
       {/* Dosen Grading Section */}
       {userRole === 'dosen' && (
-        <div className="px-4 py-3 border-t border-indigo-100 bg-indigo-50/50">
-          <p className="text-[10px] font-black text-indigo-700 uppercase tracking-widest mb-2 flex items-center gap-1">
+        <div className="px-4 py-3 border-t border-indigo-100 bg-indigo-50/50 space-y-2">
+          <p className="text-[10px] font-black text-indigo-700 uppercase tracking-widest flex items-center gap-1">
             <Trophy size={12} /> Evaluasi Dosen (Privat)
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex gap-2">
             <input 
               type="number" 
               min="0" max="100" 
@@ -164,10 +160,18 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
               placeholder="Skor 0-100" 
               className="w-24 bg-[var(--bg-surface)] dark:bg-slate-900 border border-indigo-200 dark:border-indigo-500/30 rounded-lg px-3 py-1.5 text-xs text-foreground dark:text-white font-bold focus:outline-none focus:border-indigo-500" 
             />
+            <input 
+              type="text" 
+              value={dosenFeedback} 
+              onChange={e => setDosenFeedback(e.target.value)} 
+              disabled={isScored}
+              placeholder="Feedback tambahan (opsional)" 
+              className="flex-1 bg-[var(--bg-surface)] dark:bg-slate-900 border border-indigo-200 dark:border-indigo-500/30 rounded-lg px-3 py-1.5 text-xs text-foreground dark:text-white focus:outline-none focus:border-indigo-500" 
+            />
             <button 
               onClick={handleScoreSubmit}
               disabled={!dosenScore || isScored}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all ${isScored ? 'bg-emerald-500' : 'bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all shrink-0 ${isScored ? 'bg-emerald-500' : 'bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50'}`}
             >
               {isScored ? 'Ternilai ✅' : 'Beri Nilai'}
             </button>
@@ -176,10 +180,15 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
       )}
 
       {/* Student View of Score */}
-      {(build.builder_id === studentId || isScored) && userRole !== 'dosen' && (build.dosen_score || isScored) && (
-        <div className="px-4 py-2 border-t border-emerald-100 bg-emerald-50/50 flex items-center gap-2">
-          <Award size={14} className="text-emerald-600" />
-          <span className="text-xs font-bold text-emerald-700">Nilai dari Dosen: {dosenScore || build.dosen_score}/100</span>
+      {(build.builder_id === studentId || build.student_id === studentId || isScored) && userRole !== 'dosen' && (build.dosen_score || isScored) && (
+        <div className="px-4 py-3 border-t border-emerald-100 bg-emerald-50/50 flex flex-col gap-1.5">
+          <div className="flex items-center gap-2">
+            <Award size={14} className="text-emerald-600" />
+            <span className="text-xs font-bold text-emerald-700">Nilai dari Dosen: {dosenScore || build.dosen_score}/100</span>
+          </div>
+          {(dosenFeedback || build.dosen_feedback) && (
+            <p className="text-[11px] text-emerald-700/80 italic ml-5">"{dosenFeedback || build.dosen_feedback}"</p>
+          )}
         </div>
       )}
 

@@ -100,12 +100,22 @@ function initializeSocketHandlers(io, roomOnlineUsers, sgOnlineUsers, pollState)
       console.log(`📢 [Broadcast] ${data.type || data.action} → Room ${data.roomId}`);
     });
 
+    socket.on('broadcast:start', (data) => {
+      if (socket.user?.role !== 'dosen') return;
+      socket.to(data.roomId).emit('broadcast:start', { message: data.message });
+      console.log(`📢 [Broadcast Message] Room ${data.roomId}: ${data.message}`);
+    });
+
     // ── Poll System ──
     socket.on('broadcast:poll', (data) => {
       if (socket.user?.role !== 'dosen') return;
-      const { roomId, question } = data;
-      pollState.set(roomId, { question, votes: { up: new Set(), down: new Set() } });
-      socket.to(roomId).emit('student-receive-action', { type: 'poll', question, roomId });
+      const { roomId, question, options = ['Paham', 'Belum'] } = data;
+      
+      const votes = {};
+      options.forEach(opt => { votes[opt] = new Set(); });
+
+      pollState.set(roomId, { question, options, votes });
+      socket.to(roomId).emit('student-receive-action', { type: 'poll', question, options, roomId });
     });
 
     socket.on('broadcast:poll-vote', (data) => {
@@ -114,14 +124,21 @@ function initializeSocketHandlers(io, roomOnlineUsers, sgOnlineUsers, pollState)
       if (!poll) return;
       
       // Remove previous vote
-      poll.votes.up.delete(studentId);
-      poll.votes.down.delete(studentId);
+      Object.keys(poll.votes).forEach(key => poll.votes[key].delete(studentId));
       // Add new vote
-      if (vote === 'up') poll.votes.up.add(studentId);
-      else poll.votes.down.add(studentId);
+      if (poll.votes[vote]) {
+        poll.votes[vote].add(studentId);
+      }
 
-      const result = { up: poll.votes.up.size, down: poll.votes.down.size, total: poll.votes.up.size + poll.votes.down.size };
-      io.to(roomId).emit('poll:results', { question: poll.question, ...result });
+      const results = {};
+      let total = 0;
+      Object.keys(poll.votes).forEach(key => {
+        const count = poll.votes[key].size;
+        results[key] = count;
+        total += count;
+      });
+
+      io.to(roomId).emit('poll:results', { question: poll.question, options: poll.options, results, total });
     });
 
     socket.on('broadcast:poll-close', (data) => {

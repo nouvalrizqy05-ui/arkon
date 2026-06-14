@@ -182,10 +182,38 @@ router.get('/student/:student_id', authenticateToken, async (req, res) => {
 router.get('/:id/members', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT u.id, u.full_name, u.role, u.identifier_number as nim, u.avatar_id, u.frame_id, cm.joined_at
+      `SELECT u.id, u.full_name, u.role, u.identifier_number as nim, u.avatar_id, u.frame_id, cm.joined_at,
+        COALESCE(SUM(
+          CASE a.badge_id 
+            WHEN 'first_step' THEN 50
+            WHEN 'bookworm' THEN 100
+            WHEN 'quiz_warrior' THEN 150
+            WHEN 'mind_mapper' THEN 100
+            WHEN 'card_master' THEN 100
+            WHEN 'ar_explorer' THEN 200
+            WHEN 'perfect_score' THEN 300
+            WHEN 'pipeline_master' THEN 250
+            ELSE 0 
+          END
+        ), 0)::int as total_xp,
+        (FLOOR(COALESCE(SUM(
+          CASE a.badge_id 
+            WHEN 'first_step' THEN 50
+            WHEN 'bookworm' THEN 100
+            WHEN 'quiz_warrior' THEN 150
+            WHEN 'mind_mapper' THEN 100
+            WHEN 'card_master' THEN 100
+            WHEN 'ar_explorer' THEN 200
+            WHEN 'perfect_score' THEN 300
+            WHEN 'pipeline_master' THEN 250
+            ELSE 0 
+          END
+        ), 0) / 300) + 1)::int as level
        FROM class_members cm
        JOIN users u ON cm.student_id = u.id
+       LEFT JOIN achievements a ON u.id = a.student_id
        WHERE cm.room_id = $1
+       GROUP BY u.id, cm.joined_at
        ORDER BY cm.joined_at ASC`,
       [req.params.id]
     );

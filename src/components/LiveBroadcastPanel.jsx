@@ -16,14 +16,15 @@ const QUICK_ACTIONS = [
 export default function LiveBroadcastPanel({ socket, isConnected, onlineCount, activeRoom }) {
   const [broadcastLog, setBroadcastLog] = useState([]);
   const [pollQuestion, setPollQuestion] = useState('');
+  const [pollOptions, setPollOptions] = useState(['Paham', 'Belum']);
   const [activePoll, setActivePoll] = useState(null);
-  const [pollResults, setPollResults] = useState({ up: 0, down: 0, total: 0 });
+  const [pollResults, setPollResults] = useState({ results: {}, total: 0, options: [] });
   const [customMessage, setCustomMessage] = useState('');
 
   useEffect(() => {
     if (!socket) return;
     socket.on('poll:results', (data) => {
-      setPollResults({ up: data.up, down: data.down, total: data.total });
+      setPollResults({ results: data.results || {}, total: data.total, options: data.options || [] });
     });
     return () => { socket.off('poll:results'); };
   }, [socket]);
@@ -49,10 +50,10 @@ export default function LiveBroadcastPanel({ socket, isConnected, onlineCount, a
   };
 
   const sendPoll = () => {
-    if (!socket || !activeRoom || !pollQuestion.trim()) return;
-    socket.emit('broadcast:poll', { roomId: activeRoom.id, question: pollQuestion.trim() });
+    if (!socket || !activeRoom || !pollQuestion.trim() || pollOptions.some(o => !o.trim())) return;
+    socket.emit('broadcast:poll', { roomId: activeRoom.id, question: pollQuestion.trim(), options: pollOptions.map(o => o.trim()) });
     setActivePoll(pollQuestion.trim());
-    setPollResults({ up: 0, down: 0, total: 0 });
+    setPollResults({ results: {}, total: 0, options: pollOptions.map(o => o.trim()) });
     addLog(`Poll: "${pollQuestion.trim()}"`, '📊');
     setPollQuestion('');
   };
@@ -61,11 +62,8 @@ export default function LiveBroadcastPanel({ socket, isConnected, onlineCount, a
     if (!socket || !activeRoom) return;
     socket.emit('broadcast:poll-close', { roomId: activeRoom.id });
     setActivePoll(null);
-    setPollResults({ up: 0, down: 0, total: 0 });
+    setPollResults({ results: {}, total: 0, options: [] });
   };
-
-  const upPercent = pollResults.total > 0 ? Math.round((pollResults.up / pollResults.total) * 100) : 0;
-  const downPercent = pollResults.total > 0 ? Math.round((pollResults.down / pollResults.total) * 100) : 0;
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar p-6 max-w-4xl mx-auto pb-20 space-y-5">
@@ -153,22 +151,52 @@ export default function LiveBroadcastPanel({ socket, isConnected, onlineCount, a
         </div>
 
         {!activePoll ? (
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={pollQuestion}
-              onChange={e => setPollQuestion(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && sendPoll()}
-              placeholder="Siapa yang sudah paham materi ini?"
-              className="flex-1 bg-slate-50 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:bg-[var(--bg-surface)] transition-colors"
-            />
-            <button
-              onClick={sendPoll}
-              disabled={!isConnected || !pollQuestion.trim()}
-              className="px-4 py-2.5 bg-primary text-white rounded-xl font-semibold text-sm hover:bg-primary-hover transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 shadow-emerald-sm"
-            >
-              <Zap size={15} /> Mulai
-            </button>
+          <div className="space-y-3">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={pollQuestion}
+                onChange={e => setPollQuestion(e.target.value)}
+                placeholder="Siapa yang sudah paham materi ini?"
+                className="flex-1 bg-slate-50 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:bg-[var(--bg-surface)] transition-colors"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {pollOptions.map((opt, idx) => (
+                <div key={idx} className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={opt}
+                    onChange={e => {
+                      const newOpts = [...pollOptions];
+                      newOpts[idx] = e.target.value;
+                      setPollOptions(newOpts);
+                    }}
+                    placeholder={`Opsi ${idx + 1}`}
+                    className="flex-1 bg-slate-50 border border-border rounded-xl px-3 py-2 text-sm text-foreground outline-none focus:border-primary transition-colors"
+                  />
+                  {pollOptions.length > 2 && (
+                    <button onClick={() => setPollOptions(pollOptions.filter((_, i) => i !== idx))} className="text-red-500 hover:text-red-600"><X size={16} /></button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between items-center">
+              <button
+                onClick={() => { if (pollOptions.length < 4) setPollOptions([...pollOptions, '']); }}
+                disabled={pollOptions.length >= 4}
+                className="text-xs text-primary font-semibold disabled:opacity-50"
+              >
+                + Tambah Opsi (Max 4)
+              </button>
+              <button
+                onClick={sendPoll}
+                disabled={!isConnected || !pollQuestion.trim() || pollOptions.some(o => !o.trim())}
+                className="px-4 py-2 bg-primary text-white rounded-xl font-semibold text-sm hover:bg-primary-hover transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 shadow-emerald-sm"
+              >
+                <Zap size={15} /> Mulai
+              </button>
+            </div>
           </div>
         ) : (
           <div className="space-y-4">
@@ -185,27 +213,32 @@ export default function LiveBroadcastPanel({ socket, isConnected, onlineCount, a
 
             {/* Results */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
-                <ThumbsUp size={22} className="mx-auto text-emerald-500 mb-2" />
-                <p className="text-2xl font-bold text-emerald-700">{pollResults.up}</p>
-                <p className="text-xs font-semibold text-emerald-600 mt-1">{upPercent}% Paham</p>
-              </div>
-              <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
-                <ThumbsDown size={22} className="mx-auto text-red-400 mb-2" />
-                <p className="text-2xl font-bold text-red-600">{pollResults.down}</p>
-                <p className="text-xs font-semibold text-red-500 mt-1">{downPercent}% Belum</p>
-              </div>
+              {pollResults.options.map((opt, idx) => {
+                const count = pollResults.results[opt] || 0;
+                const percent = pollResults.total > 0 ? Math.round((count / pollResults.total) * 100) : 0;
+                const colors = ['text-emerald-600 bg-emerald-50 border-emerald-200', 'text-amber-600 bg-amber-50 border-amber-200', 'text-blue-600 bg-blue-50 border-blue-200', 'text-purple-600 bg-purple-50 border-purple-200'];
+                const barColors = ['bg-emerald-500', 'bg-amber-400', 'bg-blue-400', 'bg-purple-400'];
+                return (
+                  <div key={idx} className={`border rounded-xl p-3 text-center ${colors[idx % 4]}`}>
+                    <p className="text-xl font-bold">{count}</p>
+                    <p className="text-xs font-semibold mt-1 truncate">{opt}</p>
+                    <p className="text-[10px] opacity-70">{percent}%</p>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Progress bar */}
             <div className="space-y-1.5">
               <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden flex">
-                {pollResults.total > 0 && (
-                  <>
-                    <div className="bg-emerald-500 transition-all duration-500" style={{ width: `${upPercent}%` }} />
-                    <div className="bg-red-400 transition-all duration-500" style={{ width: `${downPercent}%` }} />
-                  </>
-                )}
+                {pollResults.total > 0 && pollResults.options.map((opt, idx) => {
+                  const count = pollResults.results[opt] || 0;
+                  const percent = (count / pollResults.total) * 100;
+                  const barColors = ['bg-emerald-500', 'bg-amber-400', 'bg-blue-400', 'bg-purple-400'];
+                  return percent > 0 ? (
+                    <div key={idx} className={`${barColors[idx % 4]} transition-all duration-500`} style={{ width: `${percent}%` }} title={`${opt}: ${percent.toFixed(0)}%`} />
+                  ) : null;
+                })}
               </div>
               <p className="text-center text-[11px] text-secondary font-medium">
                 {pollResults.total} dari {onlineCount} mahasiswa sudah menjawab

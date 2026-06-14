@@ -112,13 +112,9 @@ export default function AccessibilityWidget() {
                 </div>
                 <button
                   onClick={toggleContrast}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer border ${
-                    settings.contrast
-                      ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
-                      : 'bg-slate-100 text-secondary border-slate-200'
-                  }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-[var(--bg-surface)] ${settings.contrast ? 'bg-emerald-500' : 'bg-slate-200 dark:bg-slate-700'}`}
                 >
-                  {settings.contrast ? 'Aktif' : 'Mati'}
+                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings.contrast ? 'translate-x-6' : 'translate-x-1'}`} />
                 </button>
               </div>
 

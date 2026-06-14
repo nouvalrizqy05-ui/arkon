@@ -439,7 +439,7 @@ router.put('/showroom/builds/:id/grade', authenticateToken, async (req, res) => 
   if (req.user.role !== 'dosen') {
     return res.status(403).json({ error: 'Hanya dosen yang bisa memberi nilai' });
   }
-  const { dosen_score } = req.body;
+  const { dosen_score, dosen_feedback } = req.body;
   if (dosen_score === undefined || dosen_score < 0 || dosen_score > 100) {
     return res.status(400).json({ error: 'Nilai harus antara 0-100' });
   }
@@ -448,6 +448,7 @@ router.put('/showroom/builds/:id/grade', authenticateToken, async (req, res) => 
     await pool.query(`
       DO $$ BEGIN
         ALTER TABLE pc_builds ADD COLUMN IF NOT EXISTS dosen_score INT;
+        ALTER TABLE pc_builds ADD COLUMN IF NOT EXISTS dosen_feedback TEXT;
         ALTER TABLE pc_builds ADD COLUMN IF NOT EXISTS graded_by UUID;
         ALTER TABLE pc_builds ADD COLUMN IF NOT EXISTS graded_at TIMESTAMPTZ;
       EXCEPTION WHEN OTHERS THEN NULL;
@@ -455,8 +456,8 @@ router.put('/showroom/builds/:id/grade', authenticateToken, async (req, res) => 
     `);
 
     const result = await pool.query(
-      'UPDATE pc_builds SET dosen_score = $1, graded_by = $2, graded_at = NOW() WHERE id = $3 RETURNING *',
-      [dosen_score, req.user.id, req.params.id]
+      'UPDATE pc_builds SET dosen_score = $1, dosen_feedback = $2, graded_by = $3, graded_at = NOW() WHERE id = $4 RETURNING *',
+      [dosen_score, dosen_feedback || null, req.user.id, req.params.id]
     );
     if (result.rows.length === 0) return res.status(404).json({ error: 'Build tidak ditemukan' });
     console.log(`🏆 [Showroom] Build ${req.params.id} graded ${dosen_score}/100 by dosen ${req.user.id}`);

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Users, Search, Award, Trophy, Star, ChevronRight } from 'lucide-react';
+import { Users, Search, Award, Trophy, Star, ChevronRight, X } from 'lucide-react';
 import { PROFILE_AVATARS, PROFILE_FRAMES } from '../data/profile-assets';
+import StudentProfile from './StudentProfile';
 
 export default function StudentList({ roomId, token, apiUrl }) {
   const [students, setStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
   // Mock data for fallback since API might not exist
   const MOCK_STUDENTS = [
@@ -78,24 +80,23 @@ export default function StudentList({ roomId, token, apiUrl }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredStudents.map(student => {
+            {filteredStudents.map((student, i) => {
               const avatar = PROFILE_AVATARS.find(a => a.id === student.avatar_id) || PROFILE_AVATARS[0];
               const frame = PROFILE_FRAMES.find(f => f.id === student.frame_id) || PROFILE_FRAMES[0];
+              const isCurrentUser = student.id === localStorage.getItem('user_id'); // Assuming user_id is saved
+              const localCustomAvatar = isCurrentUser ? localStorage.getItem('arkon_custom_avatar') : null;
               
-              const avatarSrc = (student.id === localStorage.getItem('user_id') && localStorage.getItem('arkon_custom_avatar')) 
-                ? localStorage.getItem('arkon_custom_avatar') 
-                : student.avatar_id;
-              
-              const isCustomAvatar = avatarSrc && (avatarSrc.startsWith('data:image/') || avatarSrc.startsWith('http'));
-
               return (
-                <div key={student.id} className="bg-[var(--bg-surface)] border border-border dark:border-slate-800 rounded-2xl p-4 flex items-center gap-4 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors cursor-pointer group">
-                  {isCustomAvatar ? (
-                    <img 
-                      src={avatarSrc} 
-                      className={`w-14 h-14 rounded-xl object-cover shrink-0 ${frame.style}`} 
-                      alt="" 
-                    />
+                <div 
+                  key={student.id} 
+                  onClick={() => setSelectedStudent(student)}
+                  className="group flex items-center gap-4 p-4 rounded-2xl border border-border dark:border-slate-800 bg-[var(--bg-surface)] hover:bg-slate-50 dark:hover:bg-white/[0.02] hover:border-indigo-200 dark:hover:border-indigo-500/30 transition-all cursor-pointer shadow-sm hover:shadow-md animate-in fade-in slide-in-from-bottom-2"
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  {(localCustomAvatar || (student.avatar_id && (student.avatar_id.startsWith('data:image/') || student.avatar_id.startsWith('http')))) ? (
+                    <div className={`w-14 h-14 rounded-xl shrink-0 p-0.5 ${frame.style}`}>
+                      <img src={localCustomAvatar || student.avatar_id} alt="Avatar" className="w-full h-full rounded-lg object-cover" />
+                    </div>
                   ) : (
                     <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 bg-gradient-to-br ${avatar.color} ${frame.style}`}>
                       <span className="text-2xl drop-shadow-md">
@@ -123,6 +124,29 @@ export default function StudentList({ roomId, token, apiUrl }) {
           </div>
         )}
       </div>
+
+      {/* Student Profile Modal */}
+      {selectedStudent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-950 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl relative border border-slate-200 dark:border-slate-800">
+            <button 
+              onClick={() => setSelectedStudent(null)}
+              className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-secondary hover:bg-red-100 hover:text-red-600 transition"
+            >
+              <X size={16} />
+            </button>
+            <div className="p-4 sm:p-6">
+              <StudentProfile 
+                studentId={selectedStudent.id} 
+                token={token} 
+                apiUrl={apiUrl} 
+                unlockedBadges={selectedStudent.badges || []}
+                levelInfo={{ currentLevel: selectedStudent.level || 1, totalXP: selectedStudent.total_xp || 0 }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

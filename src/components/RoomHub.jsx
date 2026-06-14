@@ -259,7 +259,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
     const handleAction = (data) => {
       if (data.type === 'navigate') setActiveTab(data.action);
       else if (data.type === 'poll') {
-        setActivePoll({ question: data.question, roomId: data.roomId });
+        setActivePoll({ question: data.question, options: data.options || ['Paham', 'Belum'], roomId: data.roomId });
         setNotifications(prev => [{ id: Date.now(), type: 'poll', title: 'Polling Baru!', message: `Dosen memulai polling: ${data.question}`, time: new Date(), unread: true }, ...prev]);
       }
     };
@@ -865,13 +865,15 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
           <div className="bg-[var(--bg-surface)] dark:bg-slate-900 rounded-3xl shadow-2xl p-8 w-full max-w-sm text-center">
             <h3 className="text-xs font-black text-secondary uppercase tracking-widest mb-2">Polling dari Dosen</h3>
             <p className="text-lg font-bold text-foreground mb-8">"{activePoll.question}"</p>
-            <div className="grid grid-cols-2 gap-4">
-              <button onClick={() => handlePollVote('up')} className="flex flex-col items-center gap-2 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl hover:bg-emerald-100 transition-all">
-                👍 <span className="font-bold text-sm">Paham</span>
-              </button>
-              <button onClick={() => handlePollVote('down')} className="flex flex-col items-center gap-2 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl hover:bg-red-100 transition-all">
-                👎 <span className="font-bold text-sm">Belum</span>
-              </button>
+            <div className="grid grid-cols-1 gap-3">
+              {activePoll.options.map((opt, idx) => {
+                const colors = ['bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100', 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100', 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100', 'bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100'];
+                return (
+                  <button key={idx} onClick={() => handlePollVote(opt)} className={`p-4 border rounded-2xl transition-all ${colors[idx % 4]}`}>
+                    <span className="font-bold text-sm">{opt}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
