@@ -44,6 +44,38 @@
   --shadow-card: 0 1px 4px rgba(0,0,0,.3), 0 0 0 1px rgba(255,255,255,.05);
 }
 
+/* ─── High Contrast Accessibility Mode ───────── */
+.a11y-high-contrast {
+  --bg-primary: #000000 !important;
+  --bg-surface: #1a1a1a !important;
+  --bg-overlay: rgba(0,0,0,0.95) !important;
+  --text-primary: #ffffff !important;
+  --text-soft: #ffea00 !important; /* Yellow for secondary text */
+
+  --em-50:  #000000 !important;
+  --em-100: #000000 !important;
+  --em-200: #ffea00 !important;
+  --em-400: #ffea00 !important;
+  --em-500: #ffea00 !important;
+  --em-600: #ffea00 !important;
+  --em-700: #ffea00 !important;
+
+  --shadow-card: 0 0 0 2px #ffea00 !important;
+  --shadow-hover: 0 0 0 4px #ffea00 !important;
+  
+  /* Force borders to be yellow in high contrast */
+  --border: #ffea00 !important;
+}
+
+.a11y-high-contrast * {
+  border-color: #ffea00 !important;
+}
+
+.a11y-high-contrast .card, .a11y-high-contrast .card-elevated {
+  border-width: 2px !important;
+}
+
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);

@@ -22,7 +22,7 @@ export default defineConfig({
         ],
         // Offline fallback
         navigateFallback: '/index.html',
-        navigateFallbackDenylist: [/^\/api/],
+        navigateFallbackDenylist: [/^\/api/, /model-viewer\.html$/, /three-assembly\.html$/],
       },
       manifest: {
         name: 'Arkon - Computer Architecture Learning',

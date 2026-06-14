@@ -201,11 +201,7 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// ==========================================
-// FILE UPLOAD: Removed (Room Rebuild — no more PDF uploads)
-// Static serving kept for legacy uploaded files
-// ==========================================
-app.use('/uploads', cors(), express.static(path.join(__dirname, 'uploads')));
+// FILE UPLOAD: Completely removed in 2.0.0 cleanup
 
 // ==========================================
 // STARTUP MIGRATIONS
