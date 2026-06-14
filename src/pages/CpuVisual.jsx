@@ -460,7 +460,7 @@ export default function CpuVisual({ embeddedMode = false, onCoinsEarned }) {
             {/* Feedback console monitor */}
             <div className="bg-slate-50 dark:bg-black/40 border border-border dark:border-slate-800 rounded-2xl p-4 font-mono text-xs text-secondary shadow-md">
               <span className="text-[10px] text-secondary uppercase block mb-1.5 font-bold">LOG SIKLUS MIKRO-OPERASI (MICRO-OPERATIONS CONSOLE)</span>
-              <div className="bg-white dark:bg-black/60 border border-border dark:border-slate-800 p-3.5 rounded-xl min-h-[48px] flex items-center justify-start text-emerald-600 dark:text-emerald-500 font-medium shadow-inner">
+              <div className="bg-[var(--bg-surface)] dark:bg-black/60 border border-border dark:border-slate-800 p-3.5 rounded-xl min-h-[48px] flex items-center justify-start text-emerald-600 dark:text-emerald-500 font-medium shadow-inner">
                 <span className="leading-relaxed">{cycleStep}</span>
               </div>
             </div>

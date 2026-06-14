@@ -362,7 +362,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
 
       {/* Gudang Komponen (Inventory) - Fix horizontal overflow */}
       <div className="pb-2 shrink-0 z-20 w-full overflow-hidden min-w-0">
-        <div className="bg-white dark:bg-slate-900 border border-border dark:border-slate-800 rounded-xl p-2.5 w-full overflow-hidden flex flex-col shadow-sm">
+        <div className="bg-[var(--bg-surface)] dark:bg-slate-900 border border-border dark:border-slate-800 rounded-xl p-2.5 w-full overflow-hidden flex flex-col shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-black text-foreground flex items-center gap-2">
               <span className="text-lg">📦</span> Gudang Komponen
@@ -425,7 +425,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                       onClick={() => toggleEquip(item)}
                       className={`shrink-0 w-28 p-2 rounded-lg border text-left transition-all relative overflow-hidden ${isEquipped
                           ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30 ring-1 ring-emerald-200 dark:ring-emerald-500/20'
-                          : 'bg-white dark:bg-slate-800 border-border dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500/50 hover:bg-primary-soft dark:hover:bg-indigo-900/20'
+                          : 'bg-[var(--bg-surface)] dark:bg-slate-800 border-border dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500/50 hover:bg-primary-soft dark:hover:bg-indigo-900/20'
                         }`}
                     >
                       <div className="text-2xl mb-2">{item.emoji}</div>
@@ -503,7 +503,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
       {/* Benchmark Result Card */}
       {showBenchmark && benchmark && (
         <div className="pb-2 shrink-0 animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="bg-white dark:bg-slate-900 border border-border dark:border-slate-800 shadow-sm rounded-2xl p-5">
+          <div className="bg-[var(--bg-surface)] dark:bg-slate-900 border border-border dark:border-slate-800 shadow-sm rounded-2xl p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-black text-foreground flex items-center gap-2">
                 <Gauge size={16} className="text-primary" /> PC Benchmark Score
@@ -661,7 +661,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
         {/* 3D View Iframe or 2D Fallback */}
         {use2DFallback ? (
           <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100/50 dark:bg-slate-900/50 p-8">
-            <div className="w-48 h-48 border-4 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl flex items-center justify-center bg-white dark:bg-slate-800 mb-6 shadow-sm">
+            <div className="w-48 h-48 border-4 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl flex items-center justify-center bg-[var(--bg-surface)] dark:bg-slate-800 mb-6 shadow-sm">
               <span className="text-4xl">🖥️</span>
             </div>
             <h3 className="text-lg font-black text-foreground mb-2">Mode 2D Sederhana Aktif</h3>
@@ -712,11 +712,11 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
       {/* ONBOARDING TOUR MODAL */}
       {tourStep > 0 && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
+          <div className="bg-[var(--bg-surface)] dark:bg-slate-900 rounded-3xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
             <div className="absolute top-0 left-0 w-full h-2 flex">
-              <div className={`h-full transition-all duration-300 ${tourStep >= 1 ? 'bg-primary flex-1' : 'bg-gray-100 flex-1'}`}></div>
-              <div className={`h-full transition-all duration-300 ${tourStep >= 2 ? 'bg-primary flex-1' : 'bg-gray-100 flex-1'}`}></div>
-              <div className={`h-full transition-all duration-300 ${tourStep >= 3 ? 'bg-primary flex-1' : 'bg-gray-100 flex-1'}`}></div>
+              <div className={`h-full transition-all duration-300 ${tourStep >= 1 ? 'bg-primary flex-1' : 'bg-slate-100 dark:bg-slate-800 flex-1'}`}></div>
+              <div className={`h-full transition-all duration-300 ${tourStep >= 2 ? 'bg-primary flex-1' : 'bg-slate-100 dark:bg-slate-800 flex-1'}`}></div>
+              <div className={`h-full transition-all duration-300 ${tourStep >= 3 ? 'bg-primary flex-1' : 'bg-slate-100 dark:bg-slate-800 flex-1'}`}></div>
             </div>
             
             {tourStep === 1 && (
@@ -724,7 +724,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                 <div className="w-16 h-16 bg-primary-light text-primary rounded-2xl flex items-center justify-center mb-6 shadow-inner mx-auto">
                   <Wrench size={32} />
                 </div>
-                <h3 className="text-2xl font-black text-center mb-3 text-foreground">Selamat Datang di Assembly Lab!</h3>
+                <h3 className="text-2xl font-black text-center mb-3 text-foreground dark:text-white">Selamat Datang di Assembly Lab!</h3>
                 <p className="text-center text-secondary mb-8 leading-relaxed">
                   Di sini kamu bisa merakit PC dari komponen yang kamu dapatkan atau beli di Shop.
                 </p>
@@ -740,7 +740,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                 <div className="w-16 h-16 bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-2xl flex items-center justify-center mb-6 shadow-inner mx-auto">
                   <Monitor size={32} />
                 </div>
-                <h3 className="text-2xl font-black text-center mb-3 text-foreground">Perhatikan Urutan!</h3>
+                <h3 className="text-2xl font-black text-center mb-3 text-foreground dark:text-white">Perhatikan Urutan!</h3>
                 <p className="text-center text-secondary mb-8 leading-relaxed">
                   Kamu harus memasang komponen secara berurutan: <br/> <b>Motherboard → CPU → GPU → RAM → Storage → PSU → Cooler → Case</b>.
                 </p>
@@ -756,7 +756,7 @@ export default function PcAssembly({ inventory, equippedComponents, setEquippedC
                 <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center mb-6 shadow-inner mx-auto">
                   <Shield size={32} />
                 </div>
-                <h3 className="text-2xl font-black text-center mb-3 text-foreground">Kecocokan & Benchmark</h3>
+                <h3 className="text-2xl font-black text-center mb-3 text-foreground dark:text-white">Kecocokan & Benchmark</h3>
                 <p className="text-center text-secondary mb-8 leading-relaxed">
                   Pastikan indikator <b>Compatibility</b> menunjukkan hijau (cocok). Saat semua 8 komponen terpasang, kamu bisa melihat skor Benchmark PC-mu!
                 </p>

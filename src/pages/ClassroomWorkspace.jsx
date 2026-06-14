@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Routes, Route } from 'react-router-dom';
 import { useToast } from '../components/Toast';
 import {
   Plus, Users, DoorOpen, ChevronRight, TrendingUp,
@@ -13,6 +13,7 @@ import CreateRoomModal from '../components/CreateRoomModal';
 import ErrorBoundary from '../components/ErrorBoundary';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useAchievements } from '../components/AchievementSystem';
+import StudentProfile from '../components/StudentProfile';
 
 export default function ClassroomWorkspace() {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ export default function ClassroomWorkspace() {
   const token       = localStorage.getItem('auth_token');
   const API_URL     = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-  const { unlockedBadges, unlockBadge } = useAchievements(studentId);
+  const { unlockedBadges, unlockBadge, levelInfo } = useAchievements(studentId);
 
   /* ─── Data fetching ─────────────────────── */
   const fetchJoinedRooms = useCallback(async () => {
@@ -187,7 +188,7 @@ export default function ClassroomWorkspace() {
     <div className="fixed inset-0 flex overflow-hidden bg-slate-50 dark:bg-slate-950">
 
       {/* ── Sidebar ───────────────────────────── */}
-      <aside className="hidden lg:flex flex-col w-[240px] h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 shrink-0">
+      <aside className="hidden lg:flex flex-col w-[240px] h-full bg-[var(--bg-surface)] dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 shrink-0">
         {/* Logo */}
         <div className="flex items-center gap-2.5 h-16 px-5 border-b border-slate-100">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-emerald-sm"
@@ -237,7 +238,21 @@ export default function ClassroomWorkspace() {
 
       {/* ── Main ──────────────────────────────── */}
       <main className="flex-1 overflow-y-auto min-h-0 custom-scrollbar">
-        <div className="max-w-5xl mx-auto px-6 py-8">
+        <Routes>
+          <Route path="profile" element={
+            <div className="max-w-6xl mx-auto px-6 py-8">
+              <StudentProfile 
+                studentId={studentId}
+                token={token}
+                apiUrl={API_URL}
+                unlockedBadges={unlockedBadges}
+                levelInfo={levelInfo}
+                onProfileUpdate={() => {}}
+              />
+            </div>
+          } />
+          <Route path="*" element={
+            <div className="max-w-5xl mx-auto px-6 py-8">
 
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -303,7 +318,7 @@ export default function ClassroomWorkspace() {
           <AnimatePresence mode="wait">
             {filteredRooms.length === 0 ? (
               <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+                className="flex flex-col items-center justify-center py-20 bg-[var(--bg-surface)] dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
                 <div className="w-16 h-16 rounded-2xl bg-primary-soft border border-primary/15 flex items-center justify-center mb-5">
                   <DoorOpen size={28} className="text-primary" />
                 </div>
@@ -367,6 +382,8 @@ export default function ClassroomWorkspace() {
             )}
           </AnimatePresence>
         </div>
+          } />
+        </Routes>
       </main>
 
       {/* Modals */}

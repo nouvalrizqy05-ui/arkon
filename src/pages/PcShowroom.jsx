@@ -61,8 +61,15 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
         const data = await res.json();
         setComments(prev => [...prev, data.comment]);
         setCommentText('');
+      } else {
+        const errorData = await res.json();
+        console.error('Comment error:', errorData);
+        alert(`Gagal mengirim komentar: ${errorData.error || 'Server error'}`);
       }
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+      console.error(err); 
+      alert('Koneksi gagal saat mengirim komentar.');
+    }
     finally { setSending(false); }
   };
 
@@ -98,7 +105,11 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
     <div className="bg-[var(--bg-surface)] dark:bg-white/[0.03] border border-border dark:border-slate-800 rounded-2xl overflow-hidden hover:border-border transition-all">
       {/* Header */}
       <div className="p-4 flex items-center gap-3 border-b border-border dark:border-slate-800">
-        <img src={`https://ui-avatars.com/api/?name=${build.builder_name}&background=6366f1&color=fff&size=36`} className="w-9 h-9 rounded-full" alt="" />
+        <img 
+          src={(build.student_id === studentId && localStorage.getItem('arkon_custom_avatar')) ? localStorage.getItem('arkon_custom_avatar') : (build.avatar_id && (build.avatar_id.startsWith('data:image/') || build.avatar_id.startsWith('http'))) ? build.avatar_id : `https://ui-avatars.com/api/?name=${build.builder_name}&background=6366f1&color=fff&size=36`} 
+          className="w-9 h-9 rounded-full object-cover" 
+          alt="" 
+        />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-bold text-foreground truncate">{build.build_name}</p>
           <p className="text-[10px] text-secondary">oleh {build.builder_name} · {new Date(build.created_at).toLocaleDateString('id-ID')}</p>
@@ -151,7 +162,7 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
               onChange={e => setDosenScore(e.target.value)} 
               disabled={isScored}
               placeholder="Skor 0-100" 
-              className="w-24 bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-500/30 rounded-lg px-3 py-1.5 text-xs text-foreground dark:text-white font-bold focus:outline-none focus:border-indigo-500" 
+              className="w-24 bg-[var(--bg-surface)] dark:bg-slate-900 border border-indigo-200 dark:border-indigo-500/30 rounded-lg px-3 py-1.5 text-xs text-foreground dark:text-white font-bold focus:outline-none focus:border-indigo-500" 
             />
             <button 
               onClick={handleScoreSubmit}
@@ -178,7 +189,11 @@ function BuildCard({ build, studentId, token, apiUrl, onReact, userRole }) {
           {comments.length === 0 && <p className="text-[10px] text-secondary italic text-center py-2">Belum ada komentar</p>}
           {comments.map(c => (
             <div key={c.id} className="flex gap-2 group">
-              <img src={`https://ui-avatars.com/api/?name=${c.commenter_name || 'U'}&background=374151&color=fff&size=24`} className="w-6 h-6 rounded-full shrink-0 mt-0.5" alt="" />
+              <img 
+                src={(c.student_id === studentId && localStorage.getItem('arkon_custom_avatar')) ? localStorage.getItem('arkon_custom_avatar') : (c.avatar_id && (c.avatar_id.startsWith('data:image/') || c.avatar_id.startsWith('http'))) ? c.avatar_id : `https://ui-avatars.com/api/?name=${c.commenter_name || 'U'}&background=374151&color=fff&size=24`} 
+                className="w-6 h-6 rounded-full shrink-0 mt-0.5 object-cover" 
+                alt="" 
+              />
               <div className="flex-1 bg-slate-50 dark:bg-white/[0.03] border border-border dark:border-slate-800 rounded-xl px-3 py-2">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] font-bold text-secondary">{c.commenter_name || 'User'}</span>
@@ -246,7 +261,7 @@ export default function PcShowroom({ embeddedMode = false, studentId: propStuden
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-foreground">
       {/* Header */}
-      <div className="sticky top-0 z-30 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-border dark:border-slate-800">
+      <div className="sticky top-0 z-20 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-border dark:border-slate-800">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {!embeddedMode && (

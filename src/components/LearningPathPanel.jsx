@@ -49,17 +49,17 @@ export default function LearningPathPanel({ studentId, token, activeRoomId, stud
   const thetaColor = studentTheta < -1 ? 'text-red-500' : studentTheta < 0 ? 'text-orange-500' : studentTheta < 1 ? 'text-blue-500' : studentTheta < 2 ? 'text-green-500' : 'text-purple-500';
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div className="bg-[var(--bg-surface)] dark:bg-gray-900 rounded-2xl border border-border dark:border-slate-800 dark:border-gray-700 overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border-b border-gray-200 dark:border-gray-700">
+      <div className="px-5 py-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border-b border-border dark:border-slate-800 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-indigo-100 dark:bg-indigo-800/50 flex items-center justify-center">
               <Brain size={18} className="text-indigo-600 dark:text-indigo-300" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 dark:text-white text-sm">Jalur Belajar Adaptif</h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <h3 className="font-bold text-foreground dark:text-white text-sm">Jalur Belajar Adaptif</h3>
+              <p className="text-xs text-secondary dark:text-gray-400">
                 Level: <span className={`font-bold ${thetaColor}`}>{thetaLabel}</span>
                 {' '}(θ = {studentTheta.toFixed(2)})
                 {model === 'heuristic' && <span className="ml-2 text-amber-500 text-[10px]">mode heuristik</span>}
@@ -77,12 +77,12 @@ export default function LearningPathPanel({ studentId, token, activeRoomId, stud
         {loading && (
           <div className="flex items-center justify-center py-10 gap-3">
             <Loader2 size={20} className="animate-spin text-indigo-500" />
-            <span className="text-sm text-gray-500">AI sedang menyusun jalur belajar...</span>
+            <span className="text-sm text-secondary">AI sedang menyusun jalur belajar...</span>
           </div>
         )}
 
         {error && (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-secondary">
             <p className="text-sm">{error}</p>
             <button onClick={fetchLearningPath} className="mt-3 text-xs text-indigo-600 hover:underline">Coba lagi</button>
           </div>
@@ -90,14 +90,14 @@ export default function LearningPathPanel({ studentId, token, activeRoomId, stud
 
         {!loading && !error && recommendations.length > 0 && (
           <div className="space-y-3">
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+            <p className="text-xs text-secondary dark:text-gray-400 mb-4">
               Rekomendasi topik berdasarkan kemampuan dan riwayat belajarmu:
             </p>
 
             {recommendations.map((rec, i) => (
               <div key={i}
                 onClick={() => setSelectedTopic(selectedTopic === i ? null : i)}
-                className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors">
+                className="border border-border dark:border-slate-800 dark:border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors">
                 <div className="flex items-center gap-3 p-3">
                   {/* Step number */}
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-sm flex-shrink-0 bg-gradient-to-br ${
@@ -109,9 +109,9 @@ export default function LearningPathPanel({ studentId, token, activeRoomId, stud
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-gray-800 dark:text-gray-200 truncate">{rec.topic}</p>
+                    <p className="text-sm font-bold text-foreground dark:text-gray-200 truncate">{rec.topic}</p>
                     {selectedTopic === i && rec.reason && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">{rec.reason}</p>
+                      <p className="text-xs text-secondary dark:text-gray-400 mt-1 leading-relaxed">{rec.reason}</p>
                     )}
                   </div>
 
@@ -137,7 +137,7 @@ export default function LearningPathPanel({ studentId, token, activeRoomId, stud
         {!loading && !error && recommendations.length === 0 && (
           <div className="text-center py-10">
             <Brain size={32} className="mx-auto text-gray-300 mb-3" />
-            <p className="text-sm text-gray-500">Selesaikan beberapa quiz dulu untuk mendapatkan rekomendasi jalur belajar.</p>
+            <p className="text-sm text-secondary">Selesaikan beberapa quiz dulu untuk mendapatkan rekomendasi jalur belajar.</p>
           </div>
         )}
       </div>

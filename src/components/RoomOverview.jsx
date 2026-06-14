@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 const QUICK_ACTIONS = [
   { id: 'assembly', label: 'Assembly Lab', icon: '🖥️', desc: 'Rakit PC virtual', color: 'from-rose-500 to-pink-600' },
-  { id: 'quiz', label: 'Quiz Map', icon: '🎮', desc: 'Uji pengetahuan', color: 'from-amber-500 to-orange-600' },
+  { id: 'quiz', label: 'Quiz Journey', icon: '🎮', desc: 'Uji pengetahuan', color: 'from-amber-500 to-orange-600' },
   { id: 'detective', label: 'Detective', icon: '🔍', desc: 'Identifikasi komponen', color: 'from-violet-500 to-purple-600' },
   { id: 'shop', label: 'Hardware Shop', icon: '🛒', desc: 'Beli komponen', color: 'from-emerald-500 to-teal-600' },
   { id: 'showroom', label: 'Showroom', icon: '🖼️', desc: 'Pameran karya', color: 'from-blue-500 to-indigo-600' },
@@ -21,52 +21,45 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
     const fetchDosenStats = async () => {
       setDosenLoading(true);
       try {
-        const [actRes, workRes] = await Promise.all([
-          fetch(`${apiUrl}/api/activities/room/${room.id}`, { headers: { 'Authorization': `Bearer ${token}` } }),
-          fetch(`${apiUrl}/api/student-work/room/${room.id}`, { headers: { 'Authorization': `Bearer ${token}` } }),
-        ]);
-        const activities = actRes.ok ? await actRes.json() : [];
-        const works = workRes.ok ? await workRes.json() : [];
-
-        const activeActivities = activities.filter(a => !a.is_archived);
-        const submittedWork = works.filter(w => w.is_submitted);
-        const pendingCount = Math.max(0, (activeActivities.length * Math.max(memberCount, 1)) - submittedWork.length);
-
-        const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
-        const recentStudentIds = new Set(works.filter(w => new Date(w.updated_at) > threeDaysAgo).map(w => w.student_id));
-        const inactiveCount = Math.max(0, memberCount - recentStudentIds.size);
-
-        setDosenStats({
-          pendingSubmissions: pendingCount,
-          activeActivities: activeActivities.length,
-          inactiveStudents: inactiveCount,
+        const res = await fetch(`${apiUrl}/api/analytics/overview/${room.id}`, { 
+          headers: { 'Authorization': `Bearer ${token}` } 
         });
+        if (res.ok) {
+          const data = await res.json();
+          setDosenStats({
+            studentCount: data.student_count,
+            activeActivities: data.active_activities,
+            avgXp: data.avg_xp,
+          });
+        } else {
+          setDosenStats({ studentCount: 0, activeActivities: 0, avgXp: 0 });
+        }
       } catch (e) {
         console.error('Failed to fetch dosen overview stats:', e);
-        setDosenStats({ pendingSubmissions: null, activeActivities: null, inactiveStudents: null });
+        setDosenStats({ studentCount: 0, activeActivities: 0, avgXp: 0 });
       } finally {
         setDosenLoading(false);
       }
     };
     fetchDosenStats();
-  }, [room?.id, userRole, apiUrl, token, memberCount]);
+  }, [room?.id, userRole, apiUrl, token]);
 
   return (
     <div className="w-full h-full overflow-y-auto bg-slate-50 dark:bg-slate-950 transition-colors custom-scrollbar">
       {/* Hero Banner */}
       <div className="bg-gradient-to-br from-[#0B2F6D] via-[#1a3a7a] to-[#0d1f4d] text-foreground pt-10 pb-20 px-8 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-10 right-10 w-64 h-64 bg-white rounded-full blur-[100px]" />
+          <div className="absolute top-10 right-10 w-64 h-64 bg-[var(--bg-surface)] rounded-full blur-[100px]" />
           <div className="absolute bottom-0 left-20 w-48 h-48 bg-indigo-400 rounded-full blur-[80px]" />
         </div>
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex items-center gap-3 mb-1">
-            <span className="bg-white shadow-sm border border-border px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase backdrop-blur-sm">
+            <span className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase backdrop-blur-sm">
               {room?.room_type === 'personal' ? 'PERSONAL ROOM' : room?.room_type === 'collaborative' ? 'KOLABORASI' : 'CLASSROOM'}
             </span>
             {room?.is_live && (
               <span className="bg-rose-500 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase animate-pulse flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 bg-white rounded-full" /> LIVE
+                <span className="w-1.5 h-1.5 bg-[var(--bg-surface)] rounded-full" /> LIVE
               </span>
             )}
           </div>
@@ -87,14 +80,18 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
       </div>
 
       <div className="max-w-5xl mx-auto px-6 -mt-12 relative z-20 pb-12">
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          {[
+          {(userRole === 'dosen' ? [
+            { label: 'Total Member', value: dosenStats?.studentCount ?? memberCount ?? 0, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-500/10', border: 'border-blue-100 dark:border-blue-500/20' },
+            { label: 'Aktivitas (7 Hari)', value: dosenStats?.activeActivities ?? (dosenLoading ? '...' : 0), icon: Activity, color: 'text-indigo-600', bg: 'bg-indigo-50 dark:bg-indigo-500/10', border: 'border-indigo-100 dark:border-indigo-500/20' },
+            { label: 'Rata-rata XP', value: dosenStats?.avgXp ?? (dosenLoading ? '...' : 0), icon: TrendingUp, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-500/10', border: 'border-amber-100 dark:border-amber-500/20' },
+            { label: 'Status Kelas', value: dosenStats?.studentCount > 0 ? 'Aktif' : 'Kosong', icon: AlertCircle, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-500/10', border: 'border-emerald-100 dark:border-emerald-500/20' },
+          ] : [
             { label: 'Tugas', value: pendingActivities || 0, icon: ClipboardList, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-500/10', border: 'border-amber-100 dark:border-amber-500/20' },
             { label: 'Skor Tertinggi', value: stats.highScore || '-', icon: Trophy, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-500/10', border: 'border-emerald-100 dark:border-emerald-500/20' },
             { label: 'Assembly', value: stats.assemblyCount || 0, icon: Cpu, color: 'text-primary', bg: 'bg-indigo-50 dark:bg-indigo-500/10', border: 'border-indigo-100 dark:border-indigo-500/20' },
             { label: 'Quiz Selesai', value: stats.quizCount || 0, icon: Gamepad2, color: 'text-rose-600', bg: 'bg-rose-50 dark:bg-rose-500/10', border: 'border-rose-100 dark:border-rose-500/20' },
-          ].map((stat, i) => (
+          ]).map((stat, i) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
@@ -112,7 +109,7 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 mb-6">
+        <div className="bg-[var(--bg-surface)] dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 mb-6">
           <h3 className="text-sm font-black text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
             <Activity size={16} className="text-indigo-500" />
             Mulai Aktivitas
@@ -122,7 +119,7 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
               <button
                 key={action.id}
                 onClick={() => onNavigate(action.id)}
-                className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/5 transition-all bg-white dark:bg-slate-800 hover:-translate-y-1"
+                className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/5 transition-all bg-[var(--bg-surface)] dark:bg-slate-800 hover:-translate-y-1"
               >
                 <div className={`w-14 h-14 bg-gradient-to-br ${action.color} rounded-2xl flex items-center justify-center text-2xl shadow-lg group-hover:scale-110 transition-transform`}>
                   {action.icon}
@@ -153,7 +150,7 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
         )}
 
         {/* Recent Activity Feed */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+        <div className="bg-[var(--bg-surface)] dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
           <h3 className="text-sm font-black text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
             <Clock size={16} className="text-secondary" />
             Aktivitas Terbaru
@@ -199,7 +196,7 @@ export default function RoomOverview({ room, userRole, memberCount, recentActivi
         {/* Dosen: Adaptive Learning Insight */}
         {userRole === 'dosen' && (
           <div className="mt-6 space-y-6">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+            <div className="bg-[var(--bg-surface)] dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
               <h3 className="text-sm font-black text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
                 <AlertCircle size={16} className="text-red-500" /> Perhatian Pengajar
               </h3>

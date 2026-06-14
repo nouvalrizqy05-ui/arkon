@@ -8,7 +8,7 @@ import {
 
 const QUICK_ACTIONS = [
   { id: 'assembly',  label: 'Semua ke Assembly Lab',      icon: Cpu,        color: 'bg-emerald-500 hover:bg-emerald-600', shadow: 'shadow-emerald-500/20' },
-  { id: 'quiz',      label: 'Semua ke Quiz Map',          icon: Gamepad2,   color: 'bg-amber-500 hover:bg-amber-600',    shadow: 'shadow-amber-500/20' },
+  { id: 'quiz',      label: 'Semua ke Quiz Journey',          icon: Gamepad2,   color: 'bg-amber-500 hover:bg-amber-600',    shadow: 'shadow-amber-500/20' },
   { id: 'detective', label: 'Semua ke Component Detective', icon: Search,  color: 'bg-violet-500 hover:bg-violet-600',  shadow: 'shadow-violet-500/20' },
   { id: 'shop',      label: 'Semua ke Hardware Shop',     icon: ShoppingBag,color: 'bg-rose-500 hover:bg-rose-600',     shadow: 'shadow-rose-500/20' },
 ];
@@ -93,7 +93,7 @@ export default function LiveBroadcastPanel({ socket, isConnected, onlineCount, a
       </div>
 
       {/* Custom broadcast message */}
-      <div className="bg-white rounded-2xl border border-border shadow-card p-5">
+      <div className="bg-[var(--bg-surface)] rounded-2xl border border-border shadow-card p-5">
         <div className="flex items-center gap-2 mb-3">
           <MessageSquare size={15} className="text-primary" />
           <h3 className="text-xs font-semibold text-foreground uppercase tracking-wide">Pesan Siaran</h3>
@@ -105,7 +105,7 @@ export default function LiveBroadcastPanel({ socket, isConnected, onlineCount, a
             onChange={e => setCustomMessage(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && sendCustomMessage()}
             placeholder="Tulis pesan notifikasi untuk semua mahasiswa..."
-            className="flex-1 bg-slate-50 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:bg-white transition-colors"
+            className="flex-1 bg-slate-50 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:bg-[var(--bg-surface)] transition-colors"
           />
           <button
             onClick={sendCustomMessage}
@@ -118,7 +118,7 @@ export default function LiveBroadcastPanel({ socket, isConnected, onlineCount, a
       </div>
 
       {/* Quick Navigation */}
-      <div className="bg-white rounded-2xl border border-border shadow-card p-5">
+      <div className="bg-[var(--bg-surface)] rounded-2xl border border-border shadow-card p-5">
         <div className="flex items-center gap-2 mb-4">
           <Navigation size={15} className="text-secondary" />
           <h3 className="text-xs font-semibold text-foreground uppercase tracking-wide">Navigasi Cepat</h3>
@@ -146,7 +146,7 @@ export default function LiveBroadcastPanel({ socket, isConnected, onlineCount, a
       </div>
 
       {/* Polling */}
-      <div className="bg-white rounded-2xl border border-border shadow-card p-5">
+      <div className="bg-[var(--bg-surface)] rounded-2xl border border-border shadow-card p-5">
         <div className="flex items-center gap-2 mb-4">
           <BarChart2 size={15} className="text-secondary" />
           <h3 className="text-xs font-semibold text-foreground uppercase tracking-wide">Polling Cepat</h3>
@@ -160,7 +160,7 @@ export default function LiveBroadcastPanel({ socket, isConnected, onlineCount, a
               onChange={e => setPollQuestion(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && sendPoll()}
               placeholder="Siapa yang sudah paham materi ini?"
-              className="flex-1 bg-slate-50 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:bg-white transition-colors"
+              className="flex-1 bg-slate-50 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:bg-[var(--bg-surface)] transition-colors"
             />
             <button
               onClick={sendPoll}
@@ -216,7 +216,7 @@ export default function LiveBroadcastPanel({ socket, isConnected, onlineCount, a
       </div>
 
       {/* Broadcast Log */}
-      <div className="bg-white rounded-2xl border border-border shadow-card p-5">
+      <div className="bg-[var(--bg-surface)] rounded-2xl border border-border shadow-card p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Clock size={15} className="text-secondary" />

@@ -198,7 +198,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
           {onBack && (
-            <button onClick={onBack} className="p-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-gray-500 transition" aria-label="ArrowLeft">
+            <button onClick={onBack} className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:bg-slate-700 rounded-xl text-secondary transition" aria-label="ArrowLeft">
               <ArrowLeft size={20} />
             </button>
           )}
@@ -222,7 +222,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
       {phase === PHASE.SETUP && (
         <div className="space-y-6">
           {/* Quiz Title */}
-          <div className="bg-white rounded-3xl border border-border shadow-sm p-6">
+          <div className="bg-[var(--bg-surface)] rounded-3xl border border-border shadow-sm p-6">
             <label className="block text-xs font-black text-secondary uppercase tracking-widest mb-2">Judul Kuis</label>
             <input
               type="text"
@@ -235,7 +235,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
 
           {/* Questions */}
           {questions.map((q, qIdx) => (
-            <div key={qIdx} className="bg-white rounded-3xl border border-border shadow-sm p-6">
+            <div key={qIdx} className="bg-[var(--bg-surface)] rounded-3xl border border-border shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-xs font-black text-secondary uppercase tracking-widest">Soal {qIdx + 1}/{questions.length}</h4>
                 <div className="flex items-center gap-2">
@@ -243,7 +243,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
                   <select
                     value={q.duration_seconds}
                     onChange={e => updateQuestion(qIdx, 'duration_seconds', parseInt(e.target.value))}
-                    className="bg-gray-50 border border-border rounded-lg px-2 py-1 text-xs font-bold focus:outline-none"
+                    className="bg-slate-50 dark:bg-slate-900 border border-border rounded-lg px-2 py-1 text-xs font-bold focus:outline-none"
                   >
                     {[10, 15, 20, 30, 45, 60].map(s => <option key={s} value={s}>{s}s</option>)}
                   </select>
@@ -268,7 +268,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
                   <div key={optIdx} className="flex items-center gap-2">
                     <button
                       onClick={() => updateQuestion(qIdx, 'correct_index', optIdx)}
-                      className={`w-8 h-8 rounded-lg text-xs font-black shrink-0 transition-all ${q.correct_index === optIdx ? `${OPTION_COLORS[optIdx]} text-white shadow-md` : 'bg-gray-100 text-secondary hover:bg-gray-200'}`}
+                      className={`w-8 h-8 rounded-lg text-xs font-black shrink-0 transition-all ${q.correct_index === optIdx ? `${OPTION_COLORS[optIdx]} text-white shadow-md` : 'bg-slate-100 dark:bg-slate-800 text-secondary hover:bg-slate-200 dark:bg-slate-700'}`}
                     >
                       {OPTION_LABELS[optIdx]}
                     </button>
@@ -291,7 +291,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
               <button
                 onClick={addQuestion}
                 disabled={questions.length >= 10}
-                className="flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-dashed border-gray-300 text-secondary hover:text-[#2467ce] hover:border-[#2467ce] rounded-xl font-bold text-sm transition disabled:opacity-30"
+                className="flex items-center gap-2 px-4 py-2.5 bg-[var(--bg-surface)] border-2 border-dashed border-border dark:border-slate-700 text-secondary hover:text-[#2467ce] hover:border-[#2467ce] rounded-xl font-bold text-sm transition disabled:opacity-30"
               >
                 <Plus size={16} /> Tambah Soal ({questions.length}/10)
               </button>
@@ -318,7 +318,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
               <p className="text-purple-100/80 mb-6">{sessionData.questions.length} soal | {onlineCount} mahasiswa online</p>
               <button
                 onClick={sendNextQuestion}
-                className="px-8 py-3 bg-white text-purple-700 rounded-xl font-black text-sm hover:bg-purple-50 transition-all shadow-lg active:scale-95"
+                className="px-8 py-3 bg-[var(--bg-surface)] text-purple-700 rounded-xl font-black text-sm hover:bg-purple-50 transition-all shadow-lg active:scale-95"
               >
                 Kirim Soal Pertama <ChevronRight size={16} className="inline" />
               </button>
@@ -326,7 +326,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
           ) : (
             <>
               {/* Question display */}
-              <div className="bg-white rounded-3xl border border-border shadow-sm p-6">
+              <div className="bg-[var(--bg-surface)] rounded-3xl border border-border shadow-sm p-6">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-black text-secondary uppercase tracking-widest">
                     Soal {currentQIndex + 1}/{sessionData.questions.length}
@@ -335,7 +335,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
                     <div className="flex items-center gap-2 text-xs font-bold text-secondary">
                       <Send size={12} /> {answerCount} jawaban masuk
                     </div>
-                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-black text-sm ${timeLeft <= 5 ? 'bg-red-100 text-red-700 animate-pulse' : 'bg-gray-100 text-gray-700'}`}>
+                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-black text-sm ${timeLeft <= 5 ? 'bg-red-100 text-red-700 animate-pulse' : 'bg-slate-100 dark:bg-slate-800 text-foreground'}`}>
                       <Clock size={14} /> {timeLeft}s
                     </div>
                   </div>
@@ -351,8 +351,8 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
                       key={i}
                       className={`p-3 rounded-xl border-2 text-sm font-bold flex items-center gap-2 transition-all ${
                         revealedAnswer !== null
-                          ? i === revealedAnswer ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-gray-200 bg-gray-50 text-secondary'
-                          : 'border-gray-200 bg-gray-50 text-gray-700'
+                          ? i === revealedAnswer ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-border dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-secondary'
+                          : 'border-border dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-foreground'
                       }`}
                     >
                       <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black text-white ${OPTION_COLORS[i]}`}>
@@ -385,14 +385,14 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
 
               {/* Live Leaderboard */}
               {leaderboard.length > 0 && (
-                <div className="bg-white rounded-3xl border border-border shadow-sm p-6">
+                <div className="bg-[var(--bg-surface)] rounded-3xl border border-border shadow-sm p-6">
                   <h4 className="text-xs font-black text-secondary uppercase tracking-widest mb-4 flex items-center gap-2">
                     <Trophy size={14} className="text-amber-500" /> Leaderboard Live
                   </h4>
                   <div className="space-y-2">
                     {leaderboard.slice(0, 5).map((entry, i) => (
-                      <div key={entry.student_id} className={`flex items-center gap-3 p-3 rounded-xl ${i === 0 ? 'bg-amber-50 border border-amber-200' : 'bg-gray-50'}`}>
-                        <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black ${i === 0 ? 'bg-amber-500 text-white' : i === 1 ? 'bg-gray-400 text-white' : i === 2 ? 'bg-amber-700 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                      <div key={entry.student_id} className={`flex items-center gap-3 p-3 rounded-xl ${i === 0 ? 'bg-amber-50 border border-amber-200' : 'bg-slate-50 dark:bg-slate-900'}`}>
+                        <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black ${i === 0 ? 'bg-amber-500 text-white' : i === 1 ? 'bg-gray-400 text-white' : i === 2 ? 'bg-amber-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-secondary'}`}>
                           #{i + 1}
                         </span>
                         <span className="flex-1 font-bold text-sm text-foreground">{entry.student_name}</span>
@@ -418,7 +418,7 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
           </div>
 
           {/* Final Leaderboard */}
-          <div className="bg-white rounded-3xl border border-border shadow-sm p-6">
+          <div className="bg-[var(--bg-surface)] rounded-3xl border border-border shadow-sm p-6">
             <h4 className="text-xs font-black text-secondary uppercase tracking-widest mb-4 flex items-center gap-2">
               <BarChart2 size={14} /> Hasil Akhir
             </h4>
@@ -427,8 +427,8 @@ export default function LiveQuizPanel({ socket, isConnected, onlineCount, active
             ) : (
               <div className="space-y-2">
                 {leaderboard.map((entry, i) => (
-                  <div key={entry.student_id} className={`flex items-center gap-3 p-4 rounded-xl border ${i < 3 ? 'bg-amber-50 border-amber-200' : 'bg-gray-50 border-gray-100'}`}>
-                    <span className={`w-10 h-10 rounded-full flex items-center justify-center font-black ${i === 0 ? 'bg-amber-500 text-white text-lg' : i === 1 ? 'bg-gray-400 text-white' : i === 2 ? 'bg-amber-700 text-white' : 'bg-gray-200 text-gray-600 text-sm'}`}>
+                  <div key={entry.student_id} className={`flex items-center gap-3 p-4 rounded-xl border ${i < 3 ? 'bg-amber-50 border-amber-200' : 'bg-slate-50 dark:bg-slate-900 border-border dark:border-slate-800'}`}>
+                    <span className={`w-10 h-10 rounded-full flex items-center justify-center font-black ${i === 0 ? 'bg-amber-500 text-white text-lg' : i === 1 ? 'bg-gray-400 text-white' : i === 2 ? 'bg-amber-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-secondary text-sm'}`}>
                       {i < 3 ? ['🥇', '🥈', '🥉'][i] : `#${i + 1}`}
                     </span>
                     <div className="flex-1">

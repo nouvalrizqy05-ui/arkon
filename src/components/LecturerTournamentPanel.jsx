@@ -112,7 +112,7 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
           </div>
           <button 
             onClick={() => setIsProjectorMode(false)}
-            className="p-4 bg-white shadow-sm border border-border hover:bg-white shadow-sm border border-border rounded-2xl transition-all border border-border"
+            className="p-4 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-2xl transition-all border border-border"
           >
             <Minimize2 size={24} className="text-secondary" />
           </button>
@@ -131,16 +131,16 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
                 <div key={roundNum} className="flex flex-col gap-10 min-w-[320px]">
                   <div className="text-center font-black text-sm text-secondary uppercase tracking-[0.3em]">{roundNames[roundNum] || `Round ${roundNum}`}</div>
                   {rounds[roundNum].map((match, mi) => (
-                    <div key={mi} className={`bg-white border-2 rounded-[2rem] overflow-hidden shadow-2xl transition-all duration-500 ${match.status === 'active' ? 'border-rose-500 scale-105 ring-8 ring-rose-500/10' : 'border-border'}`}>
+                    <div key={mi} className={`bg-[var(--bg-surface)] border-2 rounded-[2rem] overflow-hidden shadow-2xl transition-all duration-500 ${match.status === 'active' ? 'border-rose-500 scale-105 ring-8 ring-rose-500/10' : 'border-border'}`}>
                       <div className={`flex items-center gap-4 p-5 border-b border-border ${match.winner_id === match.player1_id ? 'bg-emerald-500/10' : ''}`}>
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg ${match.winner_id === match.player1_id ? 'bg-emerald-500 text-foreground' : 'bg-white shadow-sm border border-border text-secondary'}`}>
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg ${match.winner_id === match.player1_id ? 'bg-emerald-500 text-foreground' : 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-secondary'}`}>
                           {match.winner_id === match.player1_id ? <Crown size={20} /> : '1'}
                         </div>
                         <span className={`font-black text-lg flex-1 truncate ${match.player1_name ? 'text-foreground' : 'text-secondary'}`}>{match.player1_name || 'TBD'}</span>
                         <span className="font-black text-xl text-rose-500">{match.player1_score || 0}</span>
                       </div>
                       <div className={`flex items-center gap-4 p-5 ${match.winner_id === match.player2_id ? 'bg-emerald-500/10' : ''}`}>
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg ${match.winner_id === match.player2_id ? 'bg-emerald-500 text-foreground' : 'bg-white shadow-sm border border-border text-secondary'}`}>
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg ${match.winner_id === match.player2_id ? 'bg-emerald-500 text-foreground' : 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-secondary'}`}>
                           {match.winner_id === match.player2_id ? <Crown size={20} /> : '2'}
                         </div>
                         <span className={`font-black text-lg flex-1 truncate ${match.player2_name ? 'text-foreground' : 'text-secondary'}`}>{match.player2_name || 'TBD'}</span>
@@ -185,7 +185,7 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* CREATE & LIST */}
         <div className="space-y-6">
-          <div className="bg-white rounded-3xl p-6 border border-border shadow-sm">
+          <div className="bg-[var(--bg-surface)] rounded-3xl p-6 border border-border shadow-sm">
             <h3 className="font-bold mb-4">Buat Turnamen Baru</h3>
             <form onSubmit={handleCreate} className="space-y-4">
               <input 
@@ -193,7 +193,7 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
                 placeholder="Nama Turnamen (Misi: UAS Battle)" 
                 value={newTitle} 
                 onChange={e => setNewTitle(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 border border-border rounded-xl text-sm outline-none focus:border-rose-500 transition"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-border rounded-xl text-sm outline-none focus:border-rose-500 transition"
               />
               <button disabled={creating || !newTitle} className="w-full py-3 bg-rose-500 text-white rounded-xl font-bold shadow-lg shadow-rose-500/20 disabled:opacity-50 flex justify-center items-center gap-2">
                 {creating ? <Loader2 size={16} className="animate-spin" /> : <Trophy size={16} />}
@@ -202,13 +202,13 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
             </form>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-border shadow-sm h-[400px] overflow-y-auto custom-scrollbar">
+          <div className="bg-[var(--bg-surface)] rounded-3xl p-6 border border-border shadow-sm h-[400px] overflow-y-auto custom-scrollbar">
             <h3 className="font-bold mb-4">Daftar Turnamen</h3>
             <div className="space-y-3">
               {tournaments.map(t => (
                 <div key={t.id} 
                   onClick={() => fetchBracket(t.id)}
-                  className={`p-4 border rounded-xl cursor-pointer transition ${activeTournament?.id === t.id ? 'border-rose-500 bg-rose-50' : 'border-border hover:border-gray-300'}`}
+                  className={`p-4 border rounded-xl cursor-pointer transition ${activeTournament?.id === t.id ? 'border-rose-500 bg-rose-50' : 'border-border hover:border-border dark:border-slate-700'}`}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-bold text-sm truncate pr-2">{t.title}</span>
@@ -228,7 +228,7 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
 
         {/* BRACKET VIEW */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-3xl border border-border shadow-sm h-full min-h-[600px] flex flex-col overflow-hidden">
+          <div className="bg-[var(--bg-surface)] rounded-3xl border border-border shadow-sm h-full min-h-[600px] flex flex-col overflow-hidden">
             {!activeTournament ? (
               <div className="flex-1 flex flex-col items-center justify-center text-secondary p-8 text-center">
                 <Shield size={48} className="text-gray-200 mb-4" />
@@ -236,7 +236,7 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
               </div>
             ) : (
               <>
-                <div className="p-6 border-b border-border flex items-center justify-between bg-gray-50 shrink-0">
+                <div className="p-6 border-b border-border flex items-center justify-between bg-slate-50 dark:bg-slate-900 shrink-0">
                   <div>
                     <h3 className="font-black text-lg">{activeTournament.title}</h3>
                     <p className="text-xs text-secondary">{bracketData.participants.length} pemain terdaftar</p>
@@ -252,8 +252,8 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
                   {activeTournament.status === 'registration' ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                       {bracketData.participants.map(p => (
-                        <div key={p.id} className="bg-white border border-border p-4 rounded-xl flex items-center gap-3">
-                          <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center font-black text-secondary text-xs">{p.seed}</div>
+                        <div key={p.id} className="bg-[var(--bg-surface)] border border-border p-4 rounded-xl flex items-center gap-3">
+                          <div className="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center font-black text-secondary text-xs">{p.seed}</div>
                           <span className="font-bold text-sm truncate">{p.player_name}</span>
                         </div>
                       ))}
@@ -270,18 +270,18 @@ export default function LecturerTournamentPanel({ roomId, token, apiUrl, socket 
                           <div key={roundNum} className="flex flex-col gap-6 min-w-[260px]">
                             <div className="text-center font-black text-xs text-secondary uppercase tracking-widest">Round {roundNum}</div>
                             {rounds[roundNum].map((match, mi) => (
-                              <div key={mi} className={`bg-white border rounded-2xl overflow-hidden shadow-sm ${match.status === 'active' ? 'border-rose-400 ring-4 ring-rose-500/10' : 'border-border'}`}>
+                              <div key={mi} className={`bg-[var(--bg-surface)] border rounded-2xl overflow-hidden shadow-sm ${match.status === 'active' ? 'border-rose-400 ring-4 ring-rose-500/10' : 'border-border'}`}>
                                 <div className={`flex items-center gap-3 p-3 border-b border-gray-50 ${match.winner_id === match.player1_id ? 'bg-emerald-50' : ''}`}>
                                   <span className="font-bold text-sm truncate flex-1">{match.player1_name || 'TBD'}</span>
-                                  <span className="font-black text-xs bg-gray-100 px-2 py-1 rounded">{match.player1_score || 0}</span>
+                                  <span className="font-black text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">{match.player1_score || 0}</span>
                                 </div>
                                 <div className={`flex items-center gap-3 p-3 ${match.winner_id === match.player2_id ? 'bg-emerald-50' : ''}`}>
                                   <span className="font-bold text-sm truncate flex-1">{match.player2_name || 'TBD'}</span>
-                                  <span className="font-black text-xs bg-gray-100 px-2 py-1 rounded">{match.player2_score || 0}</span>
+                                  <span className="font-black text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">{match.player2_score || 0}</span>
                                 </div>
                                 
                                 {match.status === 'pending' && match.player1_id && match.player2_id && (
-                                  <div className="p-2 bg-gray-50 border-t border-border">
+                                  <div className="p-2 bg-slate-50 dark:bg-slate-900 border-t border-border">
                                     <button onClick={() => handleStartMatch(match.id)} className="w-full py-2 bg-indigo-500 text-white rounded-lg text-xs font-bold hover:bg-indigo-600 transition flex items-center justify-center gap-2" aria-label="Swords">
                                       <Swords size={14} /> Start Duel
                                     </button>

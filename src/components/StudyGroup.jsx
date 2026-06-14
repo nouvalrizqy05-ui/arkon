@@ -800,7 +800,7 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
                     <div className="flex gap-2">
                       <input type="text" value={newGroupName} onChange={e => setNewGroupName(e.target.value)}
                         placeholder="Contoh: Kelompok 1"
-                        className="flex-1 bg-white border border-emerald-200 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary transition-colors" />
+                        className="flex-1 bg-[var(--bg-surface)] border border-emerald-200 rounded-xl px-3 py-2 text-xs text-foreground outline-none focus:border-primary transition-colors" />
                       <button type="submit" className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary-hover transition-colors">Buat</button>
                     </div>
                   </form>
@@ -856,13 +856,13 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
               <TypingDots users={typingUsers} />
 
               {isDosen ? (
-                <div className="px-4 py-3 border-t border-border bg-white shrink-0 text-center">
+                <div className="px-4 py-3 border-t border-border bg-[var(--bg-surface)] shrink-0 text-center">
                   <p className="text-[11px] text-secondary flex items-center justify-center gap-1.5">
                     <Eye size={12} className="text-primary" /> Anda sedang memantau percakapan grup ini
                   </p>
                 </div>
               ) : (
-                <div className="p-3 border-t border-border bg-white shrink-0">
+                <div className="p-3 border-t border-border bg-[var(--bg-surface)] shrink-0">
                   <div className="flex items-center gap-2">
                     <input
                       ref={inputRef}
@@ -872,7 +872,7 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
                       onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
                       placeholder="Tulis pesan..."
                       autoComplete="off"
-                      className="flex-1 bg-slate-50 border border-border rounded-2xl px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:bg-white transition-all"
+                      className="flex-1 bg-slate-50 border border-border rounded-2xl px-4 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:bg-[var(--bg-surface)] transition-all"
                     />
                     <button
                       onClick={sendMessage}
@@ -913,7 +913,7 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
                 </p>
               </div>
               {!isDosen && (
-                <div className="p-3 border-t border-border bg-white shrink-0">
+                <div className="p-3 border-t border-border bg-[var(--bg-surface)] shrink-0">
                   <button
                     onClick={handleSaveNotesToChat}
                     disabled={!noteContent.trim()}
@@ -930,7 +930,7 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
           {view === 'tasks' && activeGroup && (
             <div className="flex-1 flex flex-col overflow-hidden bg-slate-100">
               {/* Kanban Info / Subtitle */}
-              <div className="px-4 py-3 bg-white border-b border-border shrink-0 flex items-center justify-between">
+              <div className="px-4 py-3 bg-[var(--bg-surface)] border-b border-border shrink-0 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-bold text-foreground flex items-center gap-1.5">
                     📋 Papan Tugas Notion-style
@@ -994,7 +994,7 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
                                 key={task.id}
                                 draggable={!isDosen}
                                 onDragStart={(e) => handleDragStart(e, task.id)}
-                                className={`bg-white border border-border hover:border-primary/30 p-3 rounded-xl shadow-sm hover:shadow transition-all group ${
+                                className={`bg-[var(--bg-surface)] border border-border hover:border-primary/30 p-3 rounded-xl shadow-sm hover:shadow transition-all group ${
                                   isDone ? 'opacity-65' : ''
                                 }`}
                               >
@@ -1003,7 +1003,7 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
                                     onClick={() => !isDosen && toggleTask(task.id)}
                                     disabled={isDosen}
                                     className={`w-4 h-4 rounded-full border border-border flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
-                                      isDone ? 'bg-primary border-primary' : 'hover:border-primary bg-white'
+                                      isDone ? 'bg-primary border-primary' : 'hover:border-primary bg-[var(--bg-surface)]'
                                     }`}
                                   >
                                     {isDone && <Check size={9} className="text-white" />}
@@ -1043,7 +1043,7 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
                                   else if (e.key === 'Escape') setAddingTaskFor(null);
                                 }}
                                 placeholder="Tulis tugas & tekan Enter..."
-                                className="w-full bg-white border border-primary rounded-xl px-2.5 py-1.5 text-xs text-foreground outline-none shadow-sm"
+                                className="w-full bg-[var(--bg-surface)] border border-primary rounded-xl px-2.5 py-1.5 text-xs text-foreground outline-none shadow-sm"
                               />
                               <div className="flex gap-1.5 justify-end">
                                 <button
@@ -1064,7 +1064,7 @@ export default function StudyGroup({ roomId, studentId, studentName, token, apiU
                           ) : (
                             <button
                               onClick={() => { setAddingTaskFor(colName); setInlineTaskTitle(''); }}
-                              className="w-full py-1.5 text-[10px] font-semibold text-secondary hover:text-primary hover:bg-white border border-dashed border-slate-300 hover:border-primary/40 rounded-xl transition-all flex items-center justify-center gap-1 bg-slate-50"
+                              className="w-full py-1.5 text-[10px] font-semibold text-secondary hover:text-primary hover:bg-[var(--bg-surface)] border border-dashed border-slate-300 hover:border-primary/40 rounded-xl transition-all flex items-center justify-center gap-1 bg-slate-50"
                             >
                               <Plus size={11} /> Tambah Tugas
                             </button>

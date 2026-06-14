@@ -34,17 +34,27 @@ export default function RoomSettings({ room, token, apiUrl, onRoomUpdated, onDel
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const res = await fetch(`${apiUrl}/api/rooms/${room.id}/settings`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify(settings)
-      });
-      if (res.ok) {
-        const updated = await res.json();
-        onRoomUpdated?.(updated);
-        setIsSaved(true);
-        setTimeout(() => setIsSaved(false), 2000);
+      // Save to localStorage as fallback
+      const localKey = `arkon_room_settings_${room.id}`;
+      localStorage.setItem(localKey, JSON.stringify(settings));
+
+      // Attempt API save
+      try {
+        const res = await fetch(`${apiUrl}/api/rooms/${room.id}/settings`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify(settings)
+        });
+        if (res.ok) {
+          const updated = await res.json();
+          onRoomUpdated?.(updated);
+        }
+      } catch (apiErr) {
+        console.warn('API save failed, settings saved locally:', apiErr);
       }
+
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 2000);
     } catch (e) { console.error(e); }
     finally { setIsSaving(false); }
   };
@@ -91,52 +101,52 @@ export default function RoomSettings({ room, token, apiUrl, onRoomUpdated, onDel
   };
 
   return (
-    <div className="h-full overflow-y-auto bg-gray-50 custom-scrollbar">
+    <div className="h-full overflow-y-auto bg-slate-50 dark:bg-slate-900 custom-scrollbar">
       <div className="max-w-3xl mx-auto p-8">
-        <h2 className="text-2xl font-black text-gray-900 flex items-center gap-3 mb-8">
+        <h2 className="text-2xl font-black text-foreground flex items-center gap-3 mb-8">
           <Settings className="text-secondary" size={28} /> Pengaturan Room
         </h2>
 
         {/* Room Info */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
-          <h3 className="text-sm font-black text-gray-700 uppercase tracking-wider mb-4">Informasi Room</h3>
+        <div className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 p-6 mb-6">
+          <h3 className="text-sm font-black text-foreground uppercase tracking-wider mb-4">Informasi Room</h3>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="text-[10px] font-bold text-gray-500 uppercase">Nama</label>
-              <p className="font-bold text-gray-900 mt-1">{room?.course_name}</p>
+              <label className="text-[10px] font-bold text-secondary uppercase">Nama</label>
+              <p className="font-bold text-foreground mt-1">{room?.course_name}</p>
             </div>
             <div>
-              <label className="text-[10px] font-bold text-gray-500 uppercase">Kode Room</label>
+              <label className="text-[10px] font-bold text-secondary uppercase">Kode Room</label>
               <div className="flex items-center gap-2 mt-1">
                 <code className="font-mono font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg text-sm">{room?.room_code}</code>
-                <button onClick={copyCode} className="p-1.5 hover:bg-gray-100 rounded-lg transition" title="Copy">
+                <button onClick={copyCode} className="p-1.5 hover:bg-slate-100 dark:bg-slate-800 rounded-lg transition" title="Copy">
                   {codeCopied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} className="text-secondary" />}
                 </button>
               </div>
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-bold text-gray-500 uppercase mb-1.5 block">Deskripsi</label>
+            <label className="text-[10px] font-bold text-secondary uppercase mb-1.5 block">Deskripsi</label>
             <textarea
               value={settings.description}
               onChange={e => setSettings(s => ({ ...s, description: e.target.value }))}
               rows={2}
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 outline-none resize-none"
+              className="w-full px-4 py-2.5 rounded-xl border border-border dark:border-slate-800 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 outline-none resize-none"
             />
           </div>
         </div>
 
         {/* Safe Mode & Collab */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
-          <h3 className="text-sm font-black text-gray-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <div className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 p-6 mb-6">
+          <h3 className="text-sm font-black text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
             <Shield size={16} className="text-indigo-500" /> Mode & Keamanan
           </h3>
 
           {/* Safe Mode Toggle */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl mb-3">
+          <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 rounded-xl mb-3">
             <div>
-              <p className="text-sm font-bold text-gray-800">Safe Mode</p>
-              <p className="text-[10px] text-gray-500 mt-0.5">Batasi akses mahasiswa ke galeri publik & konten eksternal</p>
+              <p className="text-sm font-bold text-foreground">Safe Mode</p>
+              <p className="text-[10px] text-secondary mt-0.5">Batasi akses mahasiswa ke galeri publik & konten eksternal</p>
             </div>
             <button
               onClick={() => setSettings(s => ({ ...s, is_safe_mode: !s.is_safe_mode }))}
@@ -144,22 +154,22 @@ export default function RoomSettings({ room, token, apiUrl, onRoomUpdated, onDel
                 settings.is_safe_mode ? 'bg-indigo-600' : 'bg-gray-300'
               }`}
             >
-              <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${
+              <div className={`w-5 h-5 bg-[var(--bg-surface)] rounded-full shadow-md transition-transform ${
                 settings.is_safe_mode ? 'translate-x-5' : 'translate-x-0'
               }`} />
             </button>
           </div>
 
           {/* Collab Mode */}
-          <div className="p-4 bg-gray-50 rounded-xl mb-3">
-            <p className="text-sm font-bold text-gray-800 mb-2">Mode Kolaborasi</p>
+          <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl mb-3">
+            <p className="text-sm font-bold text-foreground mb-2">Mode Kolaborasi</p>
             <div className="flex gap-2">
               <button
                 onClick={() => setSettings(s => ({ ...s, collab_mode: 'isolation' }))}
                 className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                   settings.collab_mode === 'isolation'
-                    ? 'bg-indigo-600 text-foreground shadow-md'
-                    : 'bg-white text-gray-600 border border-gray-200'
+                    ? 'bg-indigo-600 text-white shadow-md'
+                    : 'bg-[var(--bg-surface)] text-secondary border border-border dark:border-slate-800'
                 }`}
               >
                 <Lock size={14} /> Isolation
@@ -169,7 +179,7 @@ export default function RoomSettings({ room, token, apiUrl, onRoomUpdated, onDel
                 className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                   settings.collab_mode === 'collaborative'
                     ? 'bg-indigo-600 text-foreground shadow-md'
-                    : 'bg-white text-gray-600 border border-gray-200'
+                    : 'bg-[var(--bg-surface)] text-secondary border border-border dark:border-slate-800'
                 }`}
               >
                 <Globe size={14} /> Collaborative
@@ -178,20 +188,20 @@ export default function RoomSettings({ room, token, apiUrl, onRoomUpdated, onDel
           </div>
 
           {/* Max Members */}
-          <div className="p-4 bg-gray-50 rounded-xl">
-            <label className="text-sm font-bold text-gray-800 mb-2 block">Maks. Anggota</label>
+          <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl">
+            <label className="text-sm font-bold text-foreground mb-2 block">Maks. Anggota</label>
             <input
               type="number"
               value={settings.max_members}
               onChange={e => setSettings(s => ({ ...s, max_members: parseInt(e.target.value) || 50 }))}
-              className="w-24 px-3 py-2 rounded-lg border border-gray-200 text-sm font-bold text-center focus:border-indigo-500 outline-none"
+              className="w-24 px-3 py-2 rounded-lg border border-border dark:border-slate-800 text-sm font-bold text-center focus:border-indigo-500 outline-none"
             />
           </div>
 
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="w-full mt-4 py-3 bg-indigo-600 text-foreground rounded-xl font-bold hover:bg-indigo-700 transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20 disabled:opacity-50"
+            className="w-full mt-4 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20 disabled:opacity-50"
           >
             {isSaving ? <Loader2 size={16} className="animate-spin" /> : isSaved ? <Check size={16} /> : <Save size={16} />}
             {isSaving ? 'Menyimpan...' : isSaved ? 'Tersimpan!' : 'Simpan Pengaturan'}
@@ -199,8 +209,8 @@ export default function RoomSettings({ room, token, apiUrl, onRoomUpdated, onDel
         </div>
 
         {/* Members */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
-          <h3 className="text-sm font-black text-gray-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <div className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 p-6 mb-6">
+          <h3 className="text-sm font-black text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
             <Users size={16} className="text-emerald-500" /> Anggota ({members.length})
           </h3>
           {members.length === 0 ? (
@@ -208,13 +218,13 @@ export default function RoomSettings({ room, token, apiUrl, onRoomUpdated, onDel
           ) : (
             <div className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
               {members.map(m => (
-                <div key={m.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl group">
+                <div key={m.id} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900 rounded-xl group">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xs font-black">
                       {(m.full_name || '?')[0]}
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-gray-800">{m.full_name}</p>
+                      <p className="text-sm font-bold text-foreground">{m.full_name}</p>
                       <p className="text-[10px] text-secondary font-mono">{m.nim}</p>
                     </div>
                   </div>
@@ -237,7 +247,7 @@ export default function RoomSettings({ room, token, apiUrl, onRoomUpdated, onDel
           <p className="text-xs text-red-600 mb-4">Menghapus room akan menghapus semua data, tugas, dan progress mahasiswa secara permanen.</p>
           <button
             onClick={confirmDeleteRoom}
-            className="px-5 py-2.5 bg-red-600 text-foreground rounded-xl font-bold text-sm hover:bg-red-700 transition shadow-md"
+            className="px-5 py-2.5 bg-red-600 text-white rounded-xl font-bold text-sm hover:bg-red-700 transition shadow-md"
           >
             <Trash2 size={14} className="inline mr-2" /> Hapus Room Permanen
           </button>

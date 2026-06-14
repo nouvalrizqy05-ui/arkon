@@ -70,13 +70,13 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
   const Icon = currentCategoryObj.icon;
 
   return (
-    <div className="p-8 max-w-4xl mx-auto h-full flex flex-col min-h-0">
+    <div className="p-5 max-w-4xl mx-auto h-full flex flex-col min-h-0">
       
       {/* Header & Season Info */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-4">
         <div>
-          <h1 className="text-3xl font-black text-foreground flex items-center gap-3">
-            <Trophy className="text-amber-600" size={32} />
+          <h1 className="text-2xl font-black text-foreground flex items-center gap-3">
+            <Trophy className="text-amber-600" size={24} />
             Leaderboard Utama
           </h1>
           <p className="text-secondary text-sm mt-1">Peringkat akan di-reset setiap 3 bulan. Pemuncak akhir season akan mendapat gelar Archi Master.</p>
@@ -112,7 +112,7 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
       </div>
 
       {/* Category Tabs / Dropdown */}
-      <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-2 mb-6 shrink-0">
+      <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-2 mb-4 shrink-0">
         {CATEGORIES.map(cat => {
           const isActive = activeCategory === cat.id;
           const CatIcon = cat.icon;
@@ -120,13 +120,13 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`flex items-center gap-2 px-4 py-3 rounded-xl font-bold whitespace-nowrap transition-all duration-300 ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap text-ellipsis overflow-hidden transition-all duration-300 ${
                 isActive 
                   ? `${cat.bg} ${cat.color} border border-${cat.color.split('-')[1]}-500/50 shadow-lg`
                   : 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-foreground'
               }`}
             >
-              <CatIcon size={18} />
+              <CatIcon size={14} />
               {cat.label}
             </button>
           );
@@ -148,8 +148,8 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
             </div>
           ) : data.length === 0 ? (
             <div className="flex flex-col justify-center items-center h-full text-secondary p-8 text-center">
-              <Icon size={48} className="mb-4 opacity-50" />
-              <p className="font-bold text-lg">Belum ada data di Season ini.</p>
+              <Icon size={36} className="mb-4 opacity-50" />
+              <p className="font-bold text-base">Belum ada data di Season ini.</p>
               <p className="text-sm mt-1">Jadilah yang pertama untuk menduduki peringkat!</p>
             </div>
           ) : (
@@ -157,13 +157,13 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
               {data.map((player) => (
                 <div 
                   key={player.id}
-                  className={`flex items-center px-4 py-3 rounded-2xl transition-all border border-transparent ${
+                  className={`flex items-center px-3 py-2 rounded-2xl transition-all border border-transparent ${
                     player.id === studentId 
                       ? 'bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200 dark:border-indigo-500/30' 
                       : 'hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:border-border dark:hover:border-slate-800'
                   }`}
                 >
-                  <div className="w-16 font-black text-xl">
+                  <div className="w-16 font-black text-base">
                     {player.rank === 1 ? <span className="text-amber-600 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">#1</span> : 
                      player.rank === 2 ? <span className="text-slate-300">#2</span> : 
                      player.rank === 3 ? <span className="text-orange-400">#3</span> : 
@@ -172,8 +172,14 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
                   
                   <div className="flex-1 flex items-center gap-4 min-w-0">
                     <img 
-                      src={`https://ui-avatars.com/api/?name=${player.full_name}&background=165DFF&color=fff&size=40`} 
-                      className="w-10 h-10 rounded-xl"
+                      src={
+                        (player.id === studentId && localStorage.getItem('arkon_custom_avatar')) 
+                        ? localStorage.getItem('arkon_custom_avatar') 
+                        : (player.avatar_id && (player.avatar_id.startsWith('data:image/') || player.avatar_id.startsWith('http'))) 
+                          ? player.avatar_id 
+                          : player.avatar_url || `https://ui-avatars.com/api/?name=${player.full_name}&background=165DFF&color=fff&size=40`
+                      } 
+                      className="w-8 h-8 rounded-xl object-cover"
                       alt={player.full_name}
                     />
                     <div className="truncate">
@@ -193,7 +199,7 @@ export default function MainLeaderboard({ studentId, token, apiUrl, roomId }) {
                   </div>
 
                   <div className="w-32 text-right">
-                    <span className={`text-xl font-black ${currentCategoryObj.color}`}>
+                    <span className={`text-lg font-black ${currentCategoryObj.color}`}>
                       {player.score.toLocaleString()}
                     </span>
                     <span className="text-[10px] text-secondary block uppercase tracking-widest mt-0.5">

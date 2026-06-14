@@ -7,7 +7,7 @@ export default function Navbar({ subtext = "WORKSPACE", hideDarkMode = false, hi
   const isDark = theme === 'dark';
 
   return (
-    <nav className="w-full bg-white dark:bg-[#080C1A] border-b border-border dark:border-border fixed top-0 z-50 transition-colors">
+    <nav className="w-full bg-[var(--bg-surface)] dark:bg-[#080C1A] border-b border-border dark:border-border fixed top-0 z-50 transition-colors">
       <div className="max-w-7xl mx-auto px-6 h-[70px] flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/30">

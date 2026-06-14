@@ -14,7 +14,7 @@ const MENU_ITEMS = [
     color: 'text-rose-600', 
     bgActive: 'bg-rose-500/10',
     children: [
-      { id: 'quiz', label: 'Quiz Map' },
+      { id: 'quiz', label: 'Quiz Journey' },
       { id: 'shop', label: 'Hardware Shop' },
       { id: 'assembly', label: 'Assembly Lab' },
       { id: 'showroom', label: '🏆 Showroom' },

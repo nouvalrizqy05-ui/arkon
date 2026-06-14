@@ -49,7 +49,7 @@ export default function TheoProgressCard({ theta, percentile }) {
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="bg-white border border-border shadow-sm rounded-2xl p-4 flex items-center gap-4">
+    <div className="bg-[var(--bg-surface)] border border-border shadow-sm rounded-2xl p-4 flex items-center gap-4">
       {/* Circular Ring */}
       <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 80 80">

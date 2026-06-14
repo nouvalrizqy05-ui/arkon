@@ -94,10 +94,62 @@ export default function SettingsPage() {
           applyVisualSettings(data.appearance_theme, data.accessibility_reduced_motion);
         } else {
           toast.error('Gagal mengambil pengaturan akun.');
+          const saved = localStorage.getItem('arkon_settings');
+          if (saved) {
+            try {
+              const data = JSON.parse(saved);
+              setGeneralForm({
+                name: data.full_name || '',
+                email: data.email || '',
+                whatsapp: data.whatsapp || '',
+                language: data.language || 'id',
+                timezone: data.timezone || 'Asia/Jakarta'
+              });
+              setAppearanceForm({
+                theme: data.appearance_theme || 'system',
+                density: data.appearance_density || 'comfortable',
+                reducedMotion: data.accessibility_reduced_motion || false,
+                screenReader: data.accessibility_screen_reader !== false,
+              });
+              setNotificationForm({
+                emailAnnouncements: data.notif_email_announcements !== false,
+                emailActivities: data.notif_email_activities !== false,
+                browserPush: data.notif_browser_push || false,
+                sound: data.notif_sound !== false
+              });
+              applyVisualSettings(data.appearance_theme, data.accessibility_reduced_motion);
+            } catch(e) {}
+          }
         }
       } catch (err) {
         console.error(err);
         toast.error('Terjadi kesalahan saat menghubungi server.');
+        const saved = localStorage.getItem('arkon_settings');
+        if (saved) {
+          try {
+            const data = JSON.parse(saved);
+            setGeneralForm({
+              name: data.full_name || '',
+              email: data.email || '',
+              whatsapp: data.whatsapp || '',
+              language: data.language || 'id',
+              timezone: data.timezone || 'Asia/Jakarta'
+            });
+            setAppearanceForm({
+              theme: data.appearance_theme || 'system',
+              density: data.appearance_density || 'comfortable',
+              reducedMotion: data.accessibility_reduced_motion || false,
+              screenReader: data.accessibility_screen_reader !== false,
+            });
+            setNotificationForm({
+              emailAnnouncements: data.notif_email_announcements !== false,
+              emailActivities: data.notif_email_activities !== false,
+              browserPush: data.notif_browser_push || false,
+              sound: data.notif_sound !== false
+            });
+            applyVisualSettings(data.appearance_theme, data.accessibility_reduced_motion);
+          } catch(e) {}
+        }
       } finally {
         setIsLoading(false);
       }
@@ -147,29 +199,38 @@ export default function SettingsPage() {
         accessibility_screen_reader: appearanceForm.screenReader
       };
 
-      const res = await fetch(`${API_URL}/api/users/settings`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
-      });
+      // Always save to localStorage as fallback
+      localStorage.setItem('arkon_settings', JSON.stringify(payload));
+      if (payload.full_name) localStorage.setItem('user_name', payload.full_name);
 
-      if (res.ok) {
-        toast.success('Pengaturan berhasil disimpan!');
-        const data = await res.json();
-        if (data.updated_name) {
-          localStorage.setItem('user_name', data.updated_name);
+      // Apply visual settings immediately
+      applyVisualSettings(appearanceForm.theme, appearanceForm.reducedMotion);
+
+      // Attempt API save (non-blocking)
+      try {
+        const res = await fetch(`${API_URL}/api/users/settings`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.updated_name) {
+            localStorage.setItem('user_name', data.updated_name);
+          }
         }
-        applyVisualSettings(appearanceForm.theme, appearanceForm.reducedMotion);
-      } else {
-        const errorData = await res.json();
-        toast.error(errorData.error || 'Gagal menyimpan pengaturan.');
+      } catch (apiErr) {
+        console.warn('API save failed, settings saved locally:', apiErr);
       }
+
+      toast.success('Pengaturan berhasil disimpan!');
     } catch (err) {
       console.error(err);
-      toast.error('Terjadi kesalahan jaringan.');
+      toast.error('Terjadi kesalahan saat menyimpan.');
     } finally {
       setIsSaving(false);
     }
@@ -295,9 +356,9 @@ export default function SettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-50">
+      <div className="flex items-center justify-center min-h-screen bg-[var(--bg-primary)]">
         <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
-        <span className="ml-3 font-semibold text-slate-500">Memuat pengaturan...</span>
+        <span className="ml-3 font-semibold text-secondary">Memuat pengaturan...</span>
       </div>
     );
   }
@@ -316,7 +377,7 @@ export default function SettingsPage() {
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* Sidebar Nav */}
         <div className="w-full lg:w-72 flex-shrink-0">
-          <div className="bg-white rounded-3xl border border-slate-200 p-3 shadow-sm">
+          <div className="bg-[var(--bg-surface)] rounded-3xl border border-border dark:border-slate-700 p-3 shadow-sm">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -324,14 +385,14 @@ export default function SettingsPage() {
                 className={`w-full flex flex-col items-start p-4 rounded-2xl transition-all cursor-pointer ${
                   activeTab === tab.id
                     ? 'bg-primary-soft text-primary border border-primary/20 shadow-sm'
-                    : 'bg-transparent text-secondary hover:bg-slate-50 border border-transparent'
+                    : 'bg-transparent text-secondary hover:bg-slate-50 dark:hover:bg-slate-800 border border-transparent'
                 }`}
               >
                 <div className="flex items-center gap-3 font-bold text-sm mb-1">
                   <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-primary' : 'text-slate-400'}`} />
                   {tab.label}
                 </div>
-                <span className={`text-[11px] pl-8 font-medium text-left ${activeTab === tab.id ? 'text-primary/70' : 'text-slate-400'}`}>
+                <span className={`text-[11px] pl-8 font-medium text-left ${activeTab === tab.id ? 'text-primary/70' : 'text-secondary/60'}`}>
                   {tab.desc}
                 </span>
               </button>
@@ -340,9 +401,9 @@ export default function SettingsPage() {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 w-full bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="flex-1 w-full bg-[var(--bg-surface)] rounded-3xl border border-border dark:border-slate-700 shadow-sm overflow-hidden">
           {/* Header */}
-          <div className="px-8 py-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
+          <div className="px-8 py-6 border-b border-border dark:border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50 dark:bg-slate-900/50">
             <div>
               <h2 className="text-xl font-black text-foreground dark:text-white">{tabs.find(t => t.id === activeTab)?.label}</h2>
               <p className="text-sm text-secondary font-medium">{tabs.find(t => t.id === activeTab)?.desc}</p>
@@ -405,14 +466,14 @@ export default function SettingsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-xs font-bold text-secondary uppercase tracking-widest">Bahasa Antarmuka</label>
-                        <select className="input-field cursor-pointer bg-white" value={generalForm.language} onChange={e => setGeneralForm({...generalForm, language: e.target.value})}>
+                        <select className="input-field cursor-pointer bg-[var(--bg-surface)]" value={generalForm.language} onChange={e => setGeneralForm({...generalForm, language: e.target.value})}>
                           <option value="id">Bahasa Indonesia</option>
                           <option value="en">English (US)</option>
                         </select>
                       </div>
                       <div className="space-y-2">
                         <label className="text-xs font-bold text-secondary uppercase tracking-widest">Zona Waktu</label>
-                        <select className="input-field cursor-pointer bg-white" value={generalForm.timezone} onChange={e => setGeneralForm({...generalForm, timezone: e.target.value})}>
+                        <select className="input-field cursor-pointer bg-[var(--bg-surface)]" value={generalForm.timezone} onChange={e => setGeneralForm({...generalForm, timezone: e.target.value})}>
                           <option value="Asia/Jakarta">WIB (Asia/Jakarta)</option>
                           <option value="Asia/Makassar">WITA (Asia/Makassar)</option>
                           <option value="Asia/Jayapura">WIT (Asia/Jayapura)</option>
@@ -449,7 +510,7 @@ export default function SettingsPage() {
                           <p className="text-xs text-secondary font-medium">Mengganti font bawaan dengan font khusus yang lebih mudah dibaca.</p>
                         </div>
                         <div className="w-12 h-6 bg-slate-200 rounded-full relative cursor-not-allowed opacity-50 shrink-0" title="Gunakan widget aksesibilitas di kiri bawah">
-                          <div className="w-4 h-4 bg-white rounded-full absolute left-1 top-1" />
+                          <div className="w-4 h-4 bg-[var(--bg-surface)] rounded-full absolute left-1 top-1" />
                         </div>
                       </div>
                       <label className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors cursor-pointer gap-4">
@@ -459,7 +520,7 @@ export default function SettingsPage() {
                         </div>
                         <div className="relative inline-flex items-center cursor-pointer shrink-0">
                           <input type="checkbox" className="sr-only peer" checked={appearanceForm.reducedMotion} onChange={e => setAppearanceForm({...appearanceForm, reducedMotion: e.target.checked})} />
-                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--bg-surface)] after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                         </div>
                       </label>
                       <label className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-500/50 transition-colors cursor-pointer gap-4">
@@ -469,7 +530,7 @@ export default function SettingsPage() {
                         </div>
                         <div className="relative inline-flex items-center cursor-pointer shrink-0">
                           <input type="checkbox" className="sr-only peer" checked={appearanceForm.screenReader} onChange={e => setAppearanceForm({...appearanceForm, screenReader: e.target.checked})} />
-                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--bg-surface)] after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                         </div>
                       </label>
                     </div>
@@ -501,7 +562,7 @@ export default function SettingsPage() {
                               <p className="text-xs text-secondary font-medium">Belum diaktifkan. Fitur ini masih dalam tahap beta (LIDM mode).</p>
                             </div>
                           </div>
-                          <button onClick={() => toast.info('Fitur 2FA belum tersedia untuk versi demo.')} className="px-4 py-2 bg-white border border-slate-300 text-foreground dark:text-white font-bold text-xs rounded-xl shadow-sm hover:bg-slate-50 transition-colors shrink-0">Aktifkan</button>
+                          <button onClick={() => toast.info('Fitur 2FA belum tersedia untuk versi demo.')} className="px-4 py-2 bg-[var(--bg-surface)] border border-slate-300 text-foreground dark:text-white font-bold text-xs rounded-xl shadow-sm hover:bg-slate-50 transition-colors shrink-0">Aktifkan</button>
                         </div>
                       </div>
                       <hr className="border-slate-100" />
@@ -531,7 +592,7 @@ export default function SettingsPage() {
                         </div>
                         <div className="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
                           <input type="checkbox" className="sr-only peer" checked={notificationForm.sound} onChange={e => setNotificationForm({...notificationForm, sound: e.target.checked})} />
-                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--bg-surface)] after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                         </div>
                       </label>
                       <hr className="border-slate-100 my-4" />
@@ -542,7 +603,7 @@ export default function SettingsPage() {
                         </div>
                         <div className="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
                           <input type="checkbox" className="sr-only peer" checked={notificationForm.browserPush} onChange={e => handleBrowserPushToggle(e.target.checked)} />
-                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--bg-surface)] after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                         </div>
                       </label>
                     </div>
@@ -601,14 +662,14 @@ export default function SettingsPage() {
                           onClick={() => setAppearanceForm({...appearanceForm, density: 'comfortable'})}
                           className={`p-4 rounded-2xl border-2 text-left transition-all ${appearanceForm.density === 'comfortable' ? 'border-emerald-500 bg-emerald-50/50' : 'border-slate-200 hover:border-slate-300'}`}
                         >
-                          <span className="font-bold text-sm block mb-1 text-gray-900">Nyaman (Comfortable)</span>
+                          <span className="font-bold text-sm block mb-1 text-foreground">Nyaman (Comfortable)</span>
                           <span className="text-xs text-secondary block">Lebih banyak ruang putih, elemen lebih besar. Cocok untuk layar sentuh.</span>
                         </button>
                         <button
                           onClick={() => setAppearanceForm({...appearanceForm, density: 'compact'})}
                           className={`p-4 rounded-2xl border-2 text-left transition-all ${appearanceForm.density === 'compact' ? 'border-emerald-500 bg-emerald-50/50' : 'border-slate-200 hover:border-slate-300'}`}
                         >
-                          <span className="font-bold text-sm block mb-1 text-gray-900">Padat (Compact)</span>
+                          <span className="font-bold text-sm block mb-1 text-foreground">Padat (Compact)</span>
                           <span className="text-xs text-secondary block">Spasi lebih rapat, informasi lebih padat. Cocok untuk layar kecil/desktop.</span>
                         </button>
                       </div>

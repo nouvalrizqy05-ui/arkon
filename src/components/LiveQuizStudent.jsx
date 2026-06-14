@@ -122,7 +122,7 @@ export default function LiveQuizStudent({ socket, sessionId, title, totalQuestio
               <p className="text-secondary text-xs">{phase === 'waiting' ? 'Menunggu soal...' : `Soal ${questionIndex + 1}/${totalQuestions}`}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-white shadow-sm border border-border rounded-xl">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-xl">
             <Zap size={14} className="text-amber-600" />
             <span className="text-foreground font-black text-sm">{totalScore} pts</span>
           </div>
@@ -155,7 +155,7 @@ export default function LiveQuizStudent({ socket, sessionId, title, totalQuestio
                 <Clock size={14} className={`${timeLeft <= 5 ? 'text-red-400 animate-pulse' : 'text-secondary'}`} aria-hidden="true" />
                 <span className={`text-2xl font-black ${timeLeft <= 5 ? 'text-red-400 animate-pulse' : 'text-foreground'}`} aria-hidden="true">{timeLeft}s</span>
               </div>
-              <div className="h-2 bg-white shadow-sm border border-border rounded-full overflow-hidden" role="progressbar" aria-valuenow={timerPercent} aria-valuemin={0} aria-valuemax={100} aria-label="Timer progress">
+              <div className="h-2 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-full overflow-hidden" role="progressbar" aria-valuenow={timerPercent} aria-valuemin={0} aria-valuemax={100} aria-label="Timer progress">
                 <div
                   className={`h-full rounded-full transition-all duration-200 ${timeLeft <= 5 ? 'bg-red-500' : 'bg-purple-500'}`}
                   style={{ width: `${timerPercent}%` }}
@@ -164,7 +164,7 @@ export default function LiveQuizStudent({ socket, sessionId, title, totalQuestio
             </div>
 
             {/* Question */}
-            <div className="bg-white shadow-sm border border-border backdrop-blur-xl border border-border rounded-3xl p-6 mb-6">
+            <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 backdrop-blur-xl border border-border rounded-3xl p-6 mb-6">
               <h3 className="text-xl font-black text-foreground text-center leading-relaxed">
                 {currentQuestion.question_text}
               </h3>
@@ -187,7 +187,7 @@ export default function LiveQuizStudent({ socket, sessionId, title, totalQuestio
                     : `bg-gradient-to-r ${OPTION_COLORS[i]} hover:scale-105 active:scale-95 shadow-lg cursor-pointer`
                   }`}
                 >
-                  <span className="w-8 h-8 bg-white shadow-sm border border-border rounded-lg flex items-center justify-center font-black text-sm shrink-0">
+                  <span className="w-8 h-8 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-lg flex items-center justify-center font-black text-sm shrink-0">
                     {OPTION_LABELS[i]}
                   </span>
                   <span className="flex-1">{opt}</span>
@@ -210,7 +210,7 @@ export default function LiveQuizStudent({ socket, sessionId, title, totalQuestio
         {/* ===== REVEALED ===== */}
         {phase === 'revealed' && currentQuestion && (
           <div className="space-y-6">
-            <div className="bg-white shadow-sm border border-border backdrop-blur-xl border border-border rounded-3xl p-6 text-center">
+            <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 backdrop-blur-xl border border-border rounded-3xl p-6 text-center">
               <h3 className="text-lg font-black text-foreground mb-3">{currentQuestion.question_text}</h3>
               <p className="text-emerald-600 font-bold">
                 Jawaban benar: <span className="text-lg">{OPTION_LABELS[correctIndex]}</span> — {currentQuestion.options[correctIndex]}
@@ -218,13 +218,13 @@ export default function LiveQuizStudent({ socket, sessionId, title, totalQuestio
             </div>
 
             {leaderboard.length > 0 && (
-              <div className="bg-white shadow-sm border border-border rounded-3xl border border-border p-6">
+              <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-3xl border border-border p-6">
                 <h4 className="text-xs font-black text-secondary uppercase tracking-widest mb-3 flex items-center gap-2">
                   <Trophy size={12} className="text-amber-600" /> Top 5
                 </h4>
                 {leaderboard.slice(0, 5).map((entry, i) => (
                   <div key={entry.student_id} className={`flex items-center gap-3 p-2 rounded-xl ${entry.student_id === studentId ? 'bg-purple-500/20' : ''}`}>
-                    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${i === 0 ? 'bg-amber-500 text-foreground' : i === 1 ? 'bg-gray-400 text-foreground' : i === 2 ? 'bg-amber-700 text-foreground' : 'bg-white shadow-sm border border-border text-secondary'}`}>
+                    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${i === 0 ? 'bg-amber-500 text-foreground' : i === 1 ? 'bg-gray-400 text-foreground' : i === 2 ? 'bg-amber-700 text-foreground' : 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-secondary'}`}>
                       {i + 1}
                     </span>
                     <span className={`flex-1 text-sm font-bold ${entry.student_id === studentId ? 'text-purple-300' : 'text-secondary'}`}>
@@ -251,11 +251,11 @@ export default function LiveQuizStudent({ socket, sessionId, title, totalQuestio
             </div>
 
             {leaderboard.length > 0 && (
-              <div className="bg-white shadow-sm border border-border rounded-3xl border border-border p-6 text-left">
+              <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-3xl border border-border p-6 text-left">
                 <h4 className="text-xs font-black text-secondary uppercase tracking-widest mb-3 text-center">Hasil Akhir</h4>
                 {leaderboard.map((entry, i) => (
                   <div key={entry.student_id} className={`flex items-center gap-3 p-3 rounded-xl mb-1 ${entry.student_id === studentId ? 'bg-purple-500/20 border border-purple-500/30' : ''}`}>
-                    <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-sm ${i === 0 ? 'bg-amber-500 text-foreground' : i === 1 ? 'bg-gray-400 text-foreground' : i === 2 ? 'bg-amber-700 text-foreground' : 'bg-white shadow-sm border border-border text-secondary'}`}>
+                    <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-sm ${i === 0 ? 'bg-amber-500 text-foreground' : i === 1 ? 'bg-gray-400 text-foreground' : i === 2 ? 'bg-amber-700 text-foreground' : 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-secondary'}`}>
                       {i < 3 ? ['🥇', '🥈', '🥉'][i] : `${i + 1}`}
                     </span>
                     <span className={`flex-1 font-bold text-sm ${entry.student_id === studentId ? 'text-purple-300' : 'text-secondary'}`}>

@@ -14,9 +14,9 @@ module.exports = {
         'primary-light':'#d1fae5', // emerald-100
         'primary-soft': '#ecfdf5', // emerald-50
         // Base neutrals
-        foreground: '#0f172a',     // slate-900
-        secondary:  '#64748b',     // slate-500
-        muted:      '#f8fafc',     // slate-50
+        foreground: 'var(--text-primary)',
+        secondary:  'var(--text-soft)',
+        muted:      'var(--bg-surface)',
         border:     '#e2e8f0',     // slate-200
         // Accent for data/charts
         accent:     '#0ea5e9',     // sky-500

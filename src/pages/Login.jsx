@@ -135,7 +135,7 @@ export default function Login() {
                 onClick={() => setRole(id)}
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-lg transition-all ${
                   role === id
-                    ? 'bg-white dark:bg-slate-700 text-primary shadow-sm border border-slate-200 dark:border-slate-600'
+                    ? 'bg-[var(--bg-surface)] dark:bg-slate-700 text-primary shadow-sm border border-slate-200 dark:border-slate-600'
                     : 'text-secondary hover:text-foreground'
                 }`}>
                 <Icon size={16} aria-hidden="true" /> {label}

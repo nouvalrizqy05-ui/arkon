@@ -53,7 +53,7 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-[#080C1A] transition-colors relative">
-      <div className="bg-white dark:bg-[#131b2f] p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-md border border-border dark:border-border relative overflow-hidden">
+      <div className="bg-[var(--bg-surface)] dark:bg-[#131b2f] p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-md border border-border dark:border-border relative overflow-hidden">
         <div className="flex flex-col items-center mb-8 mt-4 text-center">
           <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-5 text-primary">
             <Lock className="w-7 h-7" />

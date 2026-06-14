@@ -77,7 +77,7 @@ export default function HeroSection() {
       {/* Hero Content */}
       <div className="container mx-auto px-6 text-center relative z-20 max-w-5xl mt-8">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 backdrop-blur-md text-primary text-xs md:text-sm font-bold mb-8">
+          <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[var(--bg-surface)] dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 backdrop-blur-md text-primary text-xs md:text-sm font-bold mb-8">
             <GraduationCap className="w-4 h-4" />
             LIDM 2027 — TENTH GROUP (KELOMPOK 10)
           </span>
@@ -103,7 +103,7 @@ export default function HeroSection() {
           <a href="/register" className="px-8 py-4 bg-gradient-to-br from-primary to-indigo-600 text-white rounded-2xl font-black text-lg hover:scale-105 transition-all shadow-[0_10px_40px_-10px_rgba(22,93,255,0.8)] flex items-center justify-center gap-2 cursor-pointer no-underline">
             Mulai Belajar <ArrowRight className="w-5 h-5 text-white" />
           </a>
-          <a href="/cpu-simulator" className="px-8 py-4 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 backdrop-blur-md text-foreground rounded-2xl font-bold text-lg hover:border-primary transition-all flex items-center justify-center cursor-pointer group no-underline">
+          <a href="/cpu-simulator" className="px-8 py-4 bg-[var(--bg-surface)] dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 backdrop-blur-md text-foreground rounded-2xl font-bold text-lg hover:border-primary transition-all flex items-center justify-center cursor-pointer group no-underline">
             Coba CPU Simulator <Cpu className="w-5 h-5 ml-2 text-secondary group-hover:text-primary transition-colors" />
           </a>
         </motion.div>

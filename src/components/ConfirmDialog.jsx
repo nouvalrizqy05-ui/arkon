@@ -29,7 +29,7 @@ export default function ConfirmDialog({ isOpen, title, message, onConfirm, onCan
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-white dark:bg-slate-900 border border-border dark:border-slate-800 rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl"
+          className="bg-[var(--bg-surface)] dark:bg-slate-900 border border-border dark:border-slate-800 rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl"
         >
           <h3 id="confirm-dialog-title" className="text-xl font-black text-foreground mb-3">{title}</h3>
           <p id="confirm-dialog-message" className="text-secondary mb-8 leading-relaxed text-sm">{message}</p>

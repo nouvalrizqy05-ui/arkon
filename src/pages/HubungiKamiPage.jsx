@@ -52,9 +52,9 @@ export default function HubungiKamiPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-foreground font-sans selection:bg-primary/20">
+    <div className="min-h-screen bg-[var(--bg-surface)] text-foreground font-sans selection:bg-primary/20">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-border">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[var(--bg-surface)] shadow-sm border-b border-border">
         <div className="container mx-auto max-w-7xl flex items-center justify-between h-20 px-6">
           <Link to="/" className="flex items-center gap-3 no-underline">
             <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/30">
@@ -70,7 +70,7 @@ export default function HubungiKamiPage() {
           <div className="flex items-center gap-3">
             {isLoggedIn ? (
               <>
-                <span className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-white border border-border rounded-full text-sm font-semibold text-foreground">
+                <span className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-[var(--bg-surface)] border border-border rounded-full text-sm font-semibold text-foreground">
                   🤖 Halo, {userName}
                 </span>
                 <Link to={dashboardPath} className="px-6 py-2.5 bg-emerald-700 text-white rounded-xl font-bold text-sm hover:bg-emerald-800 transition-colors shadow-lg no-underline">
@@ -106,7 +106,7 @@ export default function HubungiKamiPage() {
       </section>
 
       {/* Contact Channels */}
-      <section className="py-16 bg-white border-y border-border">
+      <section className="py-16 bg-[var(--bg-surface)] border-y border-border">
         <div className="container mx-auto px-6 max-w-5xl">
           <motion.div {...fadeUp} className="mb-12">
             <p className="text-sm font-black text-secondary uppercase tracking-widest mb-3">Saluran Kontak</p>
@@ -127,8 +127,8 @@ export default function HubungiKamiPage() {
               },
               {
                 icon: MapPin, color: 'text-emerald-500', bg: 'bg-emerald-50 border-emerald-200',
-                title: 'Lokasi Tim', value: 'DI Yogyakarta, Indonesia',
-                sub: 'Yogyakarta — basis pengembangan dan pilot deployment.'
+                title: 'Lokasi Tim', value: 'Semarang, Indonesia',
+                sub: 'Semarang — basis pengembangan dan pilot deployment.'
               },
             ].map((item, idx) => (
               <motion.div key={idx} {...fadeUp} transition={{ delay: idx * 0.1 }}
@@ -175,7 +175,7 @@ export default function HubungiKamiPage() {
                         className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
                           form.role === role.value
                             ? 'bg-primary-soft border-primary/30 text-primary'
-                            : 'bg-white border-slate-200 text-secondary hover:border-primary/20'
+                            : 'bg-[var(--bg-surface)] border-slate-200 text-secondary hover:border-primary/20'
                         }`}>
                         <role.icon className="w-3.5 h-3.5" />
                         {role.label}
@@ -232,7 +232,7 @@ export default function HubungiKamiPage() {
                 ].map((item, idx) => (
                   <div key={idx} className={`p-6 rounded-[1.5rem] border ${item.bg}`}>
                     <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
+                      <div className="w-10 h-10 rounded-xl bg-[var(--bg-surface)] border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
                         <item.icon className={`w-5 h-5 ${item.color}`} />
                       </div>
                       <div>
@@ -249,10 +249,10 @@ export default function HubungiKamiPage() {
       </section>
 
       {/* Tim Footer */}
-      <section className="py-8 bg-white border-t border-border">
+      <section className="py-8 bg-[var(--bg-surface)] border-t border-border">
         <div className="container mx-auto px-6 max-w-7xl text-center">
-          <p className="text-sm font-bold text-secondary">
-            Tim ARKON — Kelompok 10 · DI Yogyakarta
+          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
+            Tim ARKON — Kelompok 10 · Semarang
           </p>
         </div>
       </section>

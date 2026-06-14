@@ -17,11 +17,13 @@ import PcShop from './PcShop';
 import QuizGame from './QuizGame';
 import ComponentDetective from './ComponentDetective';
 import PcShowroom from '../pages/PcShowroom';
-import MainLeaderboard from './MainLeaderboard';
-import ProfileCustomization from './ProfileCustomization';
+import StudentProfile from './StudentProfile';
+import LecturerProfile from './LecturerProfile';
+import StudentList from './StudentList';
 import StudentInsight from './StudentInsight';
 import StudyGroup from './StudyGroup';
 import ClassTournament from './ClassTournament';
+import MainLeaderboard from './MainLeaderboard';
 import LiveQuizStudent from './LiveQuizStudent';
 import ConfirmDialog from './ConfirmDialog';
 import DailyLoginModal from './DailyLoginModal';
@@ -46,7 +48,7 @@ const LazyArLab = lazy(() => import('../pages/ArLab'));
 
 function TabLoader() {
   return (
-    <div className="flex-1 flex items-center justify-center bg-slate-50">
+    <div className="flex-1 flex items-center justify-center bg-slate-50 dark:bg-slate-950">
       <div className="flex flex-col items-center gap-3">
         <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
         <p className="text-secondary text-xs font-medium">Memuat modul...</p>
@@ -68,7 +70,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
   
   // Initialize activeTab from URL if present
   const getInitialTab = () => {
-    const validTabs = ['overview', 'assembly', 'quiz', 'detective', 'simulator', 'ar', 'community', 'tasks', 'showroom', 'leaderboard', 'tournament', 'profile', 'about', 'group-chat', 'insight', 'analytics', 'heat-map', 'settings', 'live', 'live-quiz', 'gm-panel', 'admin-tourney', 'cpu-simulator', 'ar-lab', 'study-group', 'my-activities', 'heatmap', 'room-settings', 'broadcast', 'student-work', 'achievements', 'shop', 'manage-activities'];
+    const validTabs = ['overview', 'assembly', 'quiz', 'detective', 'simulator', 'ar', 'community', 'tasks', 'showroom', 'leaderboard', 'tournament', 'profile', 'group-chat', 'insight', 'analytics', 'heat-map', 'settings', 'live', 'live-quiz', 'gm-panel', 'admin-tourney', 'cpu-simulator', 'ar-lab', 'study-group', 'my-activities', 'heatmap', 'room-settings', 'broadcast', 'student-work', 'achievements', 'shop', 'manage-activities'];
     const pathParts = window.location.pathname.split('/');
     const lastPart = pathParts[pathParts.length - 1];
     return validTabs.includes(lastPart) ? lastPart : 'overview';
@@ -241,6 +243,16 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
   }, [fetchCoins, fetchInventory, fetchProfile, fetchRoomStats, syncProgressFromDB, userRole]);
 
   // ─── SOCKET EVENTS ─────────────────────────────
+  useEffect(() => {
+    if (userRole === 'mahasiswa') {
+      setStudentStats({
+        highScore: totalXP || 0,
+        assemblyCount: inventory.length || 0,
+        quizCount: completedLevels.length || 0
+      });
+    }
+  }, [totalXP, inventory, completedLevels, userRole]);
+
   useEffect(() => {
     if (!socket) return;
 
@@ -487,22 +499,35 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
       case 'profile':
         return (
           <div className="h-full overflow-y-auto custom-scrollbar p-6">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            <div className={`max-w-6xl mx-auto`}>
               <ErrorBoundary inline name="Profile">
-                <ProfileCustomization
-                  studentId={userId}
-                  token={token}
-                  apiUrl={apiUrl}
-                  unlockedBadges={unlockedBadges}
-                  levelInfo={levelInfo}
-                  onProfileUpdate={(p) => setUserProfile(p)}
-                />
-              </ErrorBoundary>
-              <ErrorBoundary inline name="Student Insight">
-                <StudentInsight studentId={userId} token={token} apiUrl={apiUrl} />
+                {userRole === 'dosen' ? (
+                  <LecturerProfile 
+                    userId={userId}
+                    token={token}
+                    apiUrl={apiUrl}
+                    onProfileUpdate={(p) => setUserProfile(p)}
+                  />
+                ) : (
+                  <StudentProfile
+                    studentId={userId}
+                    token={token}
+                    apiUrl={apiUrl}
+                    unlockedBadges={unlockedBadges}
+                    levelInfo={levelInfo}
+                    onProfileUpdate={(p) => setUserProfile(p)}
+                  />
+                )}
               </ErrorBoundary>
             </div>
           </div>
+        );
+
+      case 'student-list':
+        return (
+          <ErrorBoundary inline name="Student List">
+            <StudentList roomId={room?.id} token={token} apiUrl={apiUrl} />
+          </ErrorBoundary>
         );
 
       // ─── DOSEN-ONLY TABS ─────────
@@ -611,68 +636,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
           </ErrorBoundary>
         );
 
-      // ─── ABOUT ARKON ─────────
-      case 'about':
-        return (
-          <div className="h-full overflow-y-auto custom-scrollbar p-6">
-            <div className="max-w-3xl mx-auto">
-              <div className="bg-white/[0.03] border border-border rounded-3xl p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <BookOpen size={24} className="text-foreground" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-black text-foreground">Tentang ARKON v1.0</h2>
-                    <p className="text-xs text-indigo-600 font-bold">Platform Edukasi Arsitektur Komputer</p>
-                  </div>
-                </div>
-                <p className="text-secondary text-sm leading-relaxed mb-6">
-                  ARKON adalah platform pembelajaran interaktif untuk mata kuliah <strong className="text-foreground">Arsitektur dan Organisasi Komputer (AOK)</strong> yang dikembangkan untuk LIDM Belmawa 2027. Seluruh materi quiz, detective, dan konten AR dikurasi berdasarkan buku referensi utama.
-                </p>
-                <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-5 mb-6">
-                  <h3 className="text-sm font-black text-indigo-600 mb-2">📚 Referensi Utama</h3>
-                  <p className="text-secondary text-sm font-medium">Stallings, W. (2019). <em>Computer Organization and Architecture: Designing for Performance</em> (11th ed.). Pearson.</p>
-                </div>
-                <h3 className="text-sm font-black text-foreground mb-3">Chapter yang Tercakup</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-6">
-                  {[
-                    { ch: 'Ch. 1', title: 'Pengantar Organisasi Komputer', levels: 'Level 1' },
-                    { ch: 'Ch. 2', title: 'Evolusi & Performa Komputer', levels: 'Level 10, 14' },
-                    { ch: 'Ch. 3', title: 'Fungsi & Interkoneksi Komputer', levels: 'Level 2, 8' },
-                    { ch: 'Ch. 4', title: 'Cache Memory', levels: 'Level 7' },
-                    { ch: 'Ch. 5', title: 'Internal Memory', levels: 'Level 2, 7' },
-                    { ch: 'Ch. 7', title: 'Input/Output', levels: 'Level 4' },
-                    { ch: 'Ch. 8', title: 'Operating System Support', levels: 'Level 6' },
-                    { ch: 'Ch. 12-13', title: 'Instruction Sets', levels: 'Level 3' },
-                    { ch: 'Ch. 14-16', title: 'Processor & Control Unit', levels: 'Level 9' },
-                    { ch: 'Ch. 17-18', title: 'Parallel Processing', levels: 'Level 10, 14' },
-                    { ch: 'Ch. 19', title: 'Multicore & Advanced', levels: 'Level 13' },
-                    { ch: 'Ch. 9-10', title: 'Sistem Bilangan & Aritmatika', levels: 'Level 5' },
-                    { ch: 'Lab', title: 'Praktikum Perakitan & Perawatan', levels: 'Level 11, 12' },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-white/[0.03] border border-border rounded-xl">
-                      <div>
-                        <span className="text-xs font-black text-indigo-600">{item.ch}</span>
-                        <p className="text-[11px] text-secondary">{item.title}</p>
-                      </div>
-                      <span className="text-[9px] text-secondary font-bold">{item.levels}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4">
-                  <h3 className="text-xs font-black text-emerald-600 mb-2">🧠 Fitur Unggulan</h3>
-                  <ul className="text-xs text-secondary space-y-1">
-                    <li>• <strong className="text-secondary">IRT Rasch Model</strong> — Adaptive quiz berbasis Item Response Theory</li>
-                    <li>• <strong className="text-secondary">CPU Visual Simulator</strong> — Fetch-Decode-Execute cycle real-time</li>
-                    <li>• <strong className="text-secondary">AR Hardware Lab</strong> — 8 model 3D komponen + AR di mobile</li>
-                    <li>• <strong className="text-secondary">Gemini AI</strong> — Feedback PC Assembly & hint adaptif</li>
-                    <li>• <strong className="text-secondary">Live Quiz</strong> — Real-time quiz via Socket.io</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+
 
       // ─── TAB ALIASES (backward compat + URL navigation) ────
       // Redirect mismatched tab IDs to their correct names
@@ -734,7 +698,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
   const tabTitles = {
     overview: 'Overview',
     assembly: 'Assembly Lab',
-    quiz: 'Quiz Map',
+    quiz: 'Quiz Journey',
     shop: 'Hardware Shop',
     showroom: 'Galeri PC',
     detective: 'Component Detective',
@@ -750,10 +714,9 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
     'gm-panel': 'Manajemen Kelas',
     'room-settings': 'Pengaturan Room',
     achievements: 'Achievement Wall',
-    profile: 'My Profile',
+    profile: 'Profil Pengguna',
     'cpu-simulator': 'CPU Simulator',
     'ar-lab': 'AR Hardware Lab',
-    about: 'Tentang ARKON',
   };
 
   return (
@@ -773,7 +736,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full min-h-0 min-w-0 overflow-hidden bg-slate-50 dark:bg-slate-950">
         {/* Header */}
-        <header className="flex items-center justify-between w-full h-[56px] px-5 bg-white dark:bg-slate-900 border-b border-border dark:border-slate-800 shrink-0 z-40">
+        <header className="flex items-center justify-between w-full h-[56px] px-5 bg-[var(--bg-surface)] dark:bg-slate-900 border-b border-border dark:border-slate-800 shrink-0 z-40">
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={onBack}
@@ -803,7 +766,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
                 title={isLive ? 'Klik untuk mengakhiri sesi Live' : 'Klik untuk memulai sesi Live'}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black transition-all border ${isLive
                     ? 'bg-rose-500 border-rose-400 text-white animate-pulse shadow-lg shadow-rose-500/30'
-                    : 'bg-white shadow-sm border border-border border-border text-secondary hover:border-rose-400/50 hover:text-rose-600'
+                    : 'bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 border-border text-secondary hover:border-rose-400/50 hover:text-rose-600'
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 <Radio size={13} />
@@ -815,7 +778,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
             <div className="relative">
               <button
                 onClick={() => setIsNotifOpen(!isNotifOpen)}
-                className={`relative p-2 rounded-full transition cursor-pointer ${isNotifOpen ? 'bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white' : 'text-secondary hover:bg-white dark:hover:bg-slate-800 shadow-sm border border-border dark:border-slate-700'}`}
+                className={`relative p-2 rounded-full transition cursor-pointer ${isNotifOpen ? 'bg-[var(--bg-surface)] dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white' : 'text-secondary hover:bg-[var(--bg-surface)] dark:hover:bg-slate-800 shadow-sm border border-border dark:border-slate-700'}`}
               >
                 <Bell size={18} />
                 {notifications.some(n => n.unread) && (
@@ -831,9 +794,9 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
                     initial={{ opacity: 0, y: 8, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                    className="absolute right-0 mt-2 w-72 bg-white dark:bg-slate-900 border border-border dark:border-slate-700 rounded-2xl shadow-2xl overflow-hidden z-50"
+                    className="absolute right-0 mt-2 w-72 bg-[var(--bg-surface)] dark:bg-slate-900 border border-border dark:border-slate-700 rounded-2xl shadow-2xl overflow-hidden z-50"
                   >
-                    <div className="p-3 border-b border-border dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm flex justify-between items-center">
+                    <div className="p-3 border-b border-border dark:border-slate-700 bg-[var(--bg-surface)] dark:bg-slate-900 shadow-sm flex justify-between items-center">
                       <span className="font-bold text-xs text-foreground">Notifikasi</span>
                       <button
                         onClick={() => setNotifications(n => n.map(x => ({ ...x, unread: false })))}
@@ -862,13 +825,19 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
             <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
 
             {/* User avatar */}
-            <div onClick={() => navigate('/settings')} className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 p-1.5 rounded-xl transition-colors">
+            <div onClick={() => setActiveTab('profile')} className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 p-1.5 rounded-xl transition-colors group">
               {userProfile ? (() => {
-                const av = PROFILE_AVATARS.find(a => a.id === userProfile.avatar_id) || PROFILE_AVATARS[0];
+                const localCustomAvatar = localStorage.getItem('arkon_custom_avatar');
+                const finalAvatarId = (userProfile.avatar_id && (userProfile.avatar_id.startsWith('data:image/') || userProfile.avatar_id.startsWith('http'))) ? userProfile.avatar_id : (localCustomAvatar || userProfile.avatar_id);
+                
+                if (finalAvatarId && (finalAvatarId.startsWith('data:image/') || finalAvatarId.startsWith('http'))) {
+                  return <img src={finalAvatarId} alt="Profile" className="w-8 h-8 rounded-full shadow-sm object-cover border border-border" />;
+                }
+                const av = PROFILE_AVATARS.find(a => a.id === finalAvatarId) || PROFILE_AVATARS[0];
                 const AvatarIcon = iconComponents[av.icon] || User;
                 return (
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br ${av.color} shadow-sm`}>
-                    <AvatarIcon size={15} className="text-foreground" />
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br ${av.color} shadow-sm border border-border`}>
+                    <AvatarIcon size={15} className="text-white" />
                   </div>
                 );
               })() : (
@@ -893,8 +862,8 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
       {/* Poll Modal */}
       {activePoll && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-6">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 w-full max-w-sm text-center">
-            <h3 className="text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Polling dari Dosen</h3>
+          <div className="bg-[var(--bg-surface)] dark:bg-slate-900 rounded-3xl shadow-2xl p-8 w-full max-w-sm text-center">
+            <h3 className="text-xs font-black text-secondary uppercase tracking-widest mb-2">Polling dari Dosen</h3>
             <p className="text-lg font-bold text-foreground mb-8">"{activePoll.question}"</p>
             <div className="grid grid-cols-2 gap-4">
               <button onClick={() => handlePollVote('up')} className="flex flex-col items-center gap-2 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl hover:bg-emerald-100 transition-all">
@@ -951,7 +920,7 @@ export default function RoomHub({ room, userRole, userId, userName, token, apiUr
 
       {/* Mobile Bottom Nav — Mahasiswa only */}
       {userRole === 'mahasiswa' && (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-[var(--bg-surface)] border-t border-border dark:border-slate-800 flex items-center justify-around px-2 py-2 z-50 transition-colors" aria-label="Navigasi mobile">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--bg-surface)] dark:bg-[var(--bg-surface)] border-t border-border dark:border-slate-800 flex items-center justify-around px-2 py-2 z-50 transition-colors" aria-label="Navigasi mobile">
           {[
             { id: 'overview', icon: '📊', label: 'Room' },
             { id: 'assembly', icon: '🖥️', label: 'Rakit' },

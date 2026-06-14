@@ -94,8 +94,8 @@ export default function AiTutorPanel({ questionText, wrongAnswer, correctAnswer,
               <div className="flex gap-2">
                 <Lightbulb size={15} className="text-yellow-500 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-[11px] font-bold text-gray-600 dark:text-gray-400 mb-1">Penjelasan</p>
-                  <p className="text-xs text-gray-800 dark:text-gray-200 leading-relaxed">{tutorData.explanation}</p>
+                  <p className="text-[11px] font-bold text-secondary dark:text-gray-400 mb-1">Penjelasan</p>
+                  <p className="text-xs text-foreground dark:text-gray-200 leading-relaxed">{tutorData.explanation}</p>
                 </div>
               </div>
 
@@ -104,8 +104,8 @@ export default function AiTutorPanel({ questionText, wrongAnswer, correctAnswer,
                 <div className="flex gap-2">
                   <Sparkles size={15} className="text-purple-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-[11px] font-bold text-gray-600 dark:text-gray-400 mb-1">Analogi</p>
-                    <p className="text-xs text-gray-800 dark:text-gray-200 leading-relaxed">{tutorData.analogy}</p>
+                    <p className="text-[11px] font-bold text-secondary dark:text-gray-400 mb-1">Analogi</p>
+                    <p className="text-xs text-foreground dark:text-gray-200 leading-relaxed">{tutorData.analogy}</p>
                   </div>
                 </div>
               )}
@@ -115,7 +115,7 @@ export default function AiTutorPanel({ questionText, wrongAnswer, correctAnswer,
                 <div className="flex gap-2">
                   <HelpCircle size={15} className="text-blue-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-[11px] font-bold text-gray-600 dark:text-gray-400 mb-1">Refleksi</p>
+                    <p className="text-[11px] font-bold text-secondary dark:text-gray-400 mb-1">Refleksi</p>
                     <p className="text-xs text-indigo-700 dark:text-indigo-300 italic leading-relaxed">"{tutorData.reflection_question}"</p>
                   </div>
                 </div>
@@ -145,11 +145,11 @@ export default function AiTutorPanel({ questionText, wrongAnswer, correctAnswer,
           {/* Flashcards */}
           {flashcards && flashcards.length > 0 && (
             <div className="space-y-2 mt-2">
-              <p className="text-[11px] font-bold text-gray-600 dark:text-gray-400">📇 Flashcard Studi:</p>
+              <p className="text-[11px] font-bold text-secondary dark:text-gray-400">📇 Flashcard Studi:</p>
               {flashcards.map((fc, i) => (
-                <div key={i} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2">
-                  <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">Q: {fc.front}</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">A: {fc.back}</p>
+                <div key={i} className="bg-[var(--bg-surface)] dark:bg-gray-800 border border-border dark:border-slate-800 dark:border-gray-700 rounded-xl px-3 py-2">
+                  <p className="text-xs font-semibold text-foreground dark:text-gray-200">Q: {fc.front}</p>
+                  <p className="text-xs text-secondary dark:text-gray-400 mt-1">A: {fc.back}</p>
                 </div>
               ))}
             </div>
@@ -157,7 +157,7 @@ export default function AiTutorPanel({ questionText, wrongAnswer, correctAnswer,
 
           {/* Dismiss */}
           {onDismiss && (
-            <button onClick={onDismiss} className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+            <button onClick={onDismiss} className="text-xs text-gray-400 hover:text-secondary dark:hover:text-gray-300 transition-colors">
               Tutup tutor
             </button>
           )}

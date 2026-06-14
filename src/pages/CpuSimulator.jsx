@@ -55,7 +55,7 @@ function CpuSimulatorAdmin() {
             <h3 className="font-bold text-foreground">Modul ISA Aktif</h3>
             <BookOpen size={20} className="text-indigo-500" />
           </div>
-          <p className="text-3xl font-black text-indigo-600">3 <span className="text-sm font-medium text-gray-500">Kategori</span></p>
+          <p className="text-3xl font-black text-indigo-600">3 <span className="text-sm font-medium text-secondary">Kategori</span></p>
         </div>
         <div className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 shadow-sm p-5">
           <div className="flex justify-between items-center mb-4">
@@ -71,11 +71,11 @@ function CpuSimulatorAdmin() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 dark:bg-slate-900 border-b border-border dark:border-slate-800">
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Mahasiswa</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Program/Skenario</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Status</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase">Cycle Count</th>
-              <th className="p-4 text-xs font-bold text-gray-500 uppercase text-center">Aksi</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Mahasiswa</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Program/Skenario</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Status</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase">Cycle Count</th>
+              <th className="p-4 text-xs font-bold text-secondary uppercase text-center">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -460,15 +460,15 @@ function CpuSimulator({ embeddedMode = false, onCoinsEarned, userRole }) {
                     </div>
                     <div className="grid grid-cols-3 gap-2">
                       {["Fetch", "Decode", "Execute"].map((step, i) => (
-                        <div key={i} className="bg-gray-50 p-2 rounded-xl border border-gray-100 text-center">
-                          <p className="text-[9px] font-black text-gray-800 uppercase">{step}</p>
+                        <div key={i} className="bg-slate-50 dark:bg-slate-900 p-2 rounded-xl border border-border dark:border-slate-800 text-center">
+                          <p className="text-[9px] font-black text-foreground uppercase">{step}</p>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                <div className="p-4 bg-gray-50 border-t border-border">
+                <div className="p-4 bg-slate-50 dark:bg-slate-900 border-t border-border">
                   <p className="text-[9px] text-center text-slate-400 font-black uppercase tracking-widest">ARKON System v1.0</p>
                 </div>
               </div>

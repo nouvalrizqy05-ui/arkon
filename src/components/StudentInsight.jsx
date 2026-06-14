@@ -73,7 +73,7 @@ export default function StudentInsight({ studentId, token, apiUrl }) {
         </div>
         <div>
           <h2 className="text-xl font-black text-foreground">Student Insight Dashboard</h2>
-          <p className="text-xs text-secondary">Analisis performa personal berbasis AI Heuristik</p>
+          <p className="text-xs text-secondary">Analisis performa personal tersinkronisasi berbasis IRT (Item Response Theory)</p>
         </div>
       </div>
 
@@ -82,7 +82,7 @@ export default function StudentInsight({ studentId, token, apiUrl }) {
         {[
           { label: 'Total Kuis', value: stats.total_quizzes || 0, icon: Zap, color: 'text-rose-500', bg: 'bg-rose-50' },
           { label: 'Rata-rata Skor', value: `${stats.avg_score || 0}%`, icon: TrendingUp, color: 'text-primary', bg: 'bg-primary-soft' },
-          { label: 'Streak Flashcard', value: `${streak.current_streak || 0} 🔥`, icon: Flame, color: 'text-amber-500', bg: 'bg-amber-50' },
+          { label: 'Koin ARKON', value: coins || 0, icon: Flame, color: 'text-amber-500', bg: 'bg-amber-50' },
           { label: 'Badges', value: badges || 0, icon: Award, color: 'text-emerald-500', bg: 'bg-emerald-50' },
         ].map((s, i) => (
           <div key={i} className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 p-5 shadow-sm hover:shadow-md transition-shadow">
@@ -148,7 +148,7 @@ export default function StudentInsight({ studentId, token, apiUrl }) {
                   {uasCategory}
                 </span>
                 <p className="text-[10px] text-secondary mt-3 max-w-[250px] mx-auto leading-relaxed">
-                  Prediksi berbasis {stats.total_quizzes} kuis, streak {streak.current_streak} hari, dan {badges} badge.
+                  Prediksi berbasis {stats.total_quizzes} kuis, analisis bobot IRT, dan {badges} badge.
                 </p>
               </div>
             </>
@@ -182,10 +182,7 @@ export default function StudentInsight({ studentId, token, apiUrl }) {
                 </div>
                 <div className="flex gap-2 shrink-0">
                   <span className="px-3 py-1.5 bg-[var(--bg-surface)] text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 rounded-lg text-[10px] font-bold cursor-pointer hover:bg-red-50 dark:hover:bg-red-500/10 transition">
-                    🎴 Review Flashcard
-                  </span>
-                  <span className="px-3 py-1.5 bg-[var(--bg-surface)] text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 rounded-lg text-[10px] font-bold cursor-pointer hover:bg-red-50 dark:hover:bg-red-500/10 transition">
-                    ⚡ Ulangi Kuis
+                    ⚡ Ulangi Kuis Topik Ini
                   </span>
                 </div>
               </div>

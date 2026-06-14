@@ -73,7 +73,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-[#080C1A] transition-colors relative">
-      <div className="bg-white dark:bg-[#131b2f] p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-md border border-border dark:border-slate-700 relative overflow-hidden">
+      <div className="bg-[var(--bg-surface)] dark:bg-[#131b2f] p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-md border border-border dark:border-slate-700 relative overflow-hidden">
         {step === 1 ? (
           <Link 
             to="/login" 

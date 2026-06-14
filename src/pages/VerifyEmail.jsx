@@ -44,7 +44,7 @@ export default function VerifyEmail() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-[#080C1A]">
-      <div className="bg-white dark:bg-[#131b2f] p-8 md:p-12 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-border dark:border-border text-center">
+      <div className="bg-[var(--bg-surface)] dark:bg-[#131b2f] p-8 md:p-12 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-border dark:border-border text-center">
         {status === 'loading' && (
           <div className="flex flex-col items-center">
             <Loader2 className="w-16 h-16 text-primary animate-spin mb-6" />

@@ -136,6 +136,39 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
     }
   };
 
+  const exportAsPDF = async () => {
+    if (!cardRef.current) return;
+    setExporting(true);
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const { jsPDF } = await import('jspdf');
+      
+      const canvas = await html2canvas(cardRef.current, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      
+      const pdf = new jsPDF({
+        orientation: imgWidth > imgHeight ? 'landscape' : 'portrait',
+        unit: 'px',
+        format: [imgWidth, imgHeight]
+      });
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      pdf.save(`ARKON_Profile_${profile.full_name.replace(/\s+/g, '_')}.pdf`);
+    } catch (err) {
+      console.error('Gagal export PDF:', err);
+      toast.error('Gagal mengekspor sebagai PDF. Pastikan library jspdf & html2canvas terinstall.');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user_id');
@@ -230,15 +263,25 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
           </div>
         </div>
 
-        {/* Download Button */}
-        <button 
-          onClick={exportAsPNG}
-          disabled={exporting}
-          className="mt-6 w-full py-4 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-2xl text-foreground font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-        >
-          {exporting ? <div className="w-5 h-5 border-2 border-border border-t-white rounded-full animate-spin"></div> : <Download size={20} />}
-          {exporting ? 'Merender...' : 'Download PNG Card'}
-        </button>
+        {/* Download Buttons */}
+        <div className="mt-6 flex flex-col gap-3 w-full">
+          <button 
+            onClick={exportAsPNG}
+            disabled={exporting}
+            className="w-full py-4 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-2xl text-foreground font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+          >
+            {exporting ? <div className="w-5 h-5 border-2 border-border border-t-white rounded-full animate-spin"></div> : <Download size={20} />}
+            {exporting ? 'Merender...' : 'Download PNG Card'}
+          </button>
+          <button 
+            onClick={exportAsPDF}
+            disabled={exporting}
+            className="w-full py-4 bg-primary hover:bg-primary-hover text-white rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-600/20 disabled:opacity-50"
+          >
+            {exporting ? <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div> : <Download size={20} />}
+            {exporting ? 'Merender...' : 'Ekspor Profil PDF'}
+          </button>
+        </div>
       </div>
 
       {/* Right Column: Options */}
@@ -278,9 +321,9 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
           <div className="mt-4 flex justify-end">
             <button 
               onClick={() => saveProfile({})}
-              className="px-6 py-2.5 bg-primary hover:bg-primary rounded-xl font-bold text-foreground transition-all flex items-center gap-2 text-sm"
+              className="px-6 py-2.5 bg-primary hover:bg-indigo-700 rounded-xl font-bold text-white transition-all flex items-center gap-2 text-sm shadow-md shadow-indigo-500/20 active:scale-95"
             >
-              {saving ? <div className="w-4 h-4 border-2 border-border border-t-white rounded-full animate-spin"></div> : 'Simpan Identitas'}
+              {saving ? <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div> : 'Simpan Identitas'}
             </button>
           </div>
         </div>
@@ -300,9 +343,9 @@ export default function ProfileCustomization({ studentId, token, apiUrl, unlocke
             />
             <button 
               onClick={() => saveProfile({})}
-              className="px-6 py-3 bg-primary hover:bg-primary rounded-xl font-bold text-foreground transition-all flex items-center gap-2"
+              className="px-6 py-3 bg-primary hover:bg-indigo-700 rounded-xl font-bold text-white transition-all flex items-center gap-2 shadow-md shadow-indigo-500/20 active:scale-95"
             >
-              {saving ? <div className="w-4 h-4 border-2 border-border border-t-white rounded-full animate-spin"></div> : 'Simpan'}
+              {saving ? <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div> : 'Simpan'}
             </button>
           </div>
           <p className="text-xs text-secondary mt-2">Maksimal 30 karakter. Tampil di bawah nama pada Profile Card.</p>

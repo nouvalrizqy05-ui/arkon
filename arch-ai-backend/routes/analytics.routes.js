@@ -27,7 +27,7 @@ router.get('/student-insight/:studentId', authenticateToken, async (req, res) =>
 
     const activity = await pool.query(`
       SELECT DATE(created_at) as day, COUNT(*)::int as count
-      FROM analytics WHERE student_id = $1 AND created_at > NOW() - INTERVAL '14 days'
+      FROM coin_transactions WHERE student_id = $1 AND created_at > NOW() - INTERVAL '14 days'
       GROUP BY DATE(created_at) ORDER BY day
     `, [req.params.studentId]);
 
@@ -156,6 +156,31 @@ router.get('/n-gain/:room_id', authenticateToken, requireRole('dosen'), async (r
 });
 
 
+
+// ─── FEAT-001: HEATMAP DATA ───────────────────────────
+router.get('/heatmap/:room_id', authenticateToken, async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        a.student_id, 
+        u.full_name as student_name, 
+        a.material_id, 
+        m.file_name as topic_raw,
+        AVG(a.score)::int as avg_score, 
+        COUNT(a.id)::int as attempt_count
+      FROM analytics a
+      JOIN users u ON a.student_id = u.id
+      JOIN materials m ON a.material_id = m.id
+      WHERE a.room_id = $1
+      GROUP BY a.student_id, u.full_name, a.material_id, m.file_name
+    `;
+    const result = await pool.query(query, [req.params.room_id]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('🔥 GET HEATMAP ERROR:', err);
+    res.status(500).json({ error: 'Gagal mengambil data heatmap' });
+  }
+});
 
 // ─── FEAT-001: PDF REPORT EXPORT — Academic Quality ─────────────────────────
 router.get('/report/pdf/:room_id', authenticateToken, requireRole('dosen'), async (req, res) => {
@@ -439,6 +464,60 @@ router.get('/report/pdf/:room_id', authenticateToken, requireRole('dosen'), asyn
   } catch (err) {
     console.error('🔥 PDF REPORT ERROR:', err);
     if (!res.headersSent) res.status(500).json({ error: 'Gagal membuat laporan PDF' });
+  }
+});
+
+// ─── OVERVIEW STATISTICS ──────────────────────────────────────────────────
+router.get('/overview/:room_id', authenticateToken, async (req, res) => {
+  try {
+    const roomId = req.params.room_id;
+    
+    // Student Count
+    const studentCountRes = await pool.query(
+      'SELECT COUNT(*)::int as count FROM class_members WHERE room_id = $1',
+      [roomId]
+    );
+
+    // Active Activity using coin_transactions
+    const activeActivityRes = await pool.query(`
+      SELECT COUNT(*)::int as count FROM coin_transactions 
+      WHERE student_id IN (SELECT student_id FROM class_members WHERE room_id = $1)
+      AND created_at > NOW() - INTERVAL '7 days'
+    `, [roomId]);
+
+    // Average XP from achievements
+    const avgXpRes = await pool.query(`
+      SELECT COALESCE(AVG(score), 0)::int as avg_xp FROM (
+        SELECT u.id, 
+          COALESCE(SUM(
+            CASE a.badge_id 
+              WHEN 'first_step' THEN 50
+              WHEN 'bookworm' THEN 100
+              WHEN 'quiz_warrior' THEN 150
+              WHEN 'mind_mapper' THEN 100
+              WHEN 'card_master' THEN 100
+              WHEN 'ar_explorer' THEN 200
+              WHEN 'perfect_score' THEN 300
+              WHEN 'pipeline_master' THEN 250
+              ELSE 0 
+            END
+          ), 0) as score
+        FROM class_members cm
+        JOIN users u ON cm.student_id = u.id
+        LEFT JOIN achievements a ON u.id = a.student_id
+        WHERE cm.room_id = $1
+        GROUP BY u.id
+      ) sub
+    `, [roomId]);
+
+    res.json({
+      student_count: studentCountRes.rows[0].count,
+      active_activities: activeActivityRes.rows[0].count,
+      avg_xp: avgXpRes.rows[0].avg_xp
+    });
+  } catch (err) {
+    console.error('🔥 OVERVIEW STATS ERROR:', err);
+    res.status(500).json({ error: 'Gagal mengambil overview stats' });
   }
 });
 

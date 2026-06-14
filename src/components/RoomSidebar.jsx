@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Gamepad2, ShoppingBag, Trophy, Award,
   Users, Swords, MessageSquare, ClipboardList, Eye, BarChart2,
   Radio, Settings, ChevronDown, ChevronRight, Flame, Shield,
-  ArrowLeft, BookOpen, Layers, Menu, LogOut
+  ArrowLeft, BookOpen, Layers, Menu, LogOut, User
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ const STUDENT_MENU = [
     color: 'text-primary', bgActive: 'bg-primary-soft',
     children: [
       { id: 'assembly',       label: '🖥️ Assembly Lab' },
-      { id: 'quiz',           label: '🎮 Quiz Map' },
+      { id: 'quiz',           label: '🎮 Quiz Journey' },
       { id: 'detective',      label: '🔍 Component Detective' },
       { id: 'cpu-simulator',  label: '⚡ CPU Simulator' },
       { id: 'ar-lab',         label: '🔬 AR Hardware Lab' },
@@ -26,6 +26,7 @@ const STUDENT_MENU = [
     children: [
       { id: 'shop',      label: '🛒 Hardware Shop' },
       { id: 'showroom',  label: '🖼️ Showroom' },
+      { id: 'student-list', label: '👥 Daftar Mahasiswa' },
     ]
   },
   { id: 'my-activities', label: 'Tugas',       icon: ClipboardList, color: 'text-amber-600', bgActive: 'bg-amber-50' },
@@ -33,6 +34,7 @@ const STUDENT_MENU = [
   { id: 'achievements',  label: 'Achievements',icon: Award,          color: 'text-emerald-600',bgActive: 'bg-emerald-50' },
   { id: 'tournament',    label: 'Tournament',  icon: Swords,          color: 'text-orange-600',bgActive: 'bg-orange-50' },
   { id: 'study-group',   label: 'Group Chat',  icon: MessageSquare,  color: 'text-sky-600',  bgActive: 'bg-sky-50' },
+  { id: 'profile',       label: 'Profil Saya', icon: User,           color: 'text-indigo-600', bgActive: 'bg-indigo-50' },
 ];
 
 const DOSEN_MENU = [
@@ -42,7 +44,7 @@ const DOSEN_MENU = [
     color: 'text-primary', bgActive: 'bg-primary-soft',
     children: [
       { id: 'assembly',      label: '🖥️ Assembly Lab' },
-      { id: 'quiz',          label: '🎮 Quiz Map' },
+      { id: 'quiz',          label: '🎮 Quiz Journey' },
       { id: 'detective',     label: '🔍 Component Detective' },
       { id: 'cpu-simulator', label: '⚡ CPU Simulator' },
       { id: 'ar-lab',        label: '🔬 AR Hardware Lab' },
@@ -54,6 +56,7 @@ const DOSEN_MENU = [
     children: [
       { id: 'shop',     label: '🛒 Hardware Shop' },
       { id: 'showroom', label: '🖼️ Showroom' },
+      { id: 'student-list', label: '👥 Daftar Mahasiswa' },
     ]
   },
   { id: 'manage-activities', label: 'Kelola Tugas',    icon: ClipboardList, color: 'text-amber-600',  bgActive: 'bg-amber-50' },
@@ -62,6 +65,7 @@ const DOSEN_MENU = [
   { id: 'achievements',      label: 'Achievements',    icon: Award,           color: 'text-emerald-600',bgActive: 'bg-emerald-50' },
   { id: 'tournament',        label: 'Tournament',      icon: Swords,           color: 'text-orange-600',bgActive: 'bg-orange-50' },
   { id: 'study-group',       label: 'Group Chat',      icon: MessageSquare,   color: 'text-sky-600',   bgActive: 'bg-sky-50' },
+  { id: 'profile',           label: 'Profil Saya',     icon: User,            color: 'text-indigo-600', bgActive: 'bg-indigo-50' },
 ];
 
 const DOSEN_TOOLS = [
@@ -73,7 +77,7 @@ const DOSEN_TOOLS = [
 ];
 
 const BELAJAR_IDS  = ['assembly','quiz','detective','cpu-simulator','ar-lab'];
-const KOMUNITAS_IDS = ['shop','showroom'];
+const KOMUNITAS_IDS = ['shop','showroom', 'student-list'];
 
 export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName, roomCode, isCollapsed, onBack, onToggleCollapse }) {
   const navigate = useNavigate();
@@ -226,12 +230,6 @@ export default function RoomSidebar({ activeTab, onTabChange, userRole, roomName
 
       {/* Footer Links */}
       <div className={`px-2 py-2 border-t border-border dark:border-slate-800 flex flex-col gap-1 ${isCollapsed ? 'items-center' : ''}`}>
-        <button onClick={() => onTabChange('about')}
-          title={isCollapsed ? 'Tentang ARKON' : ''}
-          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-medium text-secondary hover:text-primary hover:bg-primary-soft transition-all">
-          <span className="text-sm shrink-0">📖</span>
-          {!isCollapsed && <span>Tentang ARKON</span>}
-        </button>
         <button onClick={() => navigate('/settings')}
           title={isCollapsed ? 'Pengaturan Akun' : ''}
           className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-medium text-secondary hover:text-primary hover:bg-primary-soft transition-all">

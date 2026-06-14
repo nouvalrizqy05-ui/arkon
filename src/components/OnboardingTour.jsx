@@ -130,7 +130,7 @@ export default function OnboardingTour({ isVisible, onClose }) {
           initial={{ opacity: 0, y: 10, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -10, scale: 0.95 }}
-          className="fixed z-50 w-80 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-indigo-100 dark:border-slate-700 p-5"
+          className="fixed z-50 w-80 bg-[var(--bg-surface)] dark:bg-slate-800 rounded-2xl shadow-2xl border border-indigo-100 dark:border-slate-700 p-5"
           style={{ top: tourBox.top, left: tourBox.left }}
         >
           <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">

@@ -123,7 +123,7 @@ export default function BossRaid({ isOpen, studentId, token, apiUrl, onComplete,
 
   return (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-      <div className={`relative w-[550px] max-w-full bg-white border-2 rounded-[2.5rem] overflow-hidden shadow-2xl transition-all duration-500 max-h-[90vh] flex flex-col ${
+      <div className={`relative w-[550px] max-w-full bg-[var(--bg-surface)] border-2 rounded-[2.5rem] overflow-hidden shadow-2xl transition-all duration-500 max-h-[90vh] flex flex-col ${
         status === 'success' ? 'border-emerald-500 shadow-emerald-500/20' : 
         status === 'failed' ? 'border-red-500 shadow-red-500/20' : 'border-red-500/30'
       }`}>
@@ -164,7 +164,7 @@ export default function BossRaid({ isOpen, studentId, token, apiUrl, onComplete,
             </div>
           </div>
 
-          <div className="bg-white shadow-sm border border-border border border-border rounded-3xl p-6 mb-6">
+          <div className="bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-3xl p-6 mb-6">
             <h3 className="text-sm font-black text-red-400 uppercase tracking-wider mb-2 flex items-center gap-2">
               <Sword size={16} /> MISSION: {challenge?.title}
             </h3>
@@ -201,7 +201,7 @@ export default function BossRaid({ isOpen, studentId, token, apiUrl, onComplete,
                 {feedback}
               </div>
               <div className="flex gap-3">
-                <button onClick={() => setStatus('active')} className="flex-1 py-4 bg-white shadow-sm border border-border border border-border text-foreground font-bold rounded-2xl hover:bg-white shadow-sm border border-border transition">
+                <button onClick={() => setStatus('active')} className="flex-1 py-4 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-foreground font-bold rounded-2xl hover:bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 transition">
                   COBA LAGI
                 </button>
                 <button onClick={closeRaid} className="flex-1 py-4 bg-red-500 text-white font-black rounded-2xl hover:bg-red-400 transition shadow-lg shadow-red-500/20">
@@ -227,7 +227,7 @@ export default function BossRaid({ isOpen, studentId, token, apiUrl, onComplete,
               <div className="flex gap-3">
                 <button 
                   onClick={closeRaid}
-                  className="flex-1 py-4 bg-white shadow-sm border border-border border border-border text-foreground font-bold rounded-2xl hover:bg-white shadow-sm border border-border transition"
+                  className="flex-1 py-4 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 text-foreground font-bold rounded-2xl hover:bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 transition"
                 >
                   BATALKAN
                 </button>

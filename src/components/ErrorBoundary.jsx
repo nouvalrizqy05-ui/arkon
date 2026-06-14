@@ -76,7 +76,7 @@ class ErrorBoundary extends React.Component {
             )}
             <button
               onClick={this.handleReload}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white font-bold rounded-lg text-xs hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--bg-surface)] dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white font-bold rounded-lg text-xs hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95"
             >
               <RefreshCw size={12} /> Coba Lagi
             </button>
@@ -119,7 +119,7 @@ class ErrorBoundary extends React.Component {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={this.handleReload}
-                className="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white font-bold rounded-xl text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95"
+                className="flex items-center gap-2 px-5 py-2.5 bg-[var(--bg-surface)] dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white font-bold rounded-xl text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95"
               >
                 <RefreshCw size={16} /> Coba Lagi
               </button>

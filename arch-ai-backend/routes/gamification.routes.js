@@ -319,6 +319,7 @@ router.get('/showroom/builds', authenticateToken, async (req, res) => {
     const query = `
       SELECT b.*,
         u.full_name as builder_name,
+        u.avatar_id,
         COALESCE(lr.like_count, 0)::int as like_count,
         COALESCE(fr.fire_count, 0)::int as fire_count,
         COALESCE(cc.comment_count, 0)::int as comment_count,
@@ -340,7 +341,7 @@ router.get('/showroom/builds', authenticateToken, async (req, res) => {
     if (result.rows.length > 0) {
       const buildIds = result.rows.map(b => b.id);
       const commentsResult = await pool.query(
-        `SELECT bc.*, u.full_name as commenter_name 
+        `SELECT bc.*, u.full_name as commenter_name, u.avatar_id 
          FROM build_comments bc 
          JOIN users u ON bc.student_id = u.id 
          WHERE bc.build_id = ANY($1::uuid[]) 
@@ -591,7 +592,7 @@ router.get('/leaderboard/main', authenticateToken, async (req, res) => {
 
       if (category === 'coins') {
         result = await pool.query(`
-          SELECT u.id, u.full_name, COALESCE(SUM(c.amount), 0)::int as score
+          SELECT u.id, u.full_name, u.avatar_id, COALESCE(SUM(c.amount), 0)::int as score
           FROM users u
           ${joinRoom}
           LEFT JOIN coin_transactions c ON u.id = c.student_id AND c.amount > 0 AND c.created_at >= $1 AND c.created_at <= $2
@@ -600,7 +601,7 @@ router.get('/leaderboard/main', authenticateToken, async (req, res) => {
         `, params);
       } else if (category === 'quizzes') {
         result = await pool.query(`
-          SELECT u.id, u.full_name, COUNT(c.id)::int as score
+          SELECT u.id, u.full_name, u.avatar_id, COUNT(c.id)::int as score
           FROM users u
           ${joinRoom}
           LEFT JOIN coin_transactions c ON u.id = c.student_id AND c.reason LIKE 'Level %' AND c.created_at >= $1 AND c.created_at <= $2
@@ -609,7 +610,7 @@ router.get('/leaderboard/main', authenticateToken, async (req, res) => {
         `, params);
       } else if (category === 'coder') {
         result = await pool.query(`
-          SELECT u.id, u.full_name, COUNT(c.id)::int as score
+          SELECT u.id, u.full_name, u.avatar_id, COUNT(c.id)::int as score
           FROM users u
           ${joinRoom}
           LEFT JOIN coin_transactions c ON u.id = c.student_id AND c.reason LIKE 'BOSS RAID Victory%' AND c.created_at >= $1 AND c.created_at <= $2
@@ -618,7 +619,7 @@ router.get('/leaderboard/main', authenticateToken, async (req, res) => {
         `, params);
       } else if (category === 'xp') {
         result = await pool.query(`
-          SELECT u.id, u.full_name, 
+          SELECT u.id, u.full_name, u.avatar_id, 
             COALESCE(SUM(
               CASE a.badge_id 
                 WHEN 'first_step' THEN 50

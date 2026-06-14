@@ -97,15 +97,15 @@ export default function ActivityManager({ roomId, token, apiUrl, userId }) {
   const selectedType = ACTIVITY_TYPES.find(t => t.id === form.activity_type);
 
   return (
-    <div className="h-full overflow-y-auto bg-gray-50 custom-scrollbar">
+    <div className="h-full overflow-y-auto bg-slate-50 dark:bg-slate-900 custom-scrollbar">
       <div className="max-w-4xl mx-auto p-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-black text-gray-900 flex items-center gap-3">
+            <h2 className="text-2xl font-black text-foreground flex items-center gap-3">
               <ClipboardList className="text-amber-500" size={28} /> Kelola Tugas
             </h2>
-            <p className="text-sm text-gray-500 mt-1">Buat dan kelola aktivitas pembelajaran untuk mahasiswa di room ini.</p>
+            <p className="text-sm text-secondary mt-1">Buat dan kelola aktivitas pembelajaran untuk mahasiswa di room ini.</p>
           </div>
           <button
             onClick={() => setShowCreate(!showCreate)}
@@ -124,12 +124,12 @@ export default function ActivityManager({ roomId, token, apiUrl, userId }) {
               exit={{ opacity: 0, height: 0 }}
               className="overflow-hidden mb-8"
             >
-              <form onSubmit={handleCreate} className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
-                <h3 className="text-lg font-bold text-gray-800 mb-6">Buat Tugas Baru</h3>
+              <form onSubmit={handleCreate} className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 shadow-sm p-8">
+                <h3 className="text-lg font-bold text-foreground mb-6">Buat Tugas Baru</h3>
 
                 {/* Activity Type Selector */}
                 <div className="mb-6">
-                  <label className="block text-sm font-bold text-gray-700 mb-3">Tipe Aktivitas</label>
+                  <label className="block text-sm font-bold text-foreground mb-3">Tipe Aktivitas</label>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
                     {ACTIVITY_TYPES.map(type => (
                       <button
@@ -139,59 +139,59 @@ export default function ActivityManager({ roomId, token, apiUrl, userId }) {
                         className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all text-center
                           ${form.activity_type === type.id
                             ? 'border-primary bg-primary-soft ring-2 ring-primary/20'
-                            : 'border-gray-100 hover:border-gray-200'
+                            : 'border-border dark:border-slate-800 hover:border-border dark:border-slate-800'
                           }`}
                       >
                         <span className="text-2xl">{type.icon}</span>
-                        <span className="text-[10px] font-bold text-gray-700">{type.label}</span>
+                        <span className="text-[10px] font-bold text-foreground">{type.label}</span>
                       </button>
                     ))}
                   </div>
                   {selectedType && (
-                    <p className="text-xs text-gray-500 mt-2 italic">{selectedType.desc}</p>
+                    <p className="text-xs text-secondary mt-2 italic">{selectedType.desc}</p>
                   )}
                 </div>
 
                 {/* Title & Description */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Judul Tugas *</label>
+                    <label className="block text-sm font-bold text-foreground mb-2">Judul Tugas *</label>
                     <input
                       type="text"
                       required
                       value={form.title}
                       onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                       placeholder="Contoh: Rakit PC Gaming Rp 10 Juta"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-border dark:border-slate-800 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Deadline <span className="text-secondary font-normal">(opsional)</span></label>
+                    <label className="block text-sm font-bold text-foreground mb-2">Deadline <span className="text-secondary font-normal">(opsional)</span></label>
                     <input
                       type="datetime-local"
                       value={form.due_date}
                       onChange={e => setForm(f => ({ ...f, due_date: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-border dark:border-slate-800 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
                     />
                   </div>
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Deskripsi</label>
+                  <label className="block text-sm font-bold text-foreground mb-2">Deskripsi</label>
                   <textarea
                     value={form.description}
                     onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                     placeholder="Jelaskan instruksi tugas..."
                     rows={3}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-border dark:border-slate-800 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm resize-none"
                   />
                 </div>
 
                 {/* Config: Budget & Target Use (for build types) */}
                 {['free_build', 'guided_build', 'budget_challenge'].includes(form.activity_type) && (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-border dark:border-slate-800">
                     <div>
-                      <label className="block text-xs font-bold text-gray-600 mb-1.5 flex items-center gap-1">
+                      <label className="block text-xs font-bold text-secondary mb-1.5 flex items-center gap-1">
                         <DollarSign size={12} /> Budget (Rp)
                       </label>
                       <input
@@ -199,23 +199,23 @@ export default function ActivityManager({ roomId, token, apiUrl, userId }) {
                         value={form.budget_limit}
                         onChange={e => setForm(f => ({ ...f, budget_limit: e.target.value }))}
                         placeholder="10000000"
-                        className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 rounded-lg border border-border dark:border-slate-800 text-sm focus:border-primary outline-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-600 mb-1.5 flex items-center gap-1">
+                      <label className="block text-xs font-bold text-secondary mb-1.5 flex items-center gap-1">
                         <Target size={12} /> Target Penggunaan
                       </label>
                       <select
                         value={form.target_use}
                         onChange={e => setForm(f => ({ ...f, target_use: e.target.value }))}
-                        className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 rounded-lg border border-border dark:border-slate-800 text-sm focus:border-primary outline-none"
                       >
                         {TARGET_USES.map(t => <option key={t.id} value={t.id}>{t.icon} {t.label}</option>)}
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-600 mb-1.5 flex items-center gap-1">
+                      <label className="block text-xs font-bold text-secondary mb-1.5 flex items-center gap-1">
                         <Clock size={12} /> Batas Waktu (menit)
                       </label>
                       <input
@@ -223,14 +223,14 @@ export default function ActivityManager({ roomId, token, apiUrl, userId }) {
                         value={form.time_limit}
                         onChange={e => setForm(f => ({ ...f, time_limit: e.target.value }))}
                         placeholder="30"
-                        className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 rounded-lg border border-border dark:border-slate-800 text-sm focus:border-primary outline-none"
                       />
                     </div>
                   </div>
                 )}
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-                  <button type="button" onClick={() => setShowCreate(false)} className="px-5 py-2.5 text-gray-500 font-bold hover:bg-gray-100 rounded-xl transition">Batal</button>
+                <div className="flex justify-end gap-3 pt-4 border-t border-border dark:border-slate-800">
+                  <button type="button" onClick={() => setShowCreate(false)} className="px-5 py-2.5 text-secondary font-bold hover:bg-slate-100 dark:bg-slate-800 rounded-xl transition">Batal</button>
                   <button type="submit" disabled={isCreating} className="px-6 py-2.5 bg-primary text-foreground rounded-xl font-bold hover:bg-primary-hover transition disabled:opacity-50 flex items-center gap-2 shadow-lg shadow-emerald-500/20">
                     {isCreating ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
                     {isCreating ? 'Membuat...' : 'Buat Tugas'}
@@ -245,9 +245,9 @@ export default function ActivityManager({ roomId, token, apiUrl, userId }) {
         {isLoading ? (
           <div className="text-center py-16 text-secondary">Memuat tugas...</div>
         ) : activities.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
+          <div className="text-center py-20 bg-[var(--bg-surface)] rounded-2xl border border-dashed border-border dark:border-slate-700">
             <ClipboardList size={48} className="mx-auto text-foreground mb-4" />
-            <h3 className="text-lg font-bold text-gray-700 mb-2">Belum Ada Tugas</h3>
+            <h3 className="text-lg font-bold text-foreground mb-2">Belum Ada Tugas</h3>
             <p className="text-sm text-secondary mb-6">Buat tugas pertama untuk mahasiswa di room ini.</p>
             <button onClick={() => setShowCreate(true)} className="px-6 py-3 bg-primary text-foreground rounded-xl font-bold hover:bg-primary-hover transition shadow-lg shadow-emerald-500/20" aria-label="Tambah">
               <Plus size={16} className="inline mr-2" /> Buat Tugas Pertama
@@ -263,7 +263,7 @@ export default function ActivityManager({ roomId, token, apiUrl, userId }) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:shadow-md transition-all group"
+                  className="bg-[var(--bg-surface)] rounded-2xl border border-border dark:border-slate-800 shadow-sm p-6 hover:shadow-md transition-all group"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
@@ -271,8 +271,8 @@ export default function ActivityManager({ roomId, token, apiUrl, userId }) {
                         {type.icon}
                       </div>
                       <div>
-                        <h4 className="font-bold text-gray-900">{activity.title}</h4>
-                        <p className="text-xs text-gray-500 mt-1">{activity.description || 'Tidak ada deskripsi'}</p>
+                        <h4 className="font-bold text-foreground">{activity.title}</h4>
+                        <p className="text-xs text-secondary mt-1">{activity.description || 'Tidak ada deskripsi'}</p>
                         <div className="flex items-center gap-3 mt-3">
                           <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold ${type.color}`}>{type.label}</span>
                           {activity.due_date && (

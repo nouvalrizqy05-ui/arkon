@@ -277,11 +277,11 @@ function ArLab({ embeddedMode = false, onCoinsEarned, userRole }) {
           Browser Anda tidak mendukung WebGL yang dibutuhkan untuk AR Lab.
           Gunakan Chrome 90+ atau Firefox 88+ untuk pengalaman terbaik.
         </p>
-        <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-xl border border-amber-200 dark:border-amber-700">
-          <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Komponen PC yang tersedia:</p>
-          <div className="grid grid-cols-3 gap-2 text-xs text-gray-500 dark:text-gray-400">
+        <div className="mt-4 p-4 bg-[var(--bg-surface)] dark:bg-gray-800 rounded-xl border border-amber-200 dark:border-amber-700">
+          <p className="text-xs font-semibold text-secondary dark:text-gray-400 mb-2">Komponen PC yang tersedia:</p>
+          <div className="grid grid-cols-3 gap-2 text-xs text-secondary dark:text-gray-400">
             {['CPU', 'GPU', 'RAM', 'Motherboard', 'PSU', 'Storage'].map(c => (
-              <span key={c} className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-lg text-center">{c}</span>
+              <span key={c} className="bg-slate-100 dark:bg-slate-800 dark:bg-gray-700 px-2 py-1 rounded-lg text-center">{c}</span>
             ))}
           </div>
         </div>

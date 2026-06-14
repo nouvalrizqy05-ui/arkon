@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useToast } from './Toast';
-import { Shield, Coins, Cpu, Activity, Gift, Loader2, AlertCircle, ChevronRight, X, Sparkles, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Shield, Coins, Cpu, Activity, Gift, Loader2, AlertCircle, ChevronRight, X, Sparkles, ToggleLeft, ToggleRight, Search } from 'lucide-react';
 
 const SUB_TABS = [
   { id: 'coins', label: 'Reward Manager', icon: Coins },
@@ -20,6 +20,7 @@ export default function GMPanel({ activeRoom, token, apiUrl }) {
   const [bonusReason, setBonusReason] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [doubleCoins, setDoubleCoins] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (activeRoom) {
@@ -143,10 +144,22 @@ export default function GMPanel({ activeRoom, token, apiUrl }) {
       {/* Sub-tab: Koin Manager */}
       {subTab === 'coins' && (
         <div className="bg-[var(--bg-surface)] rounded-3xl border border-border dark:border-slate-800 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-border dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center gap-2">
-            <Coins className="w-5 h-5 text-amber-500" />
-            <h3 className="font-bold text-foreground">Saldo Koin Mahasiswa</h3>
-            <span className="text-[10px] ml-auto bg-slate-200 dark:bg-slate-800 text-secondary px-2 py-1 rounded-full font-bold">{students.length} mahasiswa</span>
+          <div className="px-6 py-4 border-b border-border dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex flex-col md:flex-row md:items-center gap-4 justify-between">
+            <div className="flex items-center gap-2">
+              <Coins className="w-5 h-5 text-amber-500" />
+              <h3 className="font-bold text-foreground">Saldo Koin Mahasiswa</h3>
+              <span className="text-[10px] bg-slate-200 dark:bg-slate-800 text-secondary px-2 py-1 rounded-full font-bold">{students.length} mahasiswa</span>
+            </div>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Cari nama atau NIM..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full md:w-64 pl-9 pr-4 py-2 bg-[var(--bg-surface)] border border-border dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
+              />
+              <Search className="w-4 h-4 text-secondary absolute left-3 top-2.5" />
+            </div>
           </div>
           
           {isLoading ? (
@@ -168,7 +181,9 @@ export default function GMPanel({ activeRoom, token, apiUrl }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {students.map(s => (
+                  {students
+                    .filter(s => s.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) || s.nim?.toLowerCase().includes(searchQuery.toLowerCase()))
+                    .map(s => (
                     <tr key={s.id} className="hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-colors">
                       <td className="p-4 border-b border-border dark:border-slate-800 font-medium text-foreground">{s.full_name}</td>
                       <td className="p-4 border-b border-border dark:border-slate-800 text-secondary text-sm font-mono">{s.nim}</td>

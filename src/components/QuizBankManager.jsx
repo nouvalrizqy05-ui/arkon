@@ -45,34 +45,34 @@ function QuestionForm({ initial = EMPTY_FORM, onSave, onCancel, loading }) {
     <div className="space-y-4">
       {/* Question text */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+        <label className="block text-sm font-semibold text-foreground dark:text-gray-300 mb-1">
           Teks Pertanyaan <span className="text-red-500">*</span>
         </label>
         <textarea
           rows={3} value={form.question_text}
           onChange={e => setForm(f => ({ ...f, question_text: e.target.value }))}
           placeholder="Tulis pertanyaan di sini..."
-          className={`w-full px-3 py-2 rounded-lg border text-sm bg-white dark:bg-gray-800 dark:text-gray-100
+          className={`w-full px-3 py-2 rounded-lg border text-sm bg-[var(--bg-surface)] dark:bg-gray-800 dark:text-gray-100
             dark:border-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500
-            ${errors.question_text ? 'border-red-400' : 'border-gray-300'}`}
+            ${errors.question_text ? 'border-red-400' : 'border-border dark:border-slate-700'}`}
         />
         {errors.question_text && <p className="text-xs text-red-500 mt-1">{errors.question_text}</p>}
       </div>
 
       {/* Options */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+        <label className="block text-sm font-semibold text-foreground dark:text-gray-300 mb-2">
           Pilihan Jawaban <span className="text-red-500">*</span>
-          <span className="ml-2 text-xs font-normal text-gray-500">(klik radio untuk pilih jawaban benar)</span>
+          <span className="ml-2 text-xs font-normal text-secondary">(klik radio untuk pilih jawaban benar)</span>
         </label>
         <div className="space-y-2">
           {['A','B','C','D'].map((letter, i) => (
             <div key={i} className={`flex items-center gap-2 p-2 rounded-lg border transition-colors
-              ${form.correct_index === i ? 'border-green-400 bg-green-50 dark:bg-green-900/20' : 'border-gray-200 dark:border-gray-700'}`}>
+              ${form.correct_index === i ? 'border-green-400 bg-green-50 dark:bg-green-900/20' : 'border-border dark:border-slate-800 dark:border-gray-700'}`}>
               <input type="radio" name="correct" checked={form.correct_index === i}
                 onChange={() => setForm(f => ({ ...f, correct_index: i }))}
                 className="accent-green-500 flex-shrink-0" />
-              <span className={`text-xs font-bold w-5 flex-shrink-0 ${form.correct_index === i ? 'text-green-600' : 'text-gray-500'}`}>{letter}.</span>
+              <span className={`text-xs font-bold w-5 flex-shrink-0 ${form.correct_index === i ? 'text-green-600' : 'text-secondary'}`}>{letter}.</span>
               <input type="text" value={form.options[i]} onChange={e => handleOptionChange(i, e.target.value)}
                 placeholder={`Pilihan ${letter}`}
                 className={`flex-1 bg-transparent text-sm focus:outline-none dark:text-gray-200
@@ -86,21 +86,21 @@ function QuestionForm({ initial = EMPTY_FORM, onSave, onCancel, loading }) {
       {/* Difficulty + Topic */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Tingkat Kesulitan</label>
+          <label className="block text-sm font-semibold text-foreground dark:text-gray-300 mb-1">Tingkat Kesulitan</label>
           <div className="flex gap-2">
             {[1,2,3].map(d => (
               <button key={d} onClick={() => setForm(f => ({ ...f, difficulty: d }))}
                 className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-all
-                  ${form.difficulty === d ? `${DIFFICULTY_LABELS[d].color} border-current` : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400'}`}>
+                  ${form.difficulty === d ? `${DIFFICULTY_LABELS[d].color} border-current` : 'border-border dark:border-slate-800 dark:border-gray-700 text-secondary dark:text-gray-400'}`}>
                 {DIFFICULTY_LABELS[d].label}
               </button>
             ))}
           </div>
         </div>
         <div>
-          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Topik</label>
+          <label className="block text-sm font-semibold text-foreground dark:text-gray-300 mb-1">Topik</label>
           <select value={form.topic} onChange={e => setForm(f => ({ ...f, topic: e.target.value }))}
-            className="w-full px-2 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 text-sm bg-white dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            className="w-full px-2 py-1.5 rounded-lg border border-border dark:border-slate-700 dark:border-gray-600 text-sm bg-[var(--bg-surface)] dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             {TOPICS.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
         </div>
@@ -108,13 +108,13 @@ function QuestionForm({ initial = EMPTY_FORM, onSave, onCancel, loading }) {
 
       {/* Explanation */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+        <label className="block text-sm font-semibold text-foreground dark:text-gray-300 mb-1">
           Penjelasan Jawaban <span className="text-gray-400 font-normal text-xs">(opsional — ditampilkan setelah mahasiswa menjawab)</span>
         </label>
         <textarea rows={2} value={form.explanation}
           onChange={e => setForm(f => ({ ...f, explanation: e.target.value }))}
           placeholder="Jelaskan mengapa jawaban tersebut benar..."
-          className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-sm bg-white dark:bg-gray-800 dark:text-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          className="w-full px-3 py-2 rounded-lg border border-border dark:border-slate-700 dark:border-gray-600 text-sm bg-[var(--bg-surface)] dark:bg-gray-800 dark:text-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500" />
       </div>
 
       {/* Actions */}
@@ -124,7 +124,7 @@ function QuestionForm({ initial = EMPTY_FORM, onSave, onCancel, loading }) {
           {loading ? 'Menyimpan...' : (initial === EMPTY_FORM ? '+ Tambah Soal' : 'Simpan Perubahan')}
         </button>
         {onCancel && (
-          <button onClick={onCancel} className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+          <button onClick={onCancel} className="px-4 py-2 border border-border dark:border-slate-700 dark:border-gray-600 text-secondary dark:text-gray-400 rounded-lg text-sm hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-gray-800 transition-colors">
             Batal
           </button>
         )}
@@ -230,14 +230,14 @@ function BulkImportPanel({ roomId, token, onImported }) {
         </button>
       </div>
 
-      <hr className="border-gray-200 dark:border-gray-700" />
+      <hr className="border-border dark:border-slate-800 dark:border-gray-700" />
 
       {/* CSV Import Section */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="font-bold text-gray-900 dark:text-white">Import Manual CSV</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Import soal spesifik via CSV. Maks 200 soal per import.</p>
+            <h4 className="font-bold text-foreground dark:text-white">Import Manual CSV</h4>
+            <p className="text-sm text-secondary dark:text-gray-400">Import soal spesifik via CSV. Maks 200 soal per import.</p>
           </div>
           <button onClick={() => {
             const blob = new Blob([CSV_TEMPLATE], { type: 'text/csv' });
@@ -249,7 +249,7 @@ function BulkImportPanel({ roomId, token, onImported }) {
         </div>
         <textarea rows={8} value={text} onChange={e => setText(e.target.value)}
           placeholder={`Paste isi CSV di sini:\n\n${CSV_TEMPLATE}`}
-          className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-xs font-mono bg-white dark:bg-gray-800 dark:text-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          className="w-full px-3 py-2 rounded-lg border border-border dark:border-slate-700 dark:border-gray-600 text-xs font-mono bg-[var(--bg-surface)] dark:bg-gray-800 dark:text-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500" />
         <button onClick={handleImport} disabled={loading || !text.trim()}
           className="w-full py-2 bg-gray-800 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 disabled:opacity-60 text-white font-semibold rounded-lg text-sm transition-colors">
           {loading ? 'Mengimport...' : `Import ${text.trim().split('\n').length > 1 ? text.trim().split('\n').length - 1 : 0} Baris`}
@@ -408,18 +408,18 @@ export default function QuizBankManager({ roomId, token }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div className="bg-[var(--bg-surface)] dark:bg-gray-900 rounded-2xl shadow-sm border border-border dark:border-slate-800 dark:border-gray-700 overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-border dark:border-slate-800 dark:border-gray-700 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white">📚 Bank Soal</h2>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{total} soal tersedia · Kelola soal adaptif untuk IRT Rasch</p>
+          <h2 className="text-lg font-bold text-foreground dark:text-white">📚 Bank Soal</h2>
+          <p className="text-xs text-secondary dark:text-gray-400 mt-0.5">{total} soal tersedia · Kelola soal adaptif untuk IRT Rasch</p>
         </div>
         <div className="flex gap-2">
           {['list','add','import'].map(tab => (
             <button key={tab} onClick={() => setActiveTab(tab)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors
-                ${activeTab === tab ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
+                ${activeTab === tab ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-800 dark:bg-gray-800 text-secondary dark:text-gray-400 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-gray-700'}`}>
               {tab === 'list' ? '📋 Daftar' : tab === 'add' ? '+ Tambah' : '⬆ Import'}
             </button>
           ))}
@@ -444,7 +444,7 @@ export default function QuizBankManager({ roomId, token }) {
         {/* Tab: Add */}
         {activeTab === 'add' && (
           <div>
-            <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-4">Tambah Soal Baru</h3>
+            <h3 className="text-sm font-bold text-foreground dark:text-gray-200 mb-4">Tambah Soal Baru</h3>
             <QuestionForm onSave={handleCreate} loading={actionLoading} onCancel={() => setActiveTab('list')} />
           </div>
         )}
@@ -460,27 +460,27 @@ export default function QuizBankManager({ roomId, token }) {
             {/* Filters */}
             <div className="flex gap-3">
               <select value={filters.difficulty} onChange={e => { setFilters(f => ({...f, difficulty: e.target.value})); setPage(1); }}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                className="px-3 py-1.5 rounded-lg border border-border dark:border-slate-800 dark:border-gray-700 text-sm bg-[var(--bg-surface)] dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <option value="">Semua Kesulitan</option>
                 {[1,2,3].map(d => <option key={d} value={d}>{DIFFICULTY_LABELS[d].label}</option>)}
               </select>
               <select value={filters.topic} onChange={e => { setFilters(f => ({...f, topic: e.target.value})); setPage(1); }}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                className="px-3 py-1.5 rounded-lg border border-border dark:border-slate-800 dark:border-gray-700 text-sm bg-[var(--bg-surface)] dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <option value="">Semua Topik</option>
                 {TOPICS.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
-              <span className="ml-auto text-xs text-gray-500 dark:text-gray-400 self-center">{total} soal</span>
+              <span className="ml-auto text-xs text-secondary dark:text-gray-400 self-center">{total} soal</span>
             </div>
 
             {/* Questions list */}
             {loading ? (
               <div className="space-y-3">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-20 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />
+                  <div key={i} className="h-20 bg-slate-100 dark:bg-slate-800 dark:bg-gray-800 rounded-xl animate-pulse" />
                 ))}
               </div>
             ) : questions.length === 0 ? (
-              <div className="text-center py-16 text-gray-500 dark:text-gray-400">
+              <div className="text-center py-16 text-secondary dark:text-gray-400">
                 <p className="text-4xl mb-3">📭</p>
                 <p className="font-semibold">Belum ada soal</p>
                 <p className="text-sm mt-1">Tambahkan soal pertama atau import dari CSV</p>
@@ -491,7 +491,7 @@ export default function QuizBankManager({ roomId, token }) {
             ) : (
               <div className="space-y-3">
                 {questions.map((q, i) => (
-                  <div key={q.id} className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                  <div key={q.id} className="border border-border dark:border-slate-800 dark:border-gray-700 rounded-xl overflow-hidden">
                     {editingId === q.id ? (
                       <div className="p-4">
                         <QuestionForm
@@ -507,26 +507,26 @@ export default function QuizBankManager({ roomId, token }) {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-2 flex-wrap">
                               <span className="text-xs text-gray-400">#{(page-1)*15 + i + 1}</span>
-                              <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${DIFFICULTY_LABELS[q.difficulty]?.color || 'text-gray-500 bg-gray-100'}`}>
+                              <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${DIFFICULTY_LABELS[q.difficulty]?.color || 'text-secondary bg-slate-100 dark:bg-slate-800'}`}>
                                 {DIFFICULTY_LABELS[q.difficulty]?.label || '?'}
                               </span>
                               {q.topic && <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300">{q.topic}</span>}
                             </div>
-                            <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-snug">{q.question_text}</p>
+                            <p className="text-sm font-medium text-foreground dark:text-gray-200 leading-snug">{q.question_text}</p>
                             <div className="grid grid-cols-2 gap-1 mt-2">
                               {(typeof q.options === 'string' ? JSON.parse(q.options) : q.options).map((opt, oi) => (
                                 <span key={oi} className={`text-xs px-2 py-1 rounded-lg ${q.correct_index === oi
                                   ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 font-semibold'
-                                  : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}>
+                                  : 'bg-slate-50 dark:bg-slate-900 dark:bg-gray-800 text-secondary dark:text-gray-400'}`}>
                                   {['A','B','C','D'][oi]}. {opt}
                                 </span>
                               ))}
                             </div>
-                            {q.explanation && <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 italic">💡 {q.explanation}</p>}
+                            {q.explanation && <p className="text-xs text-secondary dark:text-gray-400 mt-2 italic">💡 {q.explanation}</p>}
                           </div>
                           <div className="flex gap-1 flex-shrink-0">
                             <button onClick={() => setEditingId(q.id)}
-                              className="px-2.5 py-1.5 text-xs border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                              className="px-2.5 py-1.5 text-xs border border-border dark:border-slate-800 dark:border-gray-700 text-secondary dark:text-gray-400 rounded-lg hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-gray-800 transition-colors">
                               ✏ Edit
                             </button>
                             <button onClick={() => handleDelete(q.id)}
@@ -546,12 +546,12 @@ export default function QuizBankManager({ roomId, token }) {
             {totalPages > 1 && (
               <div className="flex items-center justify-center gap-2 pt-2">
                 <button disabled={page <= 1} onClick={() => setPage(p => p - 1)}
-                  className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  className="px-3 py-1.5 rounded-lg border border-border dark:border-slate-800 dark:border-gray-700 text-sm disabled:opacity-40 hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-gray-800 transition-colors">
                   ← Prev
                 </button>
-                <span className="text-sm text-gray-600 dark:text-gray-400">Hal {page} / {totalPages}</span>
+                <span className="text-sm text-secondary dark:text-gray-400">Hal {page} / {totalPages}</span>
                 <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}
-                  className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  className="px-3 py-1.5 rounded-lg border border-border dark:border-slate-800 dark:border-gray-700 text-sm disabled:opacity-40 hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-gray-800 transition-colors">
                   Next →
                 </button>
               </div>

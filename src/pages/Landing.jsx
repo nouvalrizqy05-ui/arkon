@@ -92,7 +92,7 @@ export default function Landing() {
           <div className="flex items-center gap-3">
             {isLoggedIn ? (
               <>
-                <span className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-border rounded-full text-sm font-semibold text-foreground">
+                <span className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-[var(--bg-surface)] dark:bg-slate-800 border border-border rounded-full text-sm font-semibold text-foreground">
                   🤖 Halo, {userName}
                 </span>
                 <Link to={dashboardPath} className="px-6 py-2.5 bg-emerald-700 text-white rounded-xl font-bold text-sm hover:bg-emerald-800 transition-colors shadow-lg no-underline">
@@ -118,7 +118,7 @@ export default function Landing() {
           <div className="flex w-max animate-marquee gap-6 hover:[animation-play-state:paused]">
             {[...BENEFITS, ...BENEFITS].map((item, idx) => (
               <div key={idx}
-                className="group w-[300px] md:w-[360px] shrink-0 p-8 rounded-[2rem] bg-white dark:bg-slate-800 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center aspect-[4/3]">
+                className="group w-[300px] md:w-[360px] shrink-0 p-8 rounded-[2rem] bg-[var(--bg-surface)] dark:bg-slate-800 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center aspect-[4/3]">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-indigo-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-primary/30">
                   <item.icon className="w-8 h-8 text-white" />
                 </div>
@@ -142,7 +142,7 @@ export default function Landing() {
 
             {/* Box 1: CPU Visual Simulator (Large Left) */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
-              className="col-span-1 md:col-span-2 lg:col-span-2 md:row-span-2 relative group p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all"
+              className="col-span-1 md:col-span-2 lg:col-span-2 md:row-span-2 relative group p-8 rounded-[2.5rem] bg-[var(--bg-surface)] dark:bg-slate-800 border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all"
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
               <div className="w-14 h-14 rounded-2xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center mb-6">
@@ -157,14 +157,14 @@ export default function Landing() {
               className="col-span-1 md:col-span-1 lg:col-span-2 md:row-span-1 relative group p-8 rounded-[2.5rem] bg-gradient-to-br from-primary to-indigo-600 text-white shadow-xl overflow-hidden hover:-translate-y-1 transition-all flex flex-col justify-center"
             >
               <div className="absolute right-[-10%] top-[-10%] opacity-20"><Users className="w-48 h-48 text-white/10" /></div>
-              <span className="inline-block px-3 py-1 bg-white shadow-sm border border-border backdrop-blur text-foreground text-[10px] font-black uppercase rounded-full w-max mb-3">Room-Based</span>
+              <span className="inline-block px-3 py-1 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 backdrop-blur text-foreground text-[10px] font-black uppercase rounded-full w-max mb-3">Room-Based</span>
               <h3 className="text-2xl font-black mb-2 text-white">Tinkercad-Style Room</h3>
               <p className="text-white/80 font-medium text-sm">Semua pembelajaran di dalam Room. Dosen buat tugas, mahasiswa kerjakan, dosen review — semua real-time dan terstruktur.</p>
             </motion.div>
 
             {/* Box 3: PC Quest Gamification */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
-              className="col-span-1 md:col-span-1 lg:col-span-1 md:row-span-1 relative p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-border shadow-xl overflow-hidden flex flex-col justify-end hover:-translate-y-1 transition-all"
+              className="col-span-1 md:col-span-1 lg:col-span-1 md:row-span-1 relative p-8 rounded-[2.5rem] bg-[var(--bg-surface)] dark:bg-slate-800 border border-border shadow-xl overflow-hidden flex flex-col justify-end hover:-translate-y-1 transition-all"
             >
               <Gamepad2 className="w-10 h-10 text-rose-500 mb-4" />
               <h3 className="text-xl font-black mb-2 text-foreground">PC Quest Map</h3>
@@ -175,7 +175,7 @@ export default function Landing() {
 
             {/* Box 5: Lecturer Analytics (Full Width Bottom) */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }}
-              className="col-span-1 md:col-span-3 lg:col-span-4 md:row-span-1 relative p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all flex flex-col md:flex-row items-start md:items-center justify-between"
+              className="col-span-1 md:col-span-3 lg:col-span-4 md:row-span-1 relative p-8 rounded-[2.5rem] bg-[var(--bg-surface)] dark:bg-slate-800 border border-border shadow-xl overflow-hidden hover:-translate-y-1 transition-all flex flex-col md:flex-row items-start md:items-center justify-between"
             >
               <div className="absolute top-1/2 left-1/2 w-full h-full bg-emerald-500/5 rounded-full -translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
               <div className="max-w-xl z-10">
@@ -196,7 +196,7 @@ export default function Landing() {
             >
               <div className="absolute right-[-5%] bottom-[-20%] opacity-10"><CircuitBoard className="w-64 h-64 text-white/10" /></div>
               <div className="max-w-xl z-10">
-                <span className="inline-block px-3 py-1 bg-white dark:bg-slate-800/80 shadow-sm border border-border dark:border-slate-700 backdrop-blur text-foreground text-[10px] font-black uppercase rounded-full w-max mb-3">Augmented Reality</span>
+                <span className="inline-block px-3 py-1 bg-[var(--bg-surface)] dark:bg-slate-800/80 shadow-sm border border-border dark:border-slate-700 backdrop-blur text-foreground text-[10px] font-black uppercase rounded-full w-max mb-3">Augmented Reality</span>
                 <div className="flex items-center gap-3 mb-3">
                   <CircuitBoard className="w-8 h-8 text-white" />
                   <h3 className="text-2xl font-black text-white">AR Computer Lab</h3>
@@ -204,7 +204,7 @@ export default function Landing() {
                 <p className="text-purple-100 font-medium">Jelajahi komponen hardware komputer (CPU, RAM, GPU, Motherboard, dll) secara interaktif. Buka di smartphone untuk pengalaman Augmented Reality.</p>
               </div>
               <div className="mt-6 md:mt-0 z-10">
-                <Link to="/ar-lab" className="px-6 py-3 bg-white text-purple-700 rounded-xl font-bold text-sm hover:scale-105 transition-all shadow-lg flex items-center gap-2 no-underline whitespace-nowrap">
+                <Link to="/ar-lab" className="px-6 py-3 bg-[var(--bg-surface)] text-purple-700 rounded-xl font-bold text-sm hover:scale-105 transition-all shadow-lg flex items-center gap-2 no-underline whitespace-nowrap">
                   Buka AR Lab <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -227,7 +227,7 @@ export default function Landing() {
               <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
                 className={`p-8 rounded-[2rem] border ${persona.bg} flex flex-col items-center text-center`}
               >
-                <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <div className="w-16 h-16 bg-[var(--bg-surface)] dark:bg-slate-800 rounded-full flex items-center justify-center mb-6 shadow-sm">
                   <persona.icon className={`w-8 h-8 ${persona.color}`} />
                 </div>
                 <h3 className="text-xl font-black text-foreground mb-3">{persona.title}</h3>
@@ -278,7 +278,7 @@ export default function Landing() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-              className="p-10 rounded-[3rem] bg-white dark:bg-slate-800 border border-border shadow-xl text-left relative overflow-hidden"
+              className="p-10 rounded-[3rem] bg-[var(--bg-surface)] dark:bg-slate-800 border border-border shadow-xl text-left relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 -translate-y-1/2 translate-x-1/2 rounded-full" />
               <div className="w-16 h-16 bg-[#C5192D] rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-red-500/20">
@@ -291,7 +291,7 @@ export default function Landing() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-              className="p-10 rounded-[3rem] bg-white dark:bg-slate-800 border border-border shadow-xl text-left relative overflow-hidden"
+              className="p-10 rounded-[3rem] bg-[var(--bg-surface)] dark:bg-slate-800 border border-border shadow-xl text-left relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 -translate-y-1/2 translate-x-1/2 rounded-full" />
               <div className="w-16 h-16 bg-[#F36D25] rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-orange-500/20">
@@ -317,7 +317,7 @@ export default function Landing() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TESTIMONIALS.map((item, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-                className="p-8 rounded-[2rem] bg-white dark:bg-slate-800 border border-border shadow-xl hover:-translate-y-2 transition-transform duration-300">
+                className="p-8 rounded-[2rem] bg-[var(--bg-surface)] dark:bg-slate-800 border border-border shadow-xl hover:-translate-y-2 transition-transform duration-300">
                 <div className="flex gap-1 mb-6">
                   {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-600" />)}
                 </div>
@@ -375,8 +375,8 @@ export default function Landing() {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="relative max-w-4xl mx-auto rounded-3xl bg-gradient-to-br from-primary to-indigo-700 p-8 md:p-12 text-center overflow-hidden shadow-2xl shadow-primary/30 border border-blue-400/30">
 
-            <div className="absolute top-0 right-0 w-48 h-48 bg-white shadow-sm border border-border rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white shadow-sm border border-border rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-48 h-48 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl pointer-events-none" />
 
             <div className="relative z-10">
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-3 leading-tight">
@@ -458,8 +458,8 @@ export default function Landing() {
               © {new Date().getFullYear()} ARKON. All Rights Reserved.
             </p>
             <div className="flex gap-6">
-              <Link to="/privacy" className="text-xs font-bold text-secondary hover:text-primary transition-colors no-underline">Privasi</Link>
-              <Link to="/terms" className="text-xs font-bold text-secondary hover:text-primary transition-colors no-underline">Ketentuan</Link>
+              <button onClick={() => alert('Halaman Kebijakan Privasi sedang dalam pengembangan.')} className="text-xs font-bold text-secondary hover:text-primary transition-colors cursor-pointer bg-transparent border-none">Privasi</button>
+              <button onClick={() => alert('Halaman Ketentuan Layanan sedang dalam pengembangan.')} className="text-xs font-bold text-secondary hover:text-primary transition-colors cursor-pointer bg-transparent border-none">Ketentuan</button>
             </div>
           </div>
         </div>

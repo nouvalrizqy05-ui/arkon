@@ -34,9 +34,9 @@ export default function TentangPage() {
   const dashboardPath = userRole === 'dosen' ? '/dosen' : '/mahasiswa';
 
   return (
-    <div className="min-h-screen bg-white text-foreground font-sans selection:bg-primary/20">
+    <div className="min-h-screen bg-[var(--bg-surface)] text-foreground font-sans selection:bg-primary/20">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-border">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[var(--bg-surface)] shadow-sm border-b border-border">
         <div className="container mx-auto max-w-7xl flex items-center justify-between h-20 px-6">
           <Link to="/" className="flex items-center gap-3 no-underline">
             <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/30">
@@ -52,7 +52,7 @@ export default function TentangPage() {
           <div className="flex items-center gap-3">
             {isLoggedIn ? (
               <>
-                <span className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-white border border-border rounded-full text-sm font-semibold text-foreground">
+                <span className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-[var(--bg-surface)] border border-border rounded-full text-sm font-semibold text-foreground">
                   🤖 Halo, {userName}
                 </span>
                 <Link to={dashboardPath} className="px-6 py-2.5 bg-emerald-700 text-white rounded-xl font-bold text-sm hover:bg-emerald-800 transition-colors shadow-lg no-underline">
@@ -89,7 +89,7 @@ export default function TentangPage() {
       </section>
 
       {/* Masalah Section */}
-      <section className="py-24 bg-white border-y border-border">
+      <section className="py-24 bg-[var(--bg-surface)] border-y border-border">
         <div className="container mx-auto px-6 max-w-5xl">
           <motion.div {...fadeUp} className="mb-16">
             <p className="text-sm font-black text-red-500 uppercase tracking-widest mb-4">Masalah</p>
@@ -112,7 +112,7 @@ export default function TentangPage() {
               },
             ].map((item, idx) => (
               <motion.div key={idx} {...fadeUp} transition={{ delay: idx * 0.1 }}
-                className="relative p-8 rounded-[2rem] bg-white border border-border shadow-lg">
+                className="relative p-8 rounded-[2rem] bg-[var(--bg-surface)] border border-border shadow-lg">
                 <span className="text-6xl font-black text-slate-100 absolute top-4 right-6">{item.num}</span>
                 <h3 className="text-xl font-black text-foreground mb-3 relative z-10">{item.title}</h3>
                 <p className="text-secondary text-sm leading-relaxed font-medium relative z-10">{item.desc}</p>
@@ -160,7 +160,7 @@ export default function TentangPage() {
               },
             ].map((item, idx) => (
               <motion.div key={idx} {...fadeUp} transition={{ delay: idx * 0.08 }}
-                className="flex gap-6 items-start p-8 bg-white rounded-[2rem] border border-border shadow-sm hover:shadow-lg transition-shadow">
+                className="flex gap-6 items-start p-8 bg-[var(--bg-surface)] rounded-[2rem] border border-border shadow-sm hover:shadow-lg transition-shadow">
                 <div className="flex flex-col items-center gap-2">
                   <div className={`w-12 h-12 ${item.color} rounded-2xl flex items-center justify-center shadow-lg`}>
                     <item.icon className="w-6 h-6 text-white" />
@@ -178,7 +178,7 @@ export default function TentangPage() {
       </section>
 
       {/* Tech Stack Section */}
-      <section className="py-24 bg-white border-y border-border">
+      <section className="py-24 bg-[var(--bg-surface)] border-y border-border">
         <div className="container mx-auto px-6 max-w-5xl">
           <motion.div {...fadeUp} className="mb-16">
             <p className="text-sm font-black text-indigo-500 uppercase tracking-widest mb-4">Tech Stack</p>
@@ -218,14 +218,14 @@ export default function TentangPage() {
             <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">Tim ARKON — Kelompok 10</h2>
             <p className="text-secondary text-lg font-medium mb-2">LIDM Belmawa 2027 · Kategori Pengembangan Perangkat Lunak</p>
             <p className="text-secondary text-sm font-medium flex items-center justify-center gap-2">
-              <Globe className="w-4 h-4" /> DI Yogyakarta, Indonesia
+              <Globe className="w-4 h-4" /> Semarang, Indonesia
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 border-t border-border bg-white">
+      <footer className="py-8 border-t border-border bg-[var(--bg-surface)]">
         <div className="container mx-auto px-6 max-w-7xl">
           <p className="text-sm font-bold text-secondary text-center">
             © {new Date().getFullYear()} ARKON — LIDM 2027 TENTH GROUP (KELOMPOK 10). All Rights Reserved.

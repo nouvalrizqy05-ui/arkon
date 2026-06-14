@@ -26,7 +26,7 @@ function QuizMapAdmin() {
     return (
       <div className="h-full overflow-y-auto custom-scrollbar p-6 bg-slate-50 dark:bg-slate-950">
         <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => setSelectedLevel(null)} className="p-2 bg-white dark:bg-slate-800 border border-border dark:border-slate-700 rounded-lg text-secondary hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-foreground dark:hover:text-white transition-colors" aria-label="ArrowRight">
+          <button onClick={() => setSelectedLevel(null)} className="p-2 bg-[var(--bg-surface)] dark:bg-slate-800 border border-border dark:border-slate-700 rounded-lg text-secondary hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-foreground dark:hover:text-white transition-colors" aria-label="ArrowRight">
             <ArrowRight size={18} className="rotate-180" />
           </button>
           <div>
@@ -535,7 +535,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
             </div>
           </div>
         </div>
-        <button onClick={() => { setSelectedLevel(null); onActivityComplete(); }} className="px-3 py-1.5 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:text-foreground dark:hover:text-white rounded-lg text-[10px] font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition">Keluar Tugas</button>
+        <button onClick={() => { setSelectedLevel(null); onActivityComplete(); }} className="px-3 py-1.5 bg-[var(--bg-surface)] dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:text-foreground dark:hover:text-white rounded-lg text-[10px] font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition">Keluar Tugas</button>
       </div>
     );
   };
@@ -668,7 +668,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
           </div>
 
           <div className="flex gap-3">
-            <button onClick={() => startLevel(selectedLevel.id)} className="flex-1 py-3 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition text-sm flex items-center justify-center gap-2" aria-label="RotateCcw">
+            <button onClick={() => startLevel(selectedLevel.id)} className="flex-1 py-3 bg-[var(--bg-surface)] dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground dark:text-white font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition text-sm flex items-center justify-center gap-2" aria-label="RotateCcw">
               <RotateCcw size={14} /> {passed ? 'Main Lagi' : 'Ulangi'}
             </button>
             <button onClick={() => setSelectedLevel(null)} className="flex-1 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary-hover transition text-sm flex items-center justify-center gap-2">
@@ -730,7 +730,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
             <div className="flex gap-3">
               <button
                 onClick={() => setIsExiting(false)}
-                className="flex-1 py-3 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition text-sm"
+                className="flex-1 py-3 bg-[var(--bg-surface)] dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-foreground font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition text-sm"
               >
                 Lanjutkan
               </button>
@@ -750,7 +750,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsExiting(true)}
-            className="p-2 bg-white dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:text-foreground dark:hover:text-white hover:bg-red-500/20 hover:border-red-500/30 rounded-xl transition-all"
+            className="p-2 bg-[var(--bg-surface)] dark:bg-slate-800 shadow-sm border border-border dark:border-slate-700 text-secondary hover:text-foreground dark:hover:text-white hover:bg-red-500/20 hover:border-red-500/30 rounded-xl transition-all"
             title="Keluar Kuis"
           >
             <ArrowRight size={18} className="rotate-180" />
@@ -847,7 +847,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
 
           <div className="grid grid-cols-1 gap-3">
             {question.options.map((opt, i) => {
-              let optClass = 'border-border dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-secondary hover:text-foreground';
+              let optClass = 'border-border dark:border-slate-700 bg-[var(--bg-surface)] dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-secondary hover:text-foreground';
               if (showResult) {
                 if (i === question.answer) optClass = 'border-emerald-500/50 bg-emerald-500/20 text-emerald-600';
                 else if (i === selectedOption && !answers[currentQ]?.correct) optClass = 'border-red-500/50 bg-red-500/20 text-red-400';
@@ -863,7 +863,7 @@ function QuizGame({ coins, studentId, token, apiUrl, onCoinsEarned, completedLev
                   disabled={showResult}
                   className={`w-full text-left p-5 rounded-2xl border-2 transition-all group flex items-center gap-4 ${optClass}`}
                 >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black border-2 transition-all ${showResult && i === question.answer ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-white dark:bg-slate-800 shadow-sm border-border dark:border-slate-700 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900 group-hover:border-indigo-200 dark:group-hover:border-indigo-800 group-hover:text-indigo-600 dark:group-hover:text-indigo-300'
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black border-2 transition-all ${showResult && i === question.answer ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-[var(--bg-surface)] dark:bg-slate-800 shadow-sm border-border dark:border-slate-700 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900 group-hover:border-indigo-200 dark:group-hover:border-indigo-800 group-hover:text-indigo-600 dark:group-hover:text-indigo-300'
                     }`}>
                     {String.fromCharCode(65 + i)}
                   </div>

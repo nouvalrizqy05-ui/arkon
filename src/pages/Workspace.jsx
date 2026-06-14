@@ -84,7 +84,7 @@ export default function Workspace() {
       {/* ========================================== */}
       {/* TOP NAVBAR FULL WIDTH                      */}
       {/* ========================================== */}
-      <header className="flex items-center justify-between w-full h-[70px] px-6 bg-white border-b border-border shrink-0 z-40">
+      <header className="flex items-center justify-between w-full h-[70px] px-6 bg-[var(--bg-surface)] border-b border-border shrink-0 z-40">
         
         {/* Kiri: Logo & Menu Navigasi */}
         <div className="flex items-center gap-8">
@@ -104,7 +104,7 @@ export default function Workspace() {
 
           {/* Menu Navigasi (Pindahan dari Sidebar) */}
           <nav className="hidden md:flex items-center gap-2">
-            <button className="flex items-center rounded-xl px-4 py-2 gap-2 text-secondary hover:bg-gray-50 transition-all cursor-pointer">
+            <button className="flex items-center rounded-xl px-4 py-2 gap-2 text-secondary hover:bg-slate-50 dark:bg-slate-900 transition-all cursor-pointer">
               <BarChart2 className="w-[18px] h-[18px]" />
               <span className="font-medium text-sm">Analitik</span>
             </button>
@@ -115,7 +115,7 @@ export default function Workspace() {
               <span className="font-bold text-sm">Visualizer</span>
             </button>
 
-            <button className="flex items-center rounded-xl px-4 py-2 gap-2 text-secondary hover:bg-gray-50 transition-all cursor-pointer">
+            <button className="flex items-center rounded-xl px-4 py-2 gap-2 text-secondary hover:bg-slate-50 dark:bg-slate-900 transition-all cursor-pointer">
               <Users className="w-[18px] h-[18px]" />
               <span className="font-medium text-sm">Class Room</span>
             </button>
@@ -141,7 +141,7 @@ export default function Workspace() {
           <div className="h-8 w-px bg-border hidden md:block mx-1"></div>
 
           {/* Profile Dropdown Minimalis */}
-          <div className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1.5 pr-3 rounded-2xl transition border border-transparent hover:border-border">
+          <div className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:bg-slate-900 p-1.5 pr-3 rounded-2xl transition border border-transparent hover:border-border">
             <img src="https://ui-avatars.com/api/?name=Mahasiswa&background=165DFF&color=fff" alt="Profile" className="w-9 h-9 rounded-full object-cover shadow-sm" />
             <div className="hidden md:block text-left">
               <p className="font-bold text-sm leading-tight text-foreground">Mahasiswa</p>
@@ -161,7 +161,7 @@ export default function Workspace() {
       <main className="flex-1 flex gap-6 p-6 overflow-hidden min-w-0">
         
         {/* PANEL KIRI: AI TUTOR (PRODIFY CARD STYLE) */}
-        <div className="w-[380px] bg-white border border-border rounded-3xl shadow-sm flex flex-col overflow-hidden shrink-0">
+        <div className="w-[380px] bg-[var(--bg-surface)] border border-border rounded-3xl shadow-sm flex flex-col overflow-hidden shrink-0">
           
           {/* Header Panel AI */}
           <div className="px-5 py-4 border-b border-border bg-gray-50/50 flex flex-col gap-1 shrink-0">
@@ -173,19 +173,19 @@ export default function Workspace() {
 
           {/* Tabs */}
           <div className="flex p-2 border-b border-border gap-1 shrink-0">
-            <button onClick={() => setActiveTab('tutor')} className={`flex-1 py-2 text-xs font-bold flex items-center justify-center gap-2 rounded-xl transition-all ${activeTab === 'tutor' ? 'bg-primary/10 text-primary' : 'text-secondary hover:bg-gray-50'}`}>
+            <button onClick={() => setActiveTab('tutor')} className={`flex-1 py-2 text-xs font-bold flex items-center justify-center gap-2 rounded-xl transition-all ${activeTab === 'tutor' ? 'bg-primary/10 text-primary' : 'text-secondary hover:bg-slate-50 dark:bg-slate-900'}`}>
               Chat
             </button>
-            <button onClick={() => setActiveTab('summary')} className={`flex-1 py-2 text-xs font-bold flex items-center justify-center gap-2 rounded-xl transition-all ${activeTab === 'summary' ? 'bg-primary/10 text-primary' : 'text-secondary hover:bg-gray-50'}`}>
+            <button onClick={() => setActiveTab('summary')} className={`flex-1 py-2 text-xs font-bold flex items-center justify-center gap-2 rounded-xl transition-all ${activeTab === 'summary' ? 'bg-primary/10 text-primary' : 'text-secondary hover:bg-slate-50 dark:bg-slate-900'}`}>
               Materi
             </button>
-            <button onClick={() => setActiveTab('flashcard')} className={`flex-1 py-2 text-xs font-bold flex items-center justify-center gap-2 rounded-xl transition-all ${activeTab === 'flashcard' ? 'bg-primary/10 text-primary' : 'text-secondary hover:bg-gray-50'}`}>
+            <button onClick={() => setActiveTab('flashcard')} className={`flex-1 py-2 text-xs font-bold flex items-center justify-center gap-2 rounded-xl transition-all ${activeTab === 'flashcard' ? 'bg-primary/10 text-primary' : 'text-secondary hover:bg-slate-50 dark:bg-slate-900'}`}>
               Kuis
             </button>
           </div>
 
           {/* Chat & Logs Content */}
-          <div className="flex-1 overflow-y-auto p-5 bg-white space-y-4 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto p-5 bg-[var(--bg-surface)] space-y-4 custom-scrollbar">
             {activeTab === 'tutor' && (
               <>
                 {/* Chat Bubbles Dynamic */}
@@ -214,25 +214,25 @@ export default function Workspace() {
                         <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
                         Live Execution State
                       </span>
-                      <button onClick={() => { setSimulationLogs([]); setDebugLogs([]); }} className="text-[10px] text-secondary hover:text-red-500 transition flex items-center gap-1 bg-gray-50 hover:bg-red-50 px-2 py-1 rounded-lg cursor-pointer">
+                      <button onClick={() => { setSimulationLogs([]); setDebugLogs([]); }} className="text-[10px] text-secondary hover:text-red-500 transition flex items-center gap-1 bg-slate-50 dark:bg-slate-900 hover:bg-red-50 px-2 py-1 rounded-lg cursor-pointer">
                         <Trash2 size={12} /> Bersihkan
                       </button>
                     </div>
                     
                     <div className="space-y-2">
                       {simulationLogs.map((log, i) => (
-                        <div key={i} className="bg-gray-50 border border-border p-3 rounded-xl shadow-sm">
+                        <div key={i} className="bg-slate-50 dark:bg-slate-900 border border-border p-3 rounded-xl shadow-sm">
                           <div className="flex justify-between items-center mb-2">
-                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${log.status === 'HALTED' ? 'bg-rose-100 text-rose-600' : log.status === 'STEP_EXECUTED' ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-200 text-gray-700'}`}>
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${log.status === 'HALTED' ? 'bg-rose-100 text-rose-600' : log.status === 'STEP_EXECUTED' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-200 dark:bg-slate-700 text-foreground'}`}>
                               {log.status}
                             </span>
                             <span className="text-[10px] text-secondary font-mono">{log.timestamp}</span>
                           </div>
-                          <div className="grid grid-cols-2 gap-2 text-xs font-mono bg-white p-2 rounded-lg border border-border">
+                          <div className="grid grid-cols-2 gap-2 text-xs font-mono bg-[var(--bg-surface)] p-2 rounded-lg border border-border">
                             <div><span className="text-secondary">PC:</span> <span className="font-bold text-indigo-600">{log.data?.pc ?? '-'}</span></div>
                             <div><span className="text-secondary">ACC:</span> <span className="font-bold text-emerald-600">{log.data?.acc ?? '-'}</span></div>
                             {log.data?.instruction && (
-                              <div className="col-span-2 pt-1 border-t border-gray-100 mt-1">
+                              <div className="col-span-2 pt-1 border-t border-border dark:border-slate-800 mt-1">
                                 <span className="text-secondary">Instruksi:</span> <span className="font-bold text-rose-500">{log.data.instruction}</span>
                               </div>
                             )}
@@ -249,7 +249,7 @@ export default function Workspace() {
           </div>
 
           {/* Chat Input */}
-          <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-border shrink-0">
+          <form onSubmit={handleSendMessage} className="p-4 bg-[var(--bg-surface)] border-t border-border shrink-0">
             <div className="relative">
               <input 
                 type="text" 
@@ -257,7 +257,7 @@ export default function Workspace() {
                 onChange={(e) => setChatInput(e.target.value)}
                 disabled={isTyping}
                 placeholder="Ketik instruksi AI..." 
-                className="w-full bg-muted border border-border rounded-xl pl-4 pr-12 py-3 text-sm focus:outline-none focus:border-primary focus:bg-white transition-all shadow-inner disabled:opacity-50" 
+                className="w-full bg-muted border border-border rounded-xl pl-4 pr-12 py-3 text-sm focus:outline-none focus:border-primary focus:bg-[var(--bg-surface)] transition-all shadow-inner disabled:opacity-50" 
               />
               <button type="submit" disabled={isTyping} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary text-foreground rounded-lg hover:bg-primary-hover transition cursor-pointer shadow-sm disabled:bg-gray-400">
                 <Play size={14} className="ml-0.5 fill-current" />

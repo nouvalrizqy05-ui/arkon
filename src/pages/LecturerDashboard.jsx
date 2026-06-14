@@ -8,7 +8,7 @@ import {
 
 import RoomHub from '../components/RoomHub';
 import CreateRoomModal from '../components/CreateRoomModal';
-import ProfileCustomization from '../components/ProfileCustomization';
+import LecturerProfile from '../components/LecturerProfile';
 import ErrorBoundary from '../components/ErrorBoundary';
 import ConfirmDialog from '../components/ConfirmDialog';
 import SkeletonCard from '../components/SkeletonCard';
@@ -247,7 +247,7 @@ export default function LecturerDashboard() {
   return (
     <div className="fixed inset-0 flex overflow-hidden font-sans text-foreground bg-slate-50 dark:bg-slate-950">
       {/* ─── SIDEBAR ─── */}
-      <aside className="hidden lg:flex flex-col w-[260px] h-full bg-white dark:bg-slate-900 border-r border-border dark:border-slate-800 shrink-0 z-40">
+      <aside className="hidden lg:flex flex-col w-[260px] h-full bg-[var(--bg-surface)] dark:bg-slate-900 border-r border-border dark:border-slate-800 shrink-0 z-40">
         <div className="flex items-center gap-3 h-[70px] px-6 border-b border-border dark:border-slate-800 shrink-0">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-emerald-sm" style={{background:"linear-gradient(135deg,#059669,#047857)"}}>
             <Layers className="w-5 h-5 text-white" />
@@ -265,7 +265,7 @@ export default function LecturerDashboard() {
             className={`flex items-center rounded-xl p-3 gap-3 transition-all ${
               !isProfile && !isRoomView
                 ? 'bg-primary-soft border-l-4 border-primary text-primary font-semibold'
-                : 'bg-white dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800'
+                : 'bg-[var(--bg-surface)] dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
             <Layers className="w-5 h-5" />
@@ -276,7 +276,7 @@ export default function LecturerDashboard() {
             className={`flex items-center rounded-xl p-3 gap-3 transition-all ${
               location.pathname.includes('bank-soal')
                 ? 'bg-primary-soft border-l-4 border-primary text-primary font-semibold'
-                : 'bg-white dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800'
+                : 'bg-[var(--bg-surface)] dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
             <AlertTriangle className="w-5 h-5" />
@@ -287,7 +287,7 @@ export default function LecturerDashboard() {
             className={`flex items-center rounded-xl p-3 gap-3 transition-all ${
               isProfile
                 ? 'bg-primary-soft border-l-4 border-primary text-primary font-semibold'
-                : 'bg-white dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800'
+                : 'bg-[var(--bg-surface)] dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
             <User className="w-5 h-5" />
@@ -295,7 +295,7 @@ export default function LecturerDashboard() {
           </button>
           <button
             onClick={() => navigate('/settings')}
-            className="flex items-center rounded-xl p-3 gap-3 transition-all bg-white dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800 mt-auto"
+            className="flex items-center rounded-xl p-3 gap-3 transition-all bg-[var(--bg-surface)] dark:bg-slate-900 text-secondary hover:bg-slate-50 dark:hover:bg-slate-800 mt-auto"
           >
             <Settings className="w-5 h-5" />
             <span className="font-bold text-sm">Pengaturan</span>
@@ -306,7 +306,7 @@ export default function LecturerDashboard() {
       {/* ─── MAIN CONTENT ─── */}
       <main className="flex-1 flex flex-col h-full min-w-0 min-h-0 relative bg-slate-50 dark:bg-slate-950">
         {/* Header */}
-        <header className="flex items-center justify-between w-full h-[70px] px-6 bg-white dark:bg-slate-900 shadow-sm border-b border-border shrink-0 z-30">
+        <header className="flex items-center justify-between w-full h-[70px] px-6 bg-[var(--bg-surface)] dark:bg-slate-900 shadow-sm border-b border-border shrink-0 z-30">
           <h2 className="font-bold text-lg text-foreground">Dashboard Dosen</h2>
           <div className="flex items-center gap-3">
             {userProfile ? (() => {
@@ -324,7 +324,7 @@ export default function LecturerDashboard() {
               <p className="font-bold text-sm leading-tight text-foreground">{userProfile?.full_name || dosenName}</p>
               <p className="text-[10px] text-secondary font-medium">Dosen Pengampu</p>
             </div>
-            <ChevronDown className="w-4 h-4 text-gray-500" />
+            <ChevronDown className="w-4 h-4 text-secondary" />
           </div>
         </header>
 
@@ -338,7 +338,7 @@ export default function LecturerDashboard() {
                     token={token}
                   />
                 ) : (
-                  <div className="text-center py-16 text-gray-500">
+                  <div className="text-center py-16 text-secondary">
                     <p className="text-4xl mb-3">🏫</p>
                     <p className="font-semibold">Buat room terlebih dahulu untuk mengelola bank soal.</p>
                   </div>
@@ -353,8 +353,8 @@ export default function LecturerDashboard() {
             } />
             <Route path="profile" element={
               <div className="p-8 max-w-6xl mx-auto">
-                <ProfileCustomization 
-                  userProfile={userProfile} 
+                <LecturerProfile 
+                  userId={userProfile?.id} 
                   token={token} 
                   apiUrl={API_URL} 
                   onProfileUpdate={fetchProfile}

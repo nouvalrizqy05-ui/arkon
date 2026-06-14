@@ -55,13 +55,14 @@ export default function QuizLevelMap({ completedLevels, onSelectLevel, studentTh
   const recommendedLevels = getRecommendedLevels(studentTheta, completedLevels);
 
   return (
-    <div className="relative flex-1 w-full h-full overflow-hidden bg-slate-50 dark:bg-slate-950 transition-all duration-500">
-      {/* Background Image */}
-      <img
-        src="/models/map/thumbnail.jpg"
-        className="absolute inset-0 w-full h-full object-cover bg-slate-100 dark:bg-slate-900"
-        alt="Motherboard Map"
-      />
+    <div className="relative flex-1 w-full h-[calc(100vh-4rem)] overflow-y-auto overflow-x-auto bg-slate-50 dark:bg-slate-950 transition-all duration-500 custom-scrollbar">
+      <div className="relative w-full min-w-[768px]">
+        {/* Background Image */}
+        <img
+          src="/models/map/thumbnail.jpg"
+          className="w-full h-auto block pointer-events-none bg-slate-100 dark:bg-slate-900"
+          alt="Motherboard Map"
+        />
 
       {/* SVG Path Lines */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
@@ -172,6 +173,7 @@ export default function QuizLevelMap({ completedLevels, onSelectLevel, studentTh
           <div className="w-3 h-3 rounded-full bg-slate-800 border border-slate-700" />
           <span className="text-secondary text-[10px] font-bold uppercase tracking-widest">Terkunci</span>
         </div>
+      </div>
       </div>
     </div>
   );

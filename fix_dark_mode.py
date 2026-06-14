@@ -1,7 +1,7 @@
 import os
 import re
 
-directory = r"d:\arkon_azure\src\components"
+directories = [r"d:\arkon_azure\src\components", r"d:\arkon_azure\src\pages"]
 
 patterns = [
     (r"bg-white shadow-sm border border-border border border-border", r"bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800"),
@@ -23,20 +23,21 @@ patterns = [
     (r"(?<!-)border-gray-300(?!\/)", r"border-border dark:border-slate-700"),
 ]
 
-for root, dirs, files in os.walk(directory):
-    for file in files:
-        if file.endswith(".jsx"):
-            filepath = os.path.join(root, file)
-            with open(filepath, "r", encoding="utf-8") as f:
-                content = f.read()
-            
-            new_content = content
-            for pattern, replacement in patterns:
-                new_content = re.sub(pattern, replacement, new_content)
-            
-            if new_content != content:
-                with open(filepath, "w", encoding="utf-8") as f:
-                    f.write(new_content)
-                print(f"Updated: {file}")
+for directory in directories:
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".jsx"):
+                filepath = os.path.join(root, file)
+                with open(filepath, "r", encoding="utf-8") as f:
+                    content = f.read()
+                
+                new_content = content
+                for pattern, replacement in patterns:
+                    new_content = re.sub(pattern, replacement, new_content)
+                
+                if new_content != content:
+                    with open(filepath, "w", encoding="utf-8") as f:
+                        f.write(new_content)
+                    print(f"Updated: {file}")
 
 print("Done.")

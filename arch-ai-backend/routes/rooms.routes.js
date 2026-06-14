@@ -182,7 +182,7 @@ router.get('/student/:student_id', authenticateToken, async (req, res) => {
 router.get('/:id/members', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT u.id, u.full_name, u.identifier_number as nim, u.avatar_id, u.frame_id, cm.joined_at
+      `SELECT u.id, u.full_name, u.role, u.identifier_number as nim, u.avatar_id, u.frame_id, cm.joined_at
        FROM class_members cm
        JOIN users u ON cm.student_id = u.id
        WHERE cm.room_id = $1

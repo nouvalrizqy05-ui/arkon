@@ -340,3 +340,8 @@ body {
   animation-play-state: paused !important;
 }
 
+/* Prevent text from overflowing cards and containers */
+.card, [class*='rounded-'] {
+  overflow-wrap: break-word;
+  min-width: 0;
+}

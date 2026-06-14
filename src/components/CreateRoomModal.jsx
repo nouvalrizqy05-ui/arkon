@@ -101,19 +101,19 @@ export default function CreateRoomModal({ isOpen, onClose, onRoomCreated, userRo
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden"
+        className="bg-[var(--bg-surface)] rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100">
+        <div className="flex items-center justify-between px-8 py-6 border-b border-border dark:border-slate-800">
           <div>
-            <h3 className="text-xl font-black text-gray-900">Buat Room Baru</h3>
-            <p className="text-xs text-gray-500 mt-1">
+            <h3 className="text-xl font-black text-foreground">Buat Room Baru</h3>
+            <p className="text-xs text-secondary mt-1">
               {step === 1 ? 'Pilih tipe room' : 'Isi detail room'}
             </p>
           </div>
           <button
             onClick={() => { handleReset(); onClose(); }}
-            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-500 transition-colors"
+            className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:bg-slate-700 rounded-full text-secondary transition-colors"
           >
             <X size={18} />
           </button>
@@ -122,8 +122,8 @@ export default function CreateRoomModal({ isOpen, onClose, onRoomCreated, userRo
         {/* Step indicator */}
         <div className="px-8 pt-5">
           <div className="flex items-center gap-2">
-            <div className={`h-1.5 flex-1 rounded-full transition-colors ${step >= 1 ? 'bg-primary' : 'bg-gray-200'}`} />
-            <div className={`h-1.5 flex-1 rounded-full transition-colors ${step >= 2 ? 'bg-primary' : 'bg-gray-200'}`} />
+            <div className={`h-1.5 flex-1 rounded-full transition-colors ${step >= 1 ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`} />
+            <div className={`h-1.5 flex-1 rounded-full transition-colors ${step >= 2 ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`} />
           </div>
         </div>
 
@@ -147,21 +147,21 @@ export default function CreateRoomModal({ isOpen, onClose, onRoomCreated, userRo
                       className={`w-full flex items-center gap-4 p-5 rounded-2xl border-2 transition-all text-left group
                         ${isSelected
                           ? `border-primary bg-primary-soft/50 ring-4 ${type.ring} shadow-md`
-                          : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
+                          : 'border-border dark:border-slate-800 hover:border-border dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-900'
                         }`}
                     >
                       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${type.color} flex items-center justify-center shadow-lg shrink-0`}>
                         <Icon size={22} className="text-foreground" />
                       </div>
                       <div className="flex-1">
-                        <p className={`font-bold text-sm ${isSelected ? 'text-indigo-700' : 'text-gray-800'}`}>
+                        <p className={`font-bold text-sm ${isSelected ? 'text-indigo-700' : 'text-foreground'}`}>
                           {type.label}
                         </p>
-                        <p className="text-xs text-gray-500 mt-0.5">{type.desc}</p>
+                        <p className="text-xs text-secondary mt-0.5">{type.desc}</p>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center shrink-0
-                        ${isSelected ? 'border-primary bg-primary' : 'border-gray-300'}`}>
-                        {isSelected && <div className="w-2 h-2 bg-white rounded-full" />}
+                        ${isSelected ? 'border-primary bg-primary' : 'border-border dark:border-slate-700'}`}>
+                        {isSelected && <div className="w-2 h-2 bg-[var(--bg-surface)] rounded-full" />}
                       </div>
                     </button>
                   );
@@ -186,7 +186,7 @@ export default function CreateRoomModal({ isOpen, onClose, onRoomCreated, userRo
               >
                 <form onSubmit={handleCreate} className="space-y-5">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-bold text-foreground mb-2">
                       Nama Room *
                     </label>
                     <input
@@ -196,12 +196,12 @@ export default function CreateRoomModal({ isOpen, onClose, onRoomCreated, userRo
                       value={roomName}
                       onChange={(e) => setRoomName(e.target.value)}
                       placeholder={roomType === 'classroom' ? 'Contoh: Arsitektur Komputer A' : 'Contoh: Latihan Rakit PC'}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-border dark:border-slate-800 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-bold text-foreground mb-2">
                       Deskripsi <span className="text-secondary font-normal">(opsional)</span>
                     </label>
                     <textarea
@@ -209,7 +209,7 @@ export default function CreateRoomModal({ isOpen, onClose, onRoomCreated, userRo
                       onChange={(e) => setRoomDesc(e.target.value)}
                       placeholder="Jelaskan tujuan room ini..."
                       rows={3}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm resize-none"
+                      className="w-full px-4 py-3 rounded-xl border border-border dark:border-slate-800 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm resize-none"
                     />
                   </div>
 
@@ -229,7 +229,7 @@ export default function CreateRoomModal({ isOpen, onClose, onRoomCreated, userRo
                           className={`flex-1 flex items-center gap-2 justify-center px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                             collabMode === 'collaborative'
                               ? 'bg-violet-600 text-foreground shadow-md'
-                              : 'bg-white text-violet-700 border border-violet-200'
+                              : 'bg-[var(--bg-surface)] text-violet-700 border border-violet-200'
                           }`}
                         >
                           <Globe size={14} /> Terbuka
@@ -240,7 +240,7 @@ export default function CreateRoomModal({ isOpen, onClose, onRoomCreated, userRo
                           className={`flex-1 flex items-center gap-2 justify-center px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                             collabMode === 'isolation'
                               ? 'bg-violet-600 text-foreground shadow-md'
-                              : 'bg-white text-violet-700 border border-violet-200'
+                              : 'bg-[var(--bg-surface)] text-violet-700 border border-violet-200'
                           }`}
                         >
                           <Lock size={14} /> Tertutup
@@ -259,7 +259,7 @@ export default function CreateRoomModal({ isOpen, onClose, onRoomCreated, userRo
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="px-5 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-100 transition-colors"
+                      className="px-5 py-3 rounded-xl font-bold text-secondary hover:bg-slate-100 dark:bg-slate-800 transition-colors"
                     >
                       Kembali
                     </button>

@@ -30,7 +30,7 @@ const TABS = [
 // ============================================================
 function StatCard({ value, label, sub, color = '#6366f1' }) {
   return (
-    <div className="relative p-5 rounded-2xl bg-white shadow-sm border border-border border border-border backdrop-blur-sm overflow-hidden group hover:border-border transition-all">
+    <div className="relative p-5 rounded-2xl bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 backdrop-blur-sm overflow-hidden group hover:border-border transition-all">
       <div className="absolute top-0 right-0 w-20 h-20 rounded-full blur-2xl opacity-20" style={{ background: color }} />
       <p className="text-3xl font-black mb-1" style={{ color }}>{value}</p>
       <p className="text-secondary text-sm font-bold">{label}</p>
@@ -166,7 +166,7 @@ function ResearchTab() {
           ].map(item => (
             <div key={item.label} className="flex items-center gap-3">
               <span className="text-[11px] text-slate-400 w-28 shrink-0 font-bold">{item.label}</span>
-              <div className="flex-1 h-6 bg-white shadow-sm border border-border rounded-lg overflow-hidden relative">
+              <div className="flex-1 h-6 bg-[var(--bg-surface)] shadow-sm border border-border dark:border-slate-800 rounded-lg overflow-hidden relative">
                 <motion.div initial={{ width: 0 }} animate={{ width: `${(item.count / item.max) * 100}%` }}
                   transition={{ duration: 1, delay: 0.3 }}
                   className="h-full rounded-lg" style={{ background: item.color }} />
