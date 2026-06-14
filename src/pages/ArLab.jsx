@@ -59,7 +59,8 @@ function ArLabAdmin() {
 
 // Semua GLB model dirender via /model-viewer.html?src=... (same-origin iframe)
 function buildGlbViewerUrl(relativePath) {
-  return `/model-viewer.html?src=${encodeURIComponent(relativePath)}`;
+  // Gunakan cache buster v=3.3.0 agar browser/PWA SW memuat file HTML terbaru
+  return `/model-viewer.html?v=3.3.0&src=${encodeURIComponent(relativePath)}`;
 }
 
 const MODEL_URLS = {
