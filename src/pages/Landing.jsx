@@ -424,8 +424,8 @@ export default function Landing() {
               </div>
               <p className="text-secondary text-sm font-medium mb-6">Platform Edukasi Arsitektur Komputer interaktif berbasis gamifikasi dan simulasi 3D.</p>
               <div className="flex items-center gap-4">
-                <a href="mailto:arkon.team@gmail.com" className="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-secondary hover:text-primary hover:border-primary/30 transition-all"><Mail className="w-4 h-4" /></a>
-                <a href="https://github.com/arkon-edu/arkon" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-secondary hover:text-primary hover:border-primary/30 transition-all"><Github className="w-4 h-4" /></a>
+                <a href="mailto:bagobago955@gmail.com" className="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-secondary hover:text-primary hover:border-primary/30 transition-all"><Mail className="w-4 h-4" /></a>
+                <a href="https://github.com/nouvalrizqy05-ui/arkon" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-secondary hover:text-primary hover:border-primary/30 transition-all"><Github className="w-4 h-4" /></a>
               </div>
             </div>
             <div>
